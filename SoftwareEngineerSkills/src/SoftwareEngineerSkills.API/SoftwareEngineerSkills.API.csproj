@@ -11,7 +11,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\SoftwareEngineerSkills.Application\SoftwareEngineerSkills.Application.csproj" />
+    <ProjectReference Include="..\SoftwareEngineerSkills.Application\SoftwareEngineerSkills.Application.csproj" />
+    <ProjectReference Include="..\SoftwareEngineerSkills.Infrastructure\SoftwareEngineerSkills.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>
