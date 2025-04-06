@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using SoftwareEngineerSkills.Application;
+﻿using SoftwareEngineerSkills.Application;
 using SoftwareEngineerSkills.Infrastructure;
 
 namespace SoftwareEngineerSkills.API;
