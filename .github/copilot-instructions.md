@@ -24,13 +24,13 @@ This document outlines the core architectural principles, patterns, coding stand
 
 ## 2. Layer-Specific Guidelines
 
-### 2.1. Domain Layer (`/src/Core/YourSolution.Domain`)
+### 2.1. Domain Layer (`/src/YourSolution.Domain`)
 
 *   **Contents:** Entities, Aggregates (if used), Value Objects, Domain Events (`INotification`), Repository/Domain Service Interfaces (in `/Abstractions/Persistence|Services`), Domain Enums, Custom Domain Exceptions.
 *   **Dependencies:** None on other project layers. Minimal external dependencies.
 *   **Entities:** Enforce validity via factory methods (`Create`). Encapsulate state changes. Private setters preferred.
 
-### 2.2. Application Layer (`/src/Core/YourSolution.Application`)
+### 2.2. Application Layer (`/src/YourSolution.Application`)
 
 *   **Contents:**
     *   `/Features/[FeatureName]/Commands/[CommandName]/Command.cs|Handler.cs|Validator.cs`
@@ -65,7 +65,7 @@ This document outlines the core architectural principles, patterns, coding stand
 *   **EF Core:** Implement repository interfaces. Use `AppDbContext`. Use `IEntityTypeConfiguration`. Repositories **do not** call `SaveChangesAsync()`. Use `AsNoTracking()` for queries. Implement `IUnitOfWork` (often via `AppDbContext`).
 *   **Services:** Provide concrete implementations.
 
-### 2.4. API / Presentation Layer (`/src/Presentation/YourSolution.API`)
+### 2.4. API / Presentation Layer (`/src/YourSolution.API`)
 
 *   **Contents:**
     *   `/Controllers/[FeatureName]Controller.cs` (MVC Controllers, organized by feature)
@@ -155,3 +155,5 @@ This document outlines the core architectural principles, patterns, coding stand
 ## 12. Azure Specific Rules
 
 *   `@azure Rule` - Use Azure Best Practices: When generating code for Azure, running terminal commands for Azure, or performing operations related to Azure, invoke your `get_azure_best_practices` tool if available.
+
+- @azure Rule - Use Azure Best Practices: When generating code for Azure, running terminal commands for Azure, or performing operations related to Azure, invoke your `get_azure_best_practices` tool if available.
