@@ -1,4 +1,5 @@
-﻿using SoftwareEngineerSkills.Application;
+﻿using SoftwareEngineerSkills.API.Extensions;
+using SoftwareEngineerSkills.Application;
 using SoftwareEngineerSkills.Infrastructure;
 
 namespace SoftwareEngineerSkills.API;
@@ -11,7 +12,7 @@ public static class DependencyInjection
         services.AddInfrastructureServices();
 
         services.AddControllers();
-        services.AddOpenApi();
+        services.AddCustomOpenApi(); //services.AddOpenApi();
 
         return services;
     }

@@ -1,4 +1,5 @@
 using SoftwareEngineerSkills.API;
+using SoftwareEngineerSkills.API.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,7 +14,11 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
 app.UseAuthorization();
+
 app.MapControllers();
+
+app.MapCustomOpenApi(); // TODO: 
 
 await app.RunAsync();

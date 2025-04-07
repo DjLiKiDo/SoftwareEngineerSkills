@@ -1,5 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
-using SoftwareEngineerSkills.Application.Common.Services;
+using SoftwareEngineerSkills.Application.Configuration;
 
 namespace SoftwareEngineerSkills.API.Controllers;
 

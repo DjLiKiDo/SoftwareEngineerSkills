@@ -1,6 +1,5 @@
 using Microsoft.Extensions.Options;
-using SoftwareEngineerSkills.Application.Common.Services;
-using SoftwareEngineerSkills.Domain.Common.Configuration;
+using SoftwareEngineerSkills.Application.Configuration;
 
 namespace SoftwareEngineerSkills.Infrastructure.Configuration;
 
