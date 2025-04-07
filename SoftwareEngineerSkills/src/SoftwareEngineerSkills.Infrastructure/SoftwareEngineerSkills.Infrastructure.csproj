@@ -10,4 +10,10 @@
     <ProjectReference Include="..\SoftwareEngineerSkills.Application\SoftwareEngineerSkills.Application.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Options" Version="9.0.3" />
+    <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="9.0.3" />
+    <PackageReference Include="Microsoft.Extensions.Options.DataAnnotations" Version="9.0.3" />
+  </ItemGroup>
+
 </Project>
