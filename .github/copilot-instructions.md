@@ -126,6 +126,7 @@ This document outlines the core architectural principles, patterns, coding stand
 *   **Structure:** Arrange-Act-Assert (AAA).
 *   **Assertions:** Verify `Result`. Verify mock interactions (`Verify()`).
 *   **Coverage:** Test success/failure paths, edge cases. **Include tests with pull requests.**
+*   **Scalability:** In large projects, include not only unit tests but also integration, acceptance, and performance tests. Use a separate solution or folder structure to manage these different types of tests more effectively.
 
 ## 8. Security
 
