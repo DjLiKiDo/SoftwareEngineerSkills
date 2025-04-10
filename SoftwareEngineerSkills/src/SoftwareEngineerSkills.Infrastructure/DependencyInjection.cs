@@ -1,6 +1,8 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using SoftwareEngineerSkills.Application.Configuration;
+using SoftwareEngineerSkills.Domain.Abstractions.Persistence;
 using SoftwareEngineerSkills.Infrastructure.Configuration;
+using SoftwareEngineerSkills.Infrastructure.Persistence.Repositories;
 
 namespace SoftwareEngineerSkills.Infrastructure;
 
@@ -17,6 +19,9 @@ public static class DependencyInjection
 
         // Register configuration service
         services.AddSingleton<IAppSettingsService, AppSettingsService>();
+
+        // Register repositories
+        services.AddSingleton<IDummyRepository, DummyRepository>();
 
         // TODO: Add other infrastructure services here
 

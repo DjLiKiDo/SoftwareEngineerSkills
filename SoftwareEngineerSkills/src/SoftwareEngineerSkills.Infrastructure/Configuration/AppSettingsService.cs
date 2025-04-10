@@ -21,6 +21,6 @@ public class AppSettingsService : IAppSettingsService
     /// <inheritdoc />
     public IDisposable OnChange(Action<AppSettings> listener)
     {
-        return _optionsMonitor.OnChange(listener);
+        return _optionsMonitor.OnChange(listener)!;
     }
 }

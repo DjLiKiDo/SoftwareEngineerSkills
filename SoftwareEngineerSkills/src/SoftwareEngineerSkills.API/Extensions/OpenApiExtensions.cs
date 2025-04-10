@@ -19,13 +19,9 @@ public static class OpenApiExtensions
         services.AddEndpointsApiExplorer();
         services.AddSwaggerGen(options =>
         {
-            // Use the injected AppSettings to get the application name
-            var serviceProvider = services.BuildServiceProvider();
-            var appSettings = serviceProvider.GetRequiredService<IOptions<AppSettings>>().Value;
-
             options.SwaggerDoc("v1", new OpenApiInfo
             {
-                Title = appSettings.ApplicationName,
+                Title = "Software Engineer Skills API",
                 Version = "v1",
                 Description = "API for Software Engineer Skills"
             });
@@ -45,5 +41,15 @@ public static class OpenApiExtensions
         {
             c.SwaggerEndpoint("/swagger/v1/swagger.json", "SoftwareEngineerSkills API v1");
         });
+    }
+    
+    /// <summary>
+    /// Legacy method - use MapCustomOpenApi instead
+    /// </summary>
+    /// <param name="app">The web application</param>
+    public static void MapOpenApi(this WebApplication app)
+    {
+        // Delegate to the proper implementation
+        MapCustomOpenApi(app);
     }
 }

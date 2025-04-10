@@ -26,10 +26,10 @@ public abstract class ApiControllerBase : ControllerBase
     /// <returns>An appropriate HTTP response</returns>
     protected IActionResult HandleResult<T>(Result<T> result)
     {
-        if (result.IsSuccess && result.Value != null)
+        if (result.IsSuccess && !object.Equals(result.Value, default(T)))
             return Ok(result.Value);
 
-        if (result.IsSuccess && result.Value == null)
+        if (result.IsSuccess && object.Equals(result.Value, default(T)))
             return NotFound();
 
         return BadRequest(new ProblemDetails

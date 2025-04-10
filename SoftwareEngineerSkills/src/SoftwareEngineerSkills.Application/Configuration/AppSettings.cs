@@ -38,6 +38,7 @@ public class AppSettings
 /// <summary>
 /// Validates all properties of the decorated object
 /// </summary>
+[AttributeUsage(AttributeTargets.Property | AttributeTargets.Field, AllowMultiple = false)]
 public class ValidateObjectAttribute : ValidationAttribute
 {
     protected override ValidationResult? IsValid(object? value, ValidationContext validationContext)

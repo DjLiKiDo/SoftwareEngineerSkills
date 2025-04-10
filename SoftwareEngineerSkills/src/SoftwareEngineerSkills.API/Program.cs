@@ -10,7 +10,8 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    app.MapOpenApi();
+    // Configurar Swagger solo en desarrollo
+    app.MapCustomOpenApi();
 }
 
 app.UseHttpsRedirection();
@@ -18,7 +19,5 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
-
-app.MapCustomOpenApi(); // TODO: 
 
 await app.RunAsync();
