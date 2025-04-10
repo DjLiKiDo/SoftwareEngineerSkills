@@ -1,6 +1,14 @@
 @SoftwareEngineerSkills.API_HostAddress = http://localhost:5096
 
-GET {{SoftwareEngineerSkills.API_HostAddress}}/weatherforecast/
+// Dummy Controller - Get Configuration
+// This endpoint uses CQRS to retrieve application configuration settings
+GET {{SoftwareEngineerSkills.API_HostAddress}}/api/dummy/config
 Accept: application/json
+
+###
+
+// Dummy Controller - Get Configuration (with different Accept header)
+GET {{SoftwareEngineerSkills.API_HostAddress}}/api/dummy/config
+Accept: application/xml
 
 ###
