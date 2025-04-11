@@ -52,7 +52,7 @@ public class DummyController : ApiControllerBase
     /// <param name="id">The ID of the dummy entity</param>
     /// <param name="cancellationToken">Cancellation token</param>
     /// <returns>The dummy entity if found</returns>
-    [HttpGet("{id}", Name = "GetDummyById")] // Ensure route matches the CreatedAtAction call
+    [HttpGet("{id}", Name = "GetDummyById")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(DummyDto))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ProblemDetails))]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -81,7 +81,21 @@ public class DummyController : ApiControllerBase
         var result = await Mediator.Send(command, cancellationToken);
 
         if (result.IsSuccess)
-            return CreatedAtAction(nameof(GetByIdAsync), new { id = result.Value }, result.Value);
+        {
+            // return CreatedAtAction(nameof(GetByIdAsync), new { id = result.Value }, result.Value);
+            return CreatedAtRoute("GetDummyById", new { id = result.Value }, result.Value);
+            // // Use CreatedAtAction to return the location of the created resource
+            // var createdAtAction = Url.Action(nameof(GetByIdAsync), new { id = result.Value }, Request.Scheme);
+            // if (createdAtAction == null)
+            // {
+            //     return BadRequest(new ProblemDetails
+            //     {
+            //         Title = "Bad Request",
+            //         Detail = "Unable to generate URL for the created resource",
+            //         Status = StatusCodes.Status400BadRequest
+            //     });
+
+        }
 
         return HandleResult(result);
     }
