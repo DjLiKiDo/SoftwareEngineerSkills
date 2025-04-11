@@ -1,5 +1,6 @@
 using MediatR;
 using Microsoft.Extensions.Logging;
+using SoftwareEngineerSkills.Application.Common.Events;
 using SoftwareEngineerSkills.Domain.Events;
 
 namespace SoftwareEngineerSkills.Application.Features.Dummy.Events;
@@ -7,7 +8,7 @@ namespace SoftwareEngineerSkills.Application.Features.Dummy.Events;
 /// <summary>
 /// Handler for the DummyCreatedEvent
 /// </summary>
-public class DummyCreatedEventHandler : INotificationHandler<DummyCreatedEvent>
+public class DummyCreatedEventHandler : INotificationHandler<DomainEventNotification<DummyCreatedEvent>>
 {
     private readonly ILogger<DummyCreatedEventHandler> _logger;
 
@@ -23,19 +24,22 @@ public class DummyCreatedEventHandler : INotificationHandler<DummyCreatedEvent>
     /// <summary>
     /// Handles the DummyCreatedEvent
     /// </summary>
-    /// <param name="notification">The event</param>
+    /// <param name="notification">The notification wrapper containing the domain event</param>
     /// <param name="cancellationToken">Cancellation token</param>
     /// <returns>A task representing the asynchronous operation</returns>
-    public Task Handle(DummyCreatedEvent notification, CancellationToken cancellationToken)
+    public Task Handle(DomainEventNotification<DummyCreatedEvent> notification, CancellationToken cancellationToken)
     {
-        _logger.LogInformation("Dummy entity created with ID: {DummyId}, Name: {Name}", 
-            notification.DummyId, 
-            notification.Name ?? "Unnamed");
+        var domainEvent = notification.DomainEvent;
+        
+        _logger.LogInformation("Dummy entity created with ID: {DummyId}, Name: {Name} at {OccurredOn}", 
+            domainEvent.DummyId,
+            domainEvent.Name ?? "Unnamed",
+            domainEvent.OccurredOn);
             
         // Additional logic can be added here like:
-        // - Sending a notification email
-        // - Updating statistics
-        // - Publishing to a message bus
+        // - Sending welcome notifications
+        // - Setting up related resources
+        // - Initializing additional data
         
         return Task.CompletedTask;
     }

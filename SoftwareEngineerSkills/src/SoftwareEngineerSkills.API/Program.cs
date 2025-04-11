@@ -7,6 +7,10 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container
 builder.Services.AddApiServices();
 
+// Register the exception handler (modern approach)
+builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+builder.Services.AddProblemDetails();
+
 // Build the application
 var app = builder.Build();
 
@@ -22,8 +26,8 @@ else
     app.UseHsts();
 }
 
-// Add global exception handling middleware (should be early in the pipeline)
-app.UseMiddleware<ExceptionHandlingMiddleware>();
+// Use exception handler middleware (modern approach)
+app.UseExceptionHandler();
 
 app.UseHttpsRedirection();
 

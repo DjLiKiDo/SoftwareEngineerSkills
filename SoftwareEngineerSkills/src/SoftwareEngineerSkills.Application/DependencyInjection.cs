@@ -23,7 +23,9 @@ public static class DependencyInjection
         services.AddTransient(typeof(IPipelineBehavior<,>), typeof(LoggingBehaviour<,>));
         // Validation should happen before domain event publishing
         services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehaviour<,>));
-        // Domain event publishing should happen last
+        // Domain event dispatcher should happen after validation but before the existing domain event publisher
+        services.AddTransient(typeof(IPipelineBehavior<,>), typeof(DomainEventDispatcherBehaviour<,>));
+        // Domain event publishing should happen last (maintaining existing behavior)
         services.AddTransient(typeof(IPipelineBehavior<,>), typeof(DomainEventPublishingBehaviour<,>));
         
         // Register FluentValidation

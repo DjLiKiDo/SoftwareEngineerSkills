@@ -1,11 +1,13 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
+using SoftwareEngineerSkills.Application.Common.Events;
 using SoftwareEngineerSkills.Application.Configuration;
 using SoftwareEngineerSkills.Domain.Abstractions.Persistence;
 using SoftwareEngineerSkills.Infrastructure.Configuration;
 using SoftwareEngineerSkills.Infrastructure.Configuration.Validators;
 using SoftwareEngineerSkills.Infrastructure.Persistence;
 using SoftwareEngineerSkills.Infrastructure.Persistence.Repositories;
+using SoftwareEngineerSkills.Infrastructure.Services;
 
 namespace SoftwareEngineerSkills.Infrastructure;
 
@@ -31,6 +33,9 @@ public static class DependencyInjection
 
         // Register UnitOfWork
         services.AddSingleton<IUnitOfWork, UnitOfWork>();
+
+        // Register domain event dispatcher
+        services.AddScoped<IDomainEventDispatcher, DomainEventDispatcher>();
 
         return services;
     }

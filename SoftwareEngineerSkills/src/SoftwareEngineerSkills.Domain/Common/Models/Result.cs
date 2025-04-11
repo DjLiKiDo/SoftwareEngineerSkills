@@ -1,10 +1,26 @@
 namespace SoftwareEngineerSkills.Domain.Common.Models;
 
 /// <summary>
+/// Interface for result objects that represents the outcome of an operation
+/// </summary>
+public interface IResult
+{
+    /// <summary>
+    /// Gets a value indicating whether the operation was successful
+    /// </summary>
+    bool IsSuccess { get; }
+    
+    /// <summary>
+    /// Gets the error message if the operation failed
+    /// </summary>
+    string? Error { get; }
+}
+
+/// <summary>
 /// Represents the result of an operation with a return value
 /// </summary>
 /// <typeparam name="T">Type of the result value</typeparam>
-public class Result<T>
+public class Result<T> : IResult
 {
     /// <summary>
     /// Gets a value indicating whether the operation was successful
@@ -46,7 +62,7 @@ public class Result<T>
 /// <summary>
 /// Represents the result of an operation without a return value
 /// </summary>
-public class Result
+public class Result : IResult
 {
     /// <summary>
     /// Gets a value indicating whether the operation was successful

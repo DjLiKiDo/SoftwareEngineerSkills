@@ -1,5 +1,6 @@
 using MediatR;
 using Microsoft.Extensions.Logging;
+using SoftwareEngineerSkills.Application.Common.Events;
 using SoftwareEngineerSkills.Domain.Events;
 
 namespace SoftwareEngineerSkills.Application.Features.Dummy.Events;
@@ -7,7 +8,7 @@ namespace SoftwareEngineerSkills.Application.Features.Dummy.Events;
 /// <summary>
 /// Handler for the DummyActivatedEvent
 /// </summary>
-public class DummyActivatedEventHandler : INotificationHandler<DummyActivatedEvent>
+public class DummyActivatedEventHandler : INotificationHandler<DomainEventNotification<DummyActivatedEvent>>
 {
     private readonly ILogger<DummyActivatedEventHandler> _logger;
 
@@ -23,14 +24,16 @@ public class DummyActivatedEventHandler : INotificationHandler<DummyActivatedEve
     /// <summary>
     /// Handles the DummyActivatedEvent
     /// </summary>
-    /// <param name="notification">The event</param>
+    /// <param name="notification">The notification wrapper containing the domain event</param>
     /// <param name="cancellationToken">Cancellation token</param>
     /// <returns>A task representing the asynchronous operation</returns>
-    public Task Handle(DummyActivatedEvent notification, CancellationToken cancellationToken)
+    public Task Handle(DomainEventNotification<DummyActivatedEvent> notification, CancellationToken cancellationToken)
     {
+        var domainEvent = notification.DomainEvent;
+        
         _logger.LogInformation("Dummy entity activated with ID: {DummyId} at {OccurredOn}", 
-            notification.DummyId, 
-            notification.OccurredOn);
+            domainEvent.DummyId, 
+            domainEvent.OccurredOn);
             
         // Additional logic can be added here like:
         // - Sending a notification
