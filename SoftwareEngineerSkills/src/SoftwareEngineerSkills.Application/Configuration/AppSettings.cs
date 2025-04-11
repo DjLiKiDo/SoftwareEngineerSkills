@@ -1,5 +1,5 @@
-using System.ComponentModel.DataAnnotations;
 using SoftwareEngineerSkills.Domain.Common.Enums;
+using System.ComponentModel.DataAnnotations;
 
 namespace SoftwareEngineerSkills.Application.Configuration;
 
@@ -19,20 +19,13 @@ public class AppSettings
     [Required(ErrorMessage = "Application name is required")]
     [StringLength(100, ErrorMessage = "Application name cannot exceed 100 characters")]
     public string ApplicationName { get; set; } = string.Empty;
-    
+
     /// <summary>
     /// The environment in which the application is running
     /// </summary>
     [Required(ErrorMessage = "Environment is required")]
     [EnumDataType(typeof(EnvironmentType), ErrorMessage = "Environment must be a valid environment type")]
     public EnvironmentType Environment { get; set; } = EnvironmentType.Unknown;
-
-    /// <summary>
-    /// Dummy settings for demonstration purposes
-    /// </summary>
-    [Required(ErrorMessage = "Dummy settings are required")]
-    [ValidateObject(ErrorMessage = "Dummy settings validation failed")]
-    public DummySettings DummySettings { get; set; } = new DummySettings();
 }
 
 /// <summary>
@@ -41,6 +34,7 @@ public class AppSettings
 [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field, AllowMultiple = false)]
 public class ValidateObjectAttribute : ValidationAttribute
 {
+    // TODO: Review this implementation. It may not be the best way to validate nested objects.
     protected override ValidationResult? IsValid(object? value, ValidationContext validationContext)
     {
         if (value == null)

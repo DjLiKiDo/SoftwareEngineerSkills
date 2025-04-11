@@ -1,5 +1,5 @@
 using AutoMapper;
-using SoftwareEngineerSkills.Application.Features.Dummy.Queries.GetAllDummies;
+using SoftwareEngineerSkills.Application.Features.Dummy.DTOs;
 
 namespace SoftwareEngineerSkills.Application.Common.Mappings;
 

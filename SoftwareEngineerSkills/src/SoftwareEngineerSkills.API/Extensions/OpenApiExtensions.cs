@@ -1,6 +1,4 @@
-using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
-using SoftwareEngineerSkills.Application.Configuration;
 
 namespace SoftwareEngineerSkills.API.Extensions;
 
@@ -41,15 +39,5 @@ public static class OpenApiExtensions
         {
             c.SwaggerEndpoint("/swagger/v1/swagger.json", "SoftwareEngineerSkills API v1");
         });
-    }
-    
-    /// <summary>
-    /// Legacy method - use MapCustomOpenApi instead
-    /// </summary>
-    /// <param name="app">The web application</param>
-    public static void MapOpenApi(this WebApplication app)
-    {
-        // Delegate to the proper implementation
-        MapCustomOpenApi(app);
     }
 }

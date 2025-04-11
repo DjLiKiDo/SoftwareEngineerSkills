@@ -1,4 +1,5 @@
-﻿Microsoft Visual Studio Solution File, Format Version 12.00
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.13.35913.81
 MinimumVisualStudioVersion = 10.0.40219.1
@@ -9,8 +10,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SoftwareEngineerSkills.Domain", "src\SoftwareEngineerSkills.Domain\SoftwareEngineerSkills.Domain.csproj", "{CCBDEF18-A02B-4063-8BD8-DD94DC556CF7}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SoftwareEngineerSkills.Infrastructure", "src\SoftwareEngineerSkills.Infrastructure\SoftwareEngineerSkills.Infrastructure.csproj", "{AA48A9D3-33FB-4B50-A1D7-6920E32D98BC}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SoftwareEngineerSkills.Tests", "tests/SoftwareEngineerSkills.Tests.csproj", "{NEW_GUID}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

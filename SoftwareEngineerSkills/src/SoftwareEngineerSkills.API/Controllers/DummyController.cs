@@ -1,14 +1,12 @@
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using SoftwareEngineerSkills.Application.Features.Dummy.Commands.ActivateDummy;
 using SoftwareEngineerSkills.Application.Features.Dummy.Commands.CreateDummy;
 using SoftwareEngineerSkills.Application.Features.Dummy.Commands.DeactivateDummy;
 using SoftwareEngineerSkills.Application.Features.Dummy.Commands.DeleteDummy;
 using SoftwareEngineerSkills.Application.Features.Dummy.Commands.UpdateDummy;
+using SoftwareEngineerSkills.Application.Features.Dummy.DTOs;
 using SoftwareEngineerSkills.Application.Features.Dummy.Queries.GetAllDummies;
 using SoftwareEngineerSkills.Application.Features.Dummy.Queries.GetDummyById;
-using SoftwareEngineerSkills.Application.Features.Dummy.Queries.GetDummyConfiguration;
 
 namespace SoftwareEngineerSkills.API.Controllers;
 
@@ -31,27 +29,6 @@ public class DummyController : ApiControllerBase
     }
 
     /// <summary>
-    /// Gets the application configuration information using CQRS pattern
-    /// </summary>
-    /// <returns>Application configuration details including environment and dummy settings</returns>
-    /// <remarks>
-    /// This endpoint demonstrates how to retrieve and return configuration information
-    /// using the CQRS pattern with MediatR.
-    /// </remarks>
-    [HttpGet("config", Name = "GetDummyConfiguration")]
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(GetDummyConfigurationResponse))]
-    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ProblemDetails))]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> GetConfigurationAsync(CancellationToken cancellationToken)
-    {
-        _logger.LogInformation("Retrieving dummy configuration through CQRS");
-        
-        var result = await Mediator.Send(new GetDummyConfigurationQuery(), cancellationToken);
-        
-        return HandleResult(result);
-    }
-    
-    /// <summary>
     /// Gets all dummy entities
     /// </summary>
     /// <param name="includeInactive">Whether to include inactive entities</param>
@@ -63,12 +40,12 @@ public class DummyController : ApiControllerBase
     public async Task<IActionResult> GetAllAsync([FromQuery] bool includeInactive = false, CancellationToken cancellationToken = default)
     {
         _logger.LogInformation("Retrieving all dummy entities (includeInactive: {IncludeInactive})", includeInactive);
-        
+
         var result = await Mediator.Send(new GetAllDummiesQuery(includeInactive), cancellationToken);
-        
+
         return HandleResult(result);
     }
-    
+
     /// <summary>
     /// Gets a specific dummy entity by its ID
     /// </summary>
@@ -82,12 +59,12 @@ public class DummyController : ApiControllerBase
     public async Task<IActionResult> GetByIdAsync(Guid id, CancellationToken cancellationToken)
     {
         _logger.LogInformation("Retrieving dummy entity with ID: {Id}", id);
-        
+
         var result = await Mediator.Send(new GetDummyByIdQuery(id), cancellationToken);
-        
+
         return HandleResult(result);
     }
-    
+
     /// <summary>
     /// Creates a new dummy entity
     /// </summary>
@@ -100,15 +77,15 @@ public class DummyController : ApiControllerBase
     public async Task<IActionResult> CreateAsync([FromBody] CreateDummyCommand command, CancellationToken cancellationToken)
     {
         _logger.LogInformation("Creating a new dummy entity");
-        
+
         var result = await Mediator.Send(command, cancellationToken);
-        
+
         if (result.IsSuccess)
             return CreatedAtAction(nameof(GetByIdAsync), new { id = result.Value }, result.Value);
-            
+
         return HandleResult(result);
     }
-    
+
     /// <summary>
     /// Updates an existing dummy entity
     /// </summary>
@@ -131,14 +108,14 @@ public class DummyController : ApiControllerBase
                 Status = StatusCodes.Status400BadRequest
             });
         }
-        
+
         _logger.LogInformation("Updating dummy entity with ID: {Id}", id);
-        
+
         var result = await Mediator.Send(command, cancellationToken);
-        
+
         return HandleResult(result);
     }
-    
+
     /// <summary>
     /// Deletes a dummy entity
     /// </summary>
@@ -152,15 +129,15 @@ public class DummyController : ApiControllerBase
     public async Task<IActionResult> DeleteAsync(Guid id, CancellationToken cancellationToken)
     {
         _logger.LogInformation("Deleting dummy entity with ID: {Id}", id);
-        
+
         var result = await Mediator.Send(new DeleteDummyCommand(id), cancellationToken);
-        
+
         if (result.IsSuccess && result.Value)
             return NoContent();
-            
+
         return HandleResult(result);
     }
-    
+
     /// <summary>
     /// Activates a dummy entity
     /// </summary>
@@ -174,12 +151,12 @@ public class DummyController : ApiControllerBase
     public async Task<IActionResult> ActivateAsync(Guid id, CancellationToken cancellationToken)
     {
         _logger.LogInformation("Activating dummy entity with ID: {Id}", id);
-        
+
         var result = await Mediator.Send(new ActivateDummyCommand(id), cancellationToken);
-        
+
         return HandleResult(result);
     }
-    
+
     /// <summary>
     /// Deactivates a dummy entity
     /// </summary>
@@ -193,9 +170,9 @@ public class DummyController : ApiControllerBase
     public async Task<IActionResult> DeactivateAsync(Guid id, CancellationToken cancellationToken)
     {
         _logger.LogInformation("Deactivating dummy entity with ID: {Id}", id);
-        
+
         var result = await Mediator.Send(new DeactivateDummyCommand(id), cancellationToken);
-        
+
         return HandleResult(result);
     }
 }

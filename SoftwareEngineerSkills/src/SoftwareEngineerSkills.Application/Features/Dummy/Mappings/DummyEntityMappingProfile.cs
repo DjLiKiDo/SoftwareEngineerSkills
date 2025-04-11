@@ -1,6 +1,5 @@
 using AutoMapper;
 using SoftwareEngineerSkills.Application.Features.Dummy.DTOs;
-using SoftwareEngineerSkills.Domain.Entities;
 
 namespace SoftwareEngineerSkills.Application.Features.Dummy.Mappings;
 

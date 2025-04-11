@@ -10,7 +10,7 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    // Configurar Swagger solo en desarrollo
+    // Configure Swagger for development
     app.MapCustomOpenApi();
 }
 

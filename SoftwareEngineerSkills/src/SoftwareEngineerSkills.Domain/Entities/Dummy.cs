@@ -1,11 +1,13 @@
+using SoftwareEngineerSkills.Domain.Aggregates;
 using SoftwareEngineerSkills.Domain.Common;
+using SoftwareEngineerSkills.Domain.Events;
 
 namespace SoftwareEngineerSkills.Domain.Entities;
 
 /// <summary>
 /// Represents a Dummy entity for demonstration purposes
 /// </summary>
-public class Dummy : BaseEntity
+public class Dummy : BaseEntity, IAggregateRoot
 {
     /// <summary>
     /// Gets or sets the name of the dummy entity
@@ -26,16 +28,13 @@ public class Dummy : BaseEntity
     /// Gets or sets whether the dummy entity is active (default: true)
     /// </summary>
     public bool IsActive { get; private set; }
+    
+    private readonly List<IDomainEvent> _domainEvents = new();
 
     /// <summary>
-    /// Gets or sets the creation date of the dummy entity
+    /// Gets the collection of domain events that have been raised but not yet committed
     /// </summary>
-    public DateTime? CreatedAt { get; private set; }
-    
-    /// <summary>
-    /// Gets or sets the last update date of the dummy entity
-    /// </summary>
-    public DateTime? UpdatedAt { get; private set; }
+    public IReadOnlyCollection<IDomainEvent> DomainEvents => _domainEvents.AsReadOnly();
 
     /// <summary>
     /// Default constructor for EF Core
@@ -58,7 +57,7 @@ public class Dummy : BaseEntity
         if (priority < 0 || priority > 5)
             throw new ArgumentOutOfRangeException(nameof(priority), "Priority must be between 0 and 5");
             
-        return new Dummy
+        var dummy = new Dummy
         {
             Id = Guid.NewGuid(),
             Name = name,
@@ -67,6 +66,11 @@ public class Dummy : BaseEntity
             IsActive = true,
             CreatedAt = DateTime.UtcNow
         };
+        
+        // Add domain event
+        dummy.AddDomainEvent(new DummyCreatedEvent(dummy));
+        
+        return dummy;
     }
     
     /// <summary>
@@ -108,5 +112,31 @@ public class Dummy : BaseEntity
             
         IsActive = false;
         UpdatedAt = DateTime.UtcNow;
+    }
+
+    /// <summary>
+    /// Adds a domain event to the aggregate's collection of domain events
+    /// </summary>
+    /// <param name="domainEvent">The domain event to add</param>
+    public void AddDomainEvent(IDomainEvent domainEvent)
+    {
+        _domainEvents.Add(domainEvent);
+    }
+
+    /// <summary>
+    /// Removes a domain event from the aggregate's collection of domain events
+    /// </summary>
+    /// <param name="domainEvent">The domain event to remove</param>
+    public void RemoveDomainEvent(IDomainEvent domainEvent)
+    {
+        _domainEvents.Remove(domainEvent);
+    }
+
+    /// <summary>
+    /// Clears all domain events from the aggregate's collection of domain events
+    /// </summary>
+    public void ClearDomainEvents()
+    {
+        _domainEvents.Clear();
     }
 }

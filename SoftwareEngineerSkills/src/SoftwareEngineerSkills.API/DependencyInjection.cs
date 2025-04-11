@@ -12,7 +12,7 @@ public static class DependencyInjection
         services.AddInfrastructureServices();
 
         services.AddControllers();
-        services.AddCustomOpenApi(); //services.AddOpenApi();
+        services.AddCustomOpenApi(); //Add custom instead of services.AddOpenApi();
 
         return services;
     }
