@@ -10,19 +10,19 @@ namespace SoftwareEngineerSkills.Application.Features.Dummy.Commands.CreateDummy
 /// </summary>
 public class CreateDummyCommandHandler : IRequestHandler<CreateDummyCommand, Result<Guid>>
 {
-    private readonly IDummyRepository _dummyRepository;
+    private readonly IUnitOfWork _unitOfWork;
     private readonly ILogger<CreateDummyCommandHandler> _logger;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="CreateDummyCommandHandler"/> class.
     /// </summary>
-    /// <param name="dummyRepository">The dummy repository</param>
+    /// <param name="unitOfWork">The unit of work</param>
     /// <param name="logger">The logger</param>
     public CreateDummyCommandHandler(
-        IDummyRepository dummyRepository,
+        IUnitOfWork unitOfWork,
         ILogger<CreateDummyCommandHandler> logger)
     {
-        _dummyRepository = dummyRepository ?? throw new ArgumentNullException(nameof(dummyRepository));
+        _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     }
 
@@ -38,9 +38,16 @@ public class CreateDummyCommandHandler : IRequestHandler<CreateDummyCommand, Res
         {
             _logger.LogInformation("Creating new dummy entity");
             
+            // Begin transaction
+            await _unitOfWork.BeginTransactionAsync(cancellationToken);
+            
             var dummy = Domain.Entities.Dummy.Create(request.Name, request.Description, request.Priority);
             
-            await _dummyRepository.AddAsync(dummy, cancellationToken);
+            await _unitOfWork.DummyRepository.AddAsync(dummy, cancellationToken);
+            
+            // Save changes and commit transaction
+            await _unitOfWork.SaveChangesAsync(cancellationToken);
+            await _unitOfWork.CommitTransactionAsync(cancellationToken);
             
             _logger.LogInformation("Successfully created dummy entity with ID: {Id}", dummy.Id);
             
@@ -48,11 +55,17 @@ public class CreateDummyCommandHandler : IRequestHandler<CreateDummyCommand, Res
         }
         catch (ArgumentOutOfRangeException ex)
         {
+            // Roll back the transaction on error
+            await _unitOfWork.RollbackTransactionAsync(cancellationToken);
+            
             _logger.LogWarning(ex, "Invalid argument when creating dummy entity");
             return Result<Guid>.Failure(ex.Message);
         }
         catch (Exception ex)
         {
+            // Roll back the transaction on error
+            await _unitOfWork.RollbackTransactionAsync(cancellationToken);
+            
             _logger.LogError(ex, "Error creating dummy entity");
             return Result<Guid>.Failure($"Error creating dummy entity: {ex.Message}");
         }

@@ -10,19 +10,19 @@ namespace SoftwareEngineerSkills.Application.Features.Dummy.Commands.ActivateDum
 /// </summary>
 public class ActivateDummyCommandHandler : IRequestHandler<ActivateDummyCommand, Result<bool>>
 {
-    private readonly IDummyRepository _dummyRepository;
+    private readonly IUnitOfWork _unitOfWork;
     private readonly ILogger<ActivateDummyCommandHandler> _logger;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="ActivateDummyCommandHandler"/> class.
     /// </summary>
-    /// <param name="dummyRepository">The dummy repository</param>
+    /// <param name="unitOfWork">The unit of work</param>
     /// <param name="logger">The logger</param>
     public ActivateDummyCommandHandler(
-        IDummyRepository dummyRepository,
+        IUnitOfWork unitOfWork,
         ILogger<ActivateDummyCommandHandler> logger)
     {
-        _dummyRepository = dummyRepository ?? throw new ArgumentNullException(nameof(dummyRepository));
+        _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     }
 
@@ -38,22 +38,31 @@ public class ActivateDummyCommandHandler : IRequestHandler<ActivateDummyCommand,
         {
             _logger.LogInformation("Activating dummy entity with ID: {Id}", request.Id);
             
-            var dummy = await _dummyRepository.GetByIdAsync(request.Id, cancellationToken);
+            // Begin transaction
+            await _unitOfWork.BeginTransactionAsync(cancellationToken);
+            
+            var dummy = await _unitOfWork.DummyRepository.GetByIdAsync(request.Id, cancellationToken);
             
             if (dummy == null)
             {
                 _logger.LogWarning("Dummy entity with ID: {Id} not found for activation", request.Id);
+                await _unitOfWork.RollbackTransactionAsync(cancellationToken);
                 return Result<bool>.Failure($"Dummy entity with ID: {request.Id} not found");
             }
             
             if (dummy.IsActive)
             {
                 _logger.LogInformation("Dummy entity with ID: {Id} is already active", request.Id);
+                await _unitOfWork.RollbackTransactionAsync(cancellationToken);
                 return Result<bool>.Success(true);
             }
             
             dummy.Activate();
-            await _dummyRepository.UpdateAsync(dummy, cancellationToken);
+            await _unitOfWork.DummyRepository.UpdateAsync(dummy, cancellationToken);
+            
+            // Save changes and commit transaction
+            await _unitOfWork.SaveChangesAsync(cancellationToken);
+            await _unitOfWork.CommitTransactionAsync(cancellationToken);
             
             _logger.LogInformation("Successfully activated dummy entity with ID: {Id}", request.Id);
             
@@ -61,6 +70,7 @@ public class ActivateDummyCommandHandler : IRequestHandler<ActivateDummyCommand,
         }
         catch (Exception ex)
         {
+            await _unitOfWork.RollbackTransactionAsync(cancellationToken);
             _logger.LogError(ex, "Error activating dummy entity with ID: {Id}", request.Id);
             return Result<bool>.Failure($"Error activating dummy entity: {ex.Message}");
         }

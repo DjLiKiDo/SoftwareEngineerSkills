@@ -10,19 +10,19 @@ namespace SoftwareEngineerSkills.Application.Features.Dummy.Commands.UpdateDummy
 /// </summary>
 public class UpdateDummyCommandHandler : IRequestHandler<UpdateDummyCommand, Result<bool>>
 {
-    private readonly IDummyRepository _dummyRepository;
+    private readonly IUnitOfWork _unitOfWork;
     private readonly ILogger<UpdateDummyCommandHandler> _logger;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="UpdateDummyCommandHandler"/> class.
     /// </summary>
-    /// <param name="dummyRepository">The dummy repository</param>
+    /// <param name="unitOfWork">The unit of work</param>
     /// <param name="logger">The logger</param>
     public UpdateDummyCommandHandler(
-        IDummyRepository dummyRepository,
+        IUnitOfWork unitOfWork,
         ILogger<UpdateDummyCommandHandler> logger)
     {
-        _dummyRepository = dummyRepository ?? throw new ArgumentNullException(nameof(dummyRepository));
+        _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     }
 
@@ -38,17 +38,25 @@ public class UpdateDummyCommandHandler : IRequestHandler<UpdateDummyCommand, Res
         {
             _logger.LogInformation("Updating dummy entity with ID: {Id}", request.Id);
             
-            var dummy = await _dummyRepository.GetByIdAsync(request.Id, cancellationToken);
+            // Begin transaction
+            await _unitOfWork.BeginTransactionAsync(cancellationToken);
+            
+            var dummy = await _unitOfWork.DummyRepository.GetByIdAsync(request.Id, cancellationToken);
             
             if (dummy == null)
             {
                 _logger.LogWarning("Dummy entity with ID: {Id} not found", request.Id);
+                await _unitOfWork.RollbackTransactionAsync(cancellationToken);
                 return Result<bool>.Failure($"Dummy entity with ID: {request.Id} not found");
             }
             
             dummy.Update(request.Name, request.Description, request.Priority);
             
-            await _dummyRepository.UpdateAsync(dummy, cancellationToken);
+            await _unitOfWork.DummyRepository.UpdateAsync(dummy, cancellationToken);
+            
+            // Save changes and commit transaction
+            await _unitOfWork.SaveChangesAsync(cancellationToken);
+            await _unitOfWork.CommitTransactionAsync(cancellationToken);
             
             _logger.LogInformation("Successfully updated dummy entity with ID: {Id}", request.Id);
             
@@ -56,11 +64,13 @@ public class UpdateDummyCommandHandler : IRequestHandler<UpdateDummyCommand, Res
         }
         catch (ArgumentOutOfRangeException ex)
         {
+            await _unitOfWork.RollbackTransactionAsync(cancellationToken);
             _logger.LogWarning(ex, "Invalid argument when updating dummy entity with ID: {Id}", request.Id);
             return Result<bool>.Failure(ex.Message);
         }
         catch (Exception ex)
         {
+            await _unitOfWork.RollbackTransactionAsync(cancellationToken);
             _logger.LogError(ex, "Error updating dummy entity with ID: {Id}", request.Id);
             return Result<bool>.Failure($"Error updating dummy entity: {ex.Message}");
         }

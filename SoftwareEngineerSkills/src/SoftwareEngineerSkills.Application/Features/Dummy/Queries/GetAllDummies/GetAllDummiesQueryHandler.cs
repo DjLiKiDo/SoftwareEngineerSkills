@@ -12,22 +12,22 @@ namespace SoftwareEngineerSkills.Application.Features.Dummy.Queries.GetAllDummie
 /// </summary>
 public class GetAllDummiesQueryHandler : IRequestHandler<GetAllDummiesQuery, Result<List<DummyDto>>>
 {
-    private readonly IDummyRepository _dummyRepository;
+    private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
     private readonly ILogger<GetAllDummiesQueryHandler> _logger;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="GetAllDummiesQueryHandler"/> class.
     /// </summary>
-    /// <param name="dummyRepository">The dummy repository</param>
+    /// <param name="unitOfWork">The unit of work</param>
     /// <param name="mapper">The mapper</param>
     /// <param name="logger">The logger</param>
     public GetAllDummiesQueryHandler(
-        IDummyRepository dummyRepository,
+        IUnitOfWork unitOfWork,
         IMapper mapper,
         ILogger<GetAllDummiesQueryHandler> logger)
     {
-        _dummyRepository = dummyRepository ?? throw new ArgumentNullException(nameof(dummyRepository));
+        _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
         _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     }
@@ -44,7 +44,8 @@ public class GetAllDummiesQueryHandler : IRequestHandler<GetAllDummiesQuery, Res
         {
             _logger.LogInformation("Retrieving all dummy entities (includeInactive: {IncludeInactive})", request.IncludeInactive);
             
-            var dummies = await _dummyRepository.GetAllAsync(request.IncludeInactive, cancellationToken);
+            // For read operations, we don't need a transaction, but we use the UnitOfWork to get the repository
+            var dummies = await _unitOfWork.DummyRepository.GetAllAsync(request.IncludeInactive, cancellationToken);
             var dummyDtos = _mapper.Map<List<DummyDto>>(dummies);
             
             _logger.LogInformation("Successfully retrieved {Count} dummy entities", dummyDtos.Count);

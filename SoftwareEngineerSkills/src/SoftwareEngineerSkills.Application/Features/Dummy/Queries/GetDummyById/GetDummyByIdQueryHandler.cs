@@ -12,22 +12,22 @@ namespace SoftwareEngineerSkills.Application.Features.Dummy.Queries.GetDummyById
 /// </summary>
 public class GetDummyByIdQueryHandler : IRequestHandler<GetDummyByIdQuery, Result<DummyDto>>
 {
-    private readonly IDummyRepository _dummyRepository;
+    private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
     private readonly ILogger<GetDummyByIdQueryHandler> _logger;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="GetDummyByIdQueryHandler"/> class.
     /// </summary>
-    /// <param name="dummyRepository">The dummy repository</param>
+    /// <param name="unitOfWork">The unit of work</param>
     /// <param name="mapper">The mapper</param>
     /// <param name="logger">The logger</param>
     public GetDummyByIdQueryHandler(
-        IDummyRepository dummyRepository,
+        IUnitOfWork unitOfWork,
         IMapper mapper,
         ILogger<GetDummyByIdQueryHandler> logger)
     {
-        _dummyRepository = dummyRepository ?? throw new ArgumentNullException(nameof(dummyRepository));
+        _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
         _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     }
@@ -44,7 +44,8 @@ public class GetDummyByIdQueryHandler : IRequestHandler<GetDummyByIdQuery, Resul
         {
             _logger.LogInformation("Retrieving dummy entity with ID: {Id}", request.Id);
             
-            var dummy = await _dummyRepository.GetByIdAsync(request.Id, cancellationToken);
+            // For read operations, we don't need a transaction, but we use the UnitOfWork to get the repository
+            var dummy = await _unitOfWork.DummyRepository.GetByIdAsync(request.Id, cancellationToken);
             
             if (dummy == null)
             {

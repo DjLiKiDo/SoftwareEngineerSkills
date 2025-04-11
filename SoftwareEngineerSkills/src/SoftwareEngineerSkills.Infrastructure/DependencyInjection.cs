@@ -4,6 +4,7 @@ using SoftwareEngineerSkills.Application.Configuration;
 using SoftwareEngineerSkills.Domain.Abstractions.Persistence;
 using SoftwareEngineerSkills.Infrastructure.Configuration;
 using SoftwareEngineerSkills.Infrastructure.Configuration.Validators;
+using SoftwareEngineerSkills.Infrastructure.Persistence;
 using SoftwareEngineerSkills.Infrastructure.Persistence.Repositories;
 
 namespace SoftwareEngineerSkills.Infrastructure;
@@ -27,6 +28,9 @@ public static class DependencyInjection
 
         // Register repositories
         services.AddSingleton<IDummyRepository, DummyRepository>();
+
+        // Register UnitOfWork
+        services.AddSingleton<IUnitOfWork, UnitOfWork>();
 
         return services;
     }
