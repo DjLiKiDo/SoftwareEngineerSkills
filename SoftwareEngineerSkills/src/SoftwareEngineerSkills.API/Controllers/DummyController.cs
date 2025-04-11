@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using SoftwareEngineerSkills.API.Common;
 using SoftwareEngineerSkills.Application.Features.Dummy.Commands.ActivateDummy;
 using SoftwareEngineerSkills.Application.Features.Dummy.Commands.CreateDummy;
 using SoftwareEngineerSkills.Application.Features.Dummy.Commands.DeactivateDummy;
@@ -34,7 +35,7 @@ public class DummyController : ApiControllerBase
     /// <param name="includeInactive">Whether to include inactive entities</param>
     /// <param name="cancellationToken">Cancellation token</param>
     /// <returns>A list of dummy entities</returns>
-    [HttpGet(Name = "GetAllDummies")]
+    [HttpGet(Name = RouteNames.Dummy.GetAll)]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<DummyDto>))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ProblemDetails))]
     public async Task<IActionResult> GetAllAsync([FromQuery] bool includeInactive = false, CancellationToken cancellationToken = default)
@@ -52,7 +53,7 @@ public class DummyController : ApiControllerBase
     /// <param name="id">The ID of the dummy entity</param>
     /// <param name="cancellationToken">Cancellation token</param>
     /// <returns>The dummy entity if found</returns>
-    [HttpGet("{id}", Name = "GetDummyById")]
+    [HttpGet("{id}", Name = RouteNames.Dummy.GetById)]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(DummyDto))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ProblemDetails))]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -71,7 +72,7 @@ public class DummyController : ApiControllerBase
     /// <param name="command">The create command</param>
     /// <param name="cancellationToken">Cancellation token</param>
     /// <returns>The ID of the newly created dummy entity</returns>
-    [HttpPost(Name = "CreateDummy")]
+    [HttpPost(Name = RouteNames.Dummy.Create)]
     [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(Guid))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ProblemDetails))]
     public async Task<IActionResult> CreateAsync([FromBody] CreateDummyCommand command, CancellationToken cancellationToken)
@@ -82,19 +83,7 @@ public class DummyController : ApiControllerBase
 
         if (result.IsSuccess)
         {
-            // return CreatedAtAction(nameof(GetByIdAsync), new { id = result.Value }, result.Value);
-            return CreatedAtRoute("GetDummyById", new { id = result.Value }, result.Value);
-            // // Use CreatedAtAction to return the location of the created resource
-            // var createdAtAction = Url.Action(nameof(GetByIdAsync), new { id = result.Value }, Request.Scheme);
-            // if (createdAtAction == null)
-            // {
-            //     return BadRequest(new ProblemDetails
-            //     {
-            //         Title = "Bad Request",
-            //         Detail = "Unable to generate URL for the created resource",
-            //         Status = StatusCodes.Status400BadRequest
-            //     });
-
+            return CreatedAtRoute(RouteNames.Dummy.GetById, new { id = result.Value }, result.Value);
         }
 
         return HandleResult(result);
@@ -107,7 +96,7 @@ public class DummyController : ApiControllerBase
     /// <param name="command">The update command</param>
     /// <param name="cancellationToken">Cancellation token</param>
     /// <returns>A success response if the update was successful</returns>
-    [HttpPut("{id}", Name = "UpdateDummy")]
+    [HttpPut("{id}", Name = RouteNames.Dummy.Update)]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ProblemDetails))]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -136,7 +125,7 @@ public class DummyController : ApiControllerBase
     /// <param name="id">The ID of the dummy entity to delete</param>
     /// <param name="cancellationToken">Cancellation token</param>
     /// <returns>A success response if the deletion was successful</returns>
-    [HttpDelete("{id}", Name = "DeleteDummy")]
+    [HttpDelete("{id}", Name = RouteNames.Dummy.Delete)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ProblemDetails))]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -158,7 +147,7 @@ public class DummyController : ApiControllerBase
     /// <param name="id">The ID of the dummy entity to activate</param>
     /// <param name="cancellationToken">Cancellation token</param>
     /// <returns>A success response if the activation was successful</returns>
-    [HttpPatch("{id}/activate", Name = "ActivateDummy")]
+    [HttpPatch("{id}/activate", Name = RouteNames.Dummy.Activate)]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ProblemDetails))]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -177,7 +166,7 @@ public class DummyController : ApiControllerBase
     /// <param name="id">The ID of the dummy entity to deactivate</param>
     /// <param name="cancellationToken">Cancellation token</param>
     /// <returns>A success response if the deactivation was successful</returns>
-    [HttpPatch("{id}/deactivate", Name = "DeactivateDummy")]
+    [HttpPatch("{id}/deactivate", Name = RouteNames.Dummy.Deactivate)]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ProblemDetails))]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
