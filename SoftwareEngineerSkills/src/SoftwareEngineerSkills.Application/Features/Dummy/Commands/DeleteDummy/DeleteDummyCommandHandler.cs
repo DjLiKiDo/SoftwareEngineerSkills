@@ -2,6 +2,7 @@ using MediatR;
 using Microsoft.Extensions.Logging;
 using SoftwareEngineerSkills.Domain.Abstractions.Persistence;
 using SoftwareEngineerSkills.Domain.Common.Models;
+using SoftwareEngineerSkills.Domain.Events;
 
 namespace SoftwareEngineerSkills.Application.Features.Dummy.Commands.DeleteDummy;
 
@@ -12,18 +13,22 @@ public class DeleteDummyCommandHandler : IRequestHandler<DeleteDummyCommand, Res
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly ILogger<DeleteDummyCommandHandler> _logger;
+    private readonly IPublisher _publisher;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="DeleteDummyCommandHandler"/> class.
     /// </summary>
     /// <param name="unitOfWork">The unit of work</param>
     /// <param name="logger">The logger</param>
+    /// <param name="publisher">The event publisher</param>
     public DeleteDummyCommandHandler(
         IUnitOfWork unitOfWork,
-        ILogger<DeleteDummyCommandHandler> logger)
+        ILogger<DeleteDummyCommandHandler> logger,
+        IPublisher publisher)
     {
         _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+        _publisher = publisher ?? throw new ArgumentNullException(nameof(publisher));
     }
 
     /// <summary>
@@ -55,6 +60,9 @@ public class DeleteDummyCommandHandler : IRequestHandler<DeleteDummyCommand, Res
             // Save changes and commit transaction
             await _unitOfWork.SaveChangesAsync(cancellationToken);
             await _unitOfWork.CommitTransactionAsync(cancellationToken);
+            
+            // Publish domain event after successful deletion
+            await _publisher.Publish(new DummyDeletedEvent(request.Id), cancellationToken);
             
             _logger.LogInformation("Successfully deleted dummy entity with ID: {Id}", request.Id);
             

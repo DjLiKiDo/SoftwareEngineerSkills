@@ -88,6 +88,9 @@ public class Dummy : BaseEntity, IAggregateRoot
         Description = description;
         Priority = priority;
         UpdatedAt = DateTime.UtcNow;
+        
+        // Add domain event
+        AddDomainEvent(new DummyUpdatedEvent(this));
     }
     
     /// <summary>
@@ -100,6 +103,9 @@ public class Dummy : BaseEntity, IAggregateRoot
             
         IsActive = true;
         UpdatedAt = DateTime.UtcNow;
+        
+        // Add domain event
+        AddDomainEvent(new DummyActivatedEvent(this));
     }
     
     /// <summary>
@@ -112,6 +118,9 @@ public class Dummy : BaseEntity, IAggregateRoot
             
         IsActive = false;
         UpdatedAt = DateTime.UtcNow;
+        
+        // Add domain event
+        AddDomainEvent(new DummyDeactivatedEvent(this));
     }
 
     /// <summary>
