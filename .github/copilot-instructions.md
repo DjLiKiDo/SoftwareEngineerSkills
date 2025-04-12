@@ -2,7 +2,7 @@
 
 ## 1. Purpose
 
-This document outlines the core architectural principles, patterns, coding standards, and processes for this .NET 9 / C# 12 project. It serves as a guide for both human developers and GitHub Copilot to ensure the generation and modification of high-quality, consistent, maintainable, and scalable code, following Clean Architecture, CQRS, Screaming Architecture, and the IOptions pattern.
+This document outlines the core architectural principles, patterns, coding standards, and processes for this .NET 9 / C# 14 project. It serves as a guide for both human developers and GitHub Copilot to ensure the generation and modification of high-quality, consistent, maintainable, and scalable code, following Clean Architecture, CQRS, Screaming Architecture, and the IOptions pattern.
 
 **Primary Framework:** .NET 9 / C# 14
 
