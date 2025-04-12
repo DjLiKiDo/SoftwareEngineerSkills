@@ -1,4 +1,4 @@
-﻿namespace SoftwareEngineerSkills.Domain.Tests;
+﻿namespace SoftwareEngineerSkills.IntegrationTests;
 
 public class UnitTest1
 {
