@@ -1,10 +1,14 @@
 # Project Architecture and GitHub Copilot Guidance (copilot-instructions.md)
 
+## 1. Purpose
+
 This document outlines the core architectural principles, patterns, coding standards, and processes for this .NET 9 / C# 12 project. It serves as a guide for both human developers and GitHub Copilot to ensure the generation and modification of high-quality, consistent, maintainable, and scalable code, following Clean Architecture, CQRS, Screaming Architecture, and the IOptions pattern.
 
 **Primary Framework:** .NET 9 / C# 14
 
-## 1. Core Principles & Goals
+## 2. Key Principles
+
+### Core Principles & Goals
 
 *   **Overarching Goals:** Separation of Concerns, Low Coupling, High Cohesion, Testability, Maintainability, Scalability.
 *   **Clean Architecture:** Strictly adhere to the layer separation:
@@ -22,15 +26,33 @@ This document outlines the core architectural principles, patterns, coding stand
 *   **Immutability:** Prefer immutable types (`record`) for DTOs, Commands, Queries, and Events.
 *   **Nullability:** Enable and strictly adhere to C# nullable reference types (`#nullable enable`).
 
-## 2. Layer-Specific Guidelines
+### Preferred Libraries
 
-### 2.1. Domain Layer (`/src/YourSolution.Domain`)
+*   **Data Access:** Entity Framework Core
+*   **CQRS:** MediatR
+*   **Mapping:** AutoMapper
+*   **Validation:** FluentValidation
+*   **Logging:** Serilog (preferred, configurable via `appsettings.json`)
+*   **API Documentation:** Swashbuckle.AspNetCore (for OpenAPI/Swagger)
+
+### Code Quality & Style
+
+*   **Language:** All code, comments, documentation **must be in English**.
+*   **Standards:** Follow Microsoft's C# coding conventions and .NET best practices.
+*   **Readability:** Prioritize clear, understandable, well-formatted code.
+*   **Naming Conventions:** `PascalCase` (types, public members), `camelCase` (parameters, locals), `_camelCase` (private fields), `IMyInterface`.
+*   **Comments:** Explain *why*, not *what*. Use XML documentation comments (`///`) for public APIs.
+*   **Method Length:** Keep methods short and focused.
+
+## 3. Architecture
+
+### Domain Layer (`/src/YourSolution.Domain`)
 
 *   **Contents:** Entities, Aggregates (if used), Value Objects, Domain Events (`INotification`), Repository/Domain Service Interfaces (in `/Abstractions/Persistence|Services`), Domain Enums, Custom Domain Exceptions.
 *   **Dependencies:** None on other project layers. Minimal external dependencies.
 *   **Entities:** Enforce validity via factory methods (`Create`). Encapsulate state changes. Private setters preferred.
 
-### 2.2. Application Layer (`/src/YourSolution.Application`)
+### Application Layer (`/src/YourSolution.Application`)
 
 *   **Contents:**
     *   `/Features/[FeatureName]/Commands/[CommandName]/Command.cs|Handler.cs|Validator.cs`
@@ -50,7 +72,7 @@ This document outlines the core architectural principles, patterns, coding stand
 *   **Mapping:** Use AutoMapper (`Profile`, `IMapper`). Map Entities <-> DTOs.
 *   **Data Access:** Use repository/UoW interfaces **only**.
 
-### 2.3. Infrastructure Layer (`/src/Infrastructure/YourSolution.Infrastructure`)
+### Infrastructure Layer (`/src/Infrastructure/YourSolution.Infrastructure`)
 
 *   **Contents:**
     *   `/Persistence/DbContexts/ApplicationDbContext.cs`
@@ -65,7 +87,7 @@ This document outlines the core architectural principles, patterns, coding stand
 *   **EF Core:** Implement repository interfaces. Use `AppDbContext`. Use `IEntityTypeConfiguration`. Repositories **do not** call `SaveChangesAsync()`. Use `AsNoTracking()` for queries. Implement `IUnitOfWork` (often via `AppDbContext`).
 *   **Services:** Provide concrete implementations.
 
-### 2.4. API / Presentation Layer (`/src/YourSolution.API`)
+### API / Presentation Layer (`/src/YourSolution.API`)
 
 *   **Contents:**
     *   `/Controllers/[FeatureName]Controller.cs` (MVC Controllers, organized by feature)
@@ -79,7 +101,7 @@ This document outlines the core architectural principles, patterns, coding stand
 *   **Controllers:** Use **MVC Controllers**. Keep controllers **thin**. Inherit `ApiControllerBase`. Inject `ISender`. Dispatch Commands/Queries. Use `HandleResult()` helpers. Apply authorization attributes. Use `[ProducesResponseType]`.
 *   **`Program.cs`:** Configure DI, logging, auth, middleware, IOptions binding (`builder.Services.AddOptions<T>().BindConfiguration(...)`).
 
-## 3. Specific Pattern Guidance
+## 4. Core Patterns
 
 *   **Result Pattern:** Standard for Application returns. Explicit success/failure. Use `Domain.Common.Error`.
 *   **MediatR (CQRS):** Enforces separation. Single responsibility handlers. `INotification` for events.
@@ -94,31 +116,23 @@ This document outlines the core architectural principles, patterns, coding stand
 *   **Validation (FluentValidation):** Declarative rules (`AbstractValidator<T>` in Application), integrated via MediatR pipeline.
 *   **Mapping (AutoMapper):** Simplify object mapping (`Profile` in Application, inject `IMapper`).
 
-## 4. Preferred Libraries
+## 5. Error Handling & Security
 
-*   **Data Access:** Entity Framework Core
-*   **CQRS:** MediatR
-*   **Mapping:** AutoMapper
-*   **Validation:** FluentValidation
-*   **Logging:** Serilog (preferred, configurable via `appsettings.json`)
-*   **API Documentation:** Swashbuckle.AspNetCore (for OpenAPI/Swagger)
-
-## 5. Code Quality & Style
-
-*   **Language:** All code, comments, documentation **must be in English**.
-*   **Standards:** Follow Microsoft's C# coding conventions and .NET best practices.
-*   **Readability:** Prioritize clear, understandable, well-formatted code.
-*   **Naming Conventions:** `PascalCase` (types, public members), `camelCase` (parameters, locals), `_camelCase` (private fields), `IMyInterface`.
-*   **Comments:** Explain *why*, not *what*. Use XML documentation comments (`///`) for public APIs.
-*   **Method Length:** Keep methods short and focused.
-
-## 6. Error Handling
+### Error Handling
 
 *   **Middleware:** Implement global exception handling middleware (`IExceptionHandler`).
 *   **Responses:** Use standardized `ProblemDetails` for all HTTP errors.
 *   **Custom Exceptions:** Create specific exception types where necessary (but prefer Result pattern for expected failures).
 
-## 7. Testing (Unit Tests)
+### Security
+
+*   **Authentication:** Use JWT Bearer Tokens via ASP.NET Core Identity / JWT middleware.
+*   **Authorization:** Apply `[Authorize]` attribute. Use policies (`[Authorize(Policy = ...)]`).
+*   **Input Validation:** Mandatory (FluentValidation, Domain/Handler checks).
+*   **Secrets Management:** **NEVER** commit secrets. Use User Secrets (dev), Azure Key Vault, or equivalent.
+*   **Logging:** Avoid logging sensitive data.
+
+## 6. Testing
 
 *   **Tools:** xUnit, Moq, FluentAssertions.
 *   **Focus:** Application layer handlers, Domain entities/logic.
@@ -128,32 +142,26 @@ This document outlines the core architectural principles, patterns, coding stand
 *   **Coverage:** Test success/failure paths, edge cases. **Include tests with pull requests.**
 *   **Scalability:** In large projects, include not only unit tests but also integration, acceptance, and performance tests. Use a separate solution or folder structure to manage these different types of tests more effectively.
 
-## 8. Security
-
-*   **Authentication:** Use JWT Bearer Tokens via ASP.NET Core Identity / JWT middleware.
-*   **Authorization:** Apply `[Authorize]` attribute. Use policies (`[Authorize(Policy = ...)]`).
-*   **Input Validation:** Mandatory (FluentValidation, Domain/Handler checks).
-*   **Secrets Management:** **NEVER** commit secrets. Use User Secrets (dev), Azure Key Vault, or equivalent.
-*   **Logging:** Avoid logging sensitive data.
-
-## 9. Documentation
+## 7. Documentation
 
 *   **API:** Generate automatic API documentation using Swashbuckle/OpenAPI.
 *   **Code:** Document all public API endpoints and complex logic using XML comments (`///`).
 
-## 10. CI/CD Integration (GitHub Actions & Azure)
+## 8. CI/CD & Collaboration
+
+### CI/CD Integration
 
 *   **CI Pipeline (GitHub Actions):** Trigger on push/PR. Restore -> Build -> Test -> Analyze. Validate PRs before merging.
 *   **CD Pipeline (GitHub Actions):** Trigger on merge (main/release). Build artifacts -> Deploy to Azure environments (Dev, Staging, Prod) following best practices (slots, approvals).
 
-## 11. Code Reviews and Pull Requests
+### Code Reviews and Pull Requests
 
 *   **Scope:** Keep PRs small and focused (single feature/bugfix).
 *   **Documentation:** Clear PR description, link issues.
 *   **Testing:** Ensure PRs include relevant unit/integration tests.
 *   **Review Checklist:** Adherence to standards (this doc), documentation, test coverage, performance/security, architectural compliance (Clean Arch, SOLID, CQRS, Repo/UoW).
 
-## 12. Azure Specific Rules
+## 9. Azure Specific Rules
 
 *   `@azure Rule` - Use Azure Best Practices: When generating code for Azure, running terminal commands for Azure, or performing operations related to Azure, invoke your `get_azure_best_practices` tool if available.
 
