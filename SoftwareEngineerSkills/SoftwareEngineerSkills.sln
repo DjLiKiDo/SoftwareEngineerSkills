@@ -1,5 +1,4 @@
-﻿
-Microsoft Visual Studio Solution File, Format Version 12.00
+﻿Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.13.35913.81
 MinimumVisualStudioVersion = 10.0.40219.1
@@ -11,15 +10,19 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SoftwareEngineerSkills.Doma
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SoftwareEngineerSkills.Infrastructure", "src\SoftwareEngineerSkills.Infrastructure\SoftwareEngineerSkills.Infrastructure.csproj", "{AA48A9D3-33FB-4B50-A1D7-6920E32D98BC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SoftwareEngineerSkills.Domain.UnitTests", "..\tests\SoftwareEngineerSkills.Domain.UnitTests\SoftwareEngineerSkills.Domain.UnitTests.csproj", "{724175B8-BF01-4B22-9D81-72F10F07E322}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SoftwareEngineerSkills.Domain.UnitTests", "tests\SoftwareEngineerSkills.Domain.UnitTests\SoftwareEngineerSkills.Domain.UnitTests.csproj", "{724175B8-BF01-4B22-9D81-72F10F07E322}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SoftwareEngineerSkills.Application.UnitTests", "..\tests\SoftwareEngineerSkills.Application.UnitTests\SoftwareEngineerSkills.Application.UnitTests.csproj", "{E8702738-EB54-4966-B973-9CC18DF0CCAA}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SoftwareEngineerSkills.Application.UnitTests", "tests\SoftwareEngineerSkills.Application.UnitTests\SoftwareEngineerSkills.Application.UnitTests.csproj", "{E8702738-EB54-4966-B973-9CC18DF0CCAA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SoftwareEngineerSkills.Infrastructure.UnitTests", "..\tests\SoftwareEngineerSkills.Infrastructure.UnitTests\SoftwareEngineerSkills.Infrastructure.UnitTests.csproj", "{314A9DC0-51F3-4825-943D-6AF7F024C3B0}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SoftwareEngineerSkills.Infrastructure.UnitTests", "tests\SoftwareEngineerSkills.Infrastructure.UnitTests\SoftwareEngineerSkills.Infrastructure.UnitTests.csproj", "{314A9DC0-51F3-4825-943D-6AF7F024C3B0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SoftwareEngineerSkills.API.UnitTests", "..\tests\SoftwareEngineerSkills.API.UnitTests\SoftwareEngineerSkills.API.UnitTests.csproj", "{08FA4556-6B97-458D-95E5-097D7AE56B41}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SoftwareEngineerSkills.API.UnitTests", "tests\SoftwareEngineerSkills.API.UnitTests\SoftwareEngineerSkills.API.UnitTests.csproj", "{08FA4556-6B97-458D-95E5-097D7AE56B41}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SoftwareEngineerSkills.IntegrationTests", "..\tests\SoftwareEngineerSkills.IntegrationTests\SoftwareEngineerSkills.IntegrationTests.csproj", "{EBA7DEC2-C346-49EE-88AE-9AAB3AC91AD6}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SoftwareEngineerSkills.IntegrationTests", "tests\SoftwareEngineerSkills.IntegrationTests\SoftwareEngineerSkills.IntegrationTests.csproj", "{EBA7DEC2-C346-49EE-88AE-9AAB3AC91AD6}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{D277D744-5A25-48C8-9ADE-48460784193A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -142,6 +145,17 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{C2B7C239-E6B7-5DC7-7205-17150A2E7AE3} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+		{F9E0B645-742B-4BFF-97B8-5E95CA50D089} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+		{CCBDEF18-A02B-4063-8BD8-DD94DC556CF7} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+		{AA48A9D3-33FB-4B50-A1D7-6920E32D98BC} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+		{724175B8-BF01-4B22-9D81-72F10F07E322} = {D277D744-5A25-48C8-9ADE-48460784193A}
+		{E8702738-EB54-4966-B973-9CC18DF0CCAA} = {D277D744-5A25-48C8-9ADE-48460784193A}
+		{314A9DC0-51F3-4825-943D-6AF7F024C3B0} = {D277D744-5A25-48C8-9ADE-48460784193A}
+		{08FA4556-6B97-458D-95E5-097D7AE56B41} = {D277D744-5A25-48C8-9ADE-48460784193A}
+		{EBA7DEC2-C346-49EE-88AE-9AAB3AC91AD6} = {D277D744-5A25-48C8-9ADE-48460784193A}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {E442D355-8858-446E-9A2F-9F7DDA1B58FA}

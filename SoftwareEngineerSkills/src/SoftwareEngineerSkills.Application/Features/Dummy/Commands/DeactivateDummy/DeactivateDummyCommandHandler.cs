@@ -8,7 +8,7 @@ namespace SoftwareEngineerSkills.Application.Features.Dummy.Commands.DeactivateD
 /// <summary>
 /// Handler for the DeactivateDummyCommand
 /// </summary>
-public class DeactivateDummyCommandHandler : IRequestHandler<DeactivateDummyCommand, Result<bool>>
+public class DeactivateDummyCommandHandler : IRequestHandler<DeactivateDummyCommand, Result<Unit>>
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly ILogger<DeactivateDummyCommandHandler> _logger;
@@ -31,48 +31,38 @@ public class DeactivateDummyCommandHandler : IRequestHandler<DeactivateDummyComm
     /// </summary>
     /// <param name="request">The command</param>
     /// <param name="cancellationToken">Cancellation token</param>
-    /// <returns>True if the deactivation was successful, otherwise false</returns>
-    public async Task<Result<bool>> Handle(DeactivateDummyCommand request, CancellationToken cancellationToken)
+    /// <returns>Unit result indicating success or failure</returns>
+    public async Task<Result<Unit>> Handle(DeactivateDummyCommand request, CancellationToken cancellationToken)
     {
         try
         {
             _logger.LogInformation("Deactivating dummy entity with ID: {Id}", request.Id);
-            
-            // Begin transaction
-            await _unitOfWork.BeginTransactionAsync(cancellationToken);
             
             var dummy = await _unitOfWork.DummyRepository.GetByIdAsync(request.Id, cancellationToken);
             
             if (dummy == null)
             {
                 _logger.LogWarning("Dummy entity with ID: {Id} not found for deactivation", request.Id);
-                await _unitOfWork.RollbackTransactionAsync(cancellationToken);
-                return Result<bool>.Failure($"Dummy entity with ID: {request.Id} not found");
+                return Result<Unit>.Failure($"Dummy entity with ID: {request.Id} not found");
             }
             
             if (!dummy.IsActive)
             {
                 _logger.LogInformation("Dummy entity with ID: {Id} is already inactive", request.Id);
-                await _unitOfWork.RollbackTransactionAsync(cancellationToken);
-                return Result<bool>.Success(true);
+                return Result<Unit>.Success(Unit.Value);
             }
             
             dummy.Deactivate();
             await _unitOfWork.DummyRepository.UpdateAsync(dummy, cancellationToken);
             
-            // Save changes and commit transaction
-            await _unitOfWork.SaveChangesAsync(cancellationToken);
-            await _unitOfWork.CommitTransactionAsync(cancellationToken);
-            
             _logger.LogInformation("Successfully deactivated dummy entity with ID: {Id}", request.Id);
             
-            return Result<bool>.Success(true);
+            return Result<Unit>.Success(Unit.Value);
         }
         catch (Exception ex)
         {
-            await _unitOfWork.RollbackTransactionAsync(cancellationToken);
             _logger.LogError(ex, "Error deactivating dummy entity with ID: {Id}", request.Id);
-            return Result<bool>.Failure($"Error deactivating dummy entity: {ex.Message}");
+            return Result<Unit>.Failure($"Error deactivating dummy entity: {ex.Message}");
         }
     }
 }

@@ -1,12 +1,13 @@
 using MediatR;
 using SoftwareEngineerSkills.Domain.Common.Models;
+using SoftwareEngineerSkills.Application.Common.Commands;
 
 namespace SoftwareEngineerSkills.Application.Features.Dummy.Commands.CreateDummy;
 
 /// <summary>
 /// Command to create a new dummy entity
 /// </summary>
-public record CreateDummyCommand : IRequest<Result<Guid>>
+public record CreateDummyCommand : ICommand<Result<Guid>>
 {
     /// <summary>
     /// Gets or sets the name of the dummy entity

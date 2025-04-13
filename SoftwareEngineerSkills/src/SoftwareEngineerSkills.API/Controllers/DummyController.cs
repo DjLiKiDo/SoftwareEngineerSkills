@@ -133,9 +133,9 @@ public class DummyController : ApiControllerBase
     {
         _logger.LogInformation("Deleting dummy entity with ID: {Id}", id);
 
-        var result = await Mediator.Send(new DeleteDummyCommand(id), cancellationToken);
+        var result = await Mediator.Send(new DeleteDummyCommand { Id = id }, cancellationToken);
 
-        if (result.IsSuccess && result.Value)
+        if (result.IsSuccess)
             return NoContent();
 
         return HandleResult(result);
@@ -155,7 +155,7 @@ public class DummyController : ApiControllerBase
     {
         _logger.LogInformation("Activating dummy entity with ID: {Id}", id);
 
-        var result = await Mediator.Send(new ActivateDummyCommand(id), cancellationToken);
+        var result = await Mediator.Send(new ActivateDummyCommand { Id = id }, cancellationToken);
 
         return HandleResult(result);
     }
@@ -174,7 +174,7 @@ public class DummyController : ApiControllerBase
     {
         _logger.LogInformation("Deactivating dummy entity with ID: {Id}", id);
 
-        var result = await Mediator.Send(new DeactivateDummyCommand(id), cancellationToken);
+        var result = await Mediator.Send(new DeactivateDummyCommand { Id = id }, cancellationToken);
 
         return HandleResult(result);
     }

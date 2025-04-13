@@ -38,3 +38,6 @@ app.UseAuthorization();
 app.MapControllers();
 
 await app.RunAsync();
+
+// Make Program class accessible to tests
+public partial class Program {}

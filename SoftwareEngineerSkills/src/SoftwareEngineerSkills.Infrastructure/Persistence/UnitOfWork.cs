@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using SoftwareEngineerSkills.Domain.Abstractions.Persistence;
 using SoftwareEngineerSkills.Domain.Common;
@@ -6,22 +7,26 @@ namespace SoftwareEngineerSkills.Infrastructure.Persistence;
 
 /// <summary>
 /// Implementation of the Unit of Work pattern that coordinates the work of multiple repositories
+/// using Entity Framework Core and an in-memory database
 /// </summary>
 public class UnitOfWork : IUnitOfWork
 {
     private readonly IServiceProvider _serviceProvider;
-    private bool _isTransactionActive;
+    private readonly ApplicationDbContext _dbContext;
     
     /// <summary>
     /// Initializes a new instance of the <see cref="UnitOfWork"/> class
     /// </summary>
     /// <param name="serviceProvider">The service provider</param>
+    /// <param name="dbContext">The database context</param>
     /// <param name="dummyRepository">The dummy repository</param>
     public UnitOfWork(
         IServiceProvider serviceProvider,
+        ApplicationDbContext dbContext,
         IDummyRepository dummyRepository)
     {
         _serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
+        _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
         DummyRepository = dummyRepository ?? throw new ArgumentNullException(nameof(dummyRepository));
     }
 
@@ -41,42 +46,26 @@ public class UnitOfWork : IUnitOfWork
     }
 
     /// <inheritdoc />
-    public Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+    public async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {
-        // Since we're using an in-memory repository implementation,
-        // there's no actual database context to save changes to.
-        // In a real application with a database, this would call
-        // _dbContext.SaveChangesAsync() or equivalent.
-
-        // For now, we'll just return a completed task with value 1
-        // to indicate success
-        return Task.FromResult(1);
+        return await _dbContext.SaveChangesAsync(cancellationToken);
     }
 
     /// <inheritdoc />
-    public Task BeginTransactionAsync(CancellationToken cancellationToken = default)
+    public async Task BeginTransactionAsync(CancellationToken cancellationToken = default)
     {
-        // In a real implementation, this would start a database transaction
-        // For this in-memory example, we'll just track the transaction state
-        _isTransactionActive = true;
-        return Task.CompletedTask;
+        await _dbContext.BeginTransactionAsync(cancellationToken);
     }
 
     /// <inheritdoc />
-    public Task CommitTransactionAsync(CancellationToken cancellationToken = default)
+    public async Task CommitTransactionAsync(CancellationToken cancellationToken = default)
     {
-        // In a real implementation, this would commit the database transaction
-        // For this in-memory example, we'll just reset the transaction state
-        _isTransactionActive = false;
-        return Task.CompletedTask;
+        await _dbContext.CommitTransactionAsync(cancellationToken);
     }
 
     /// <inheritdoc />
-    public Task RollbackTransactionAsync(CancellationToken cancellationToken = default)
+    public async Task RollbackTransactionAsync(CancellationToken cancellationToken = default)
     {
-        // In a real implementation, this would roll back the database transaction
-        // For this in-memory example, we'll just reset the transaction state
-        _isTransactionActive = false;
-        return Task.CompletedTask;
+        await _dbContext.RollbackTransactionAsync(cancellationToken);
     }
 }

@@ -38,16 +38,9 @@ public class CreateDummyCommandHandler : IRequestHandler<CreateDummyCommand, Res
         {
             _logger.LogInformation("Creating new dummy entity");
             
-            // Begin transaction
-            await _unitOfWork.BeginTransactionAsync(cancellationToken);
-            
             var dummy = Domain.Entities.Dummy.Create(request.Name, request.Description, request.Priority);
             
             await _unitOfWork.DummyRepository.AddAsync(dummy, cancellationToken);
-            
-            // Save changes and commit transaction
-            await _unitOfWork.SaveChangesAsync(cancellationToken);
-            await _unitOfWork.CommitTransactionAsync(cancellationToken);
             
             _logger.LogInformation("Successfully created dummy entity with ID: {Id}", dummy.Id);
             
@@ -55,17 +48,11 @@ public class CreateDummyCommandHandler : IRequestHandler<CreateDummyCommand, Res
         }
         catch (ArgumentOutOfRangeException ex)
         {
-            // Roll back the transaction on error
-            await _unitOfWork.RollbackTransactionAsync(cancellationToken);
-            
             _logger.LogWarning(ex, "Invalid argument when creating dummy entity");
             return Result<Guid>.Failure(ex.Message);
         }
         catch (Exception ex)
         {
-            // Roll back the transaction on error
-            await _unitOfWork.RollbackTransactionAsync(cancellationToken);
-            
             _logger.LogError(ex, "Error creating dummy entity");
             return Result<Guid>.Failure($"Error creating dummy entity: {ex.Message}");
         }

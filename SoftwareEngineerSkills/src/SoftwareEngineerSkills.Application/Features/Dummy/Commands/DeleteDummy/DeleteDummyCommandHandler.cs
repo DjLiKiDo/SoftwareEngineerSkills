@@ -9,7 +9,7 @@ namespace SoftwareEngineerSkills.Application.Features.Dummy.Commands.DeleteDummy
 /// <summary>
 /// Handler for the DeleteDummyCommand
 /// </summary>
-public class DeleteDummyCommandHandler : IRequestHandler<DeleteDummyCommand, Result<bool>>
+public class DeleteDummyCommandHandler : IRequestHandler<DeleteDummyCommand, Result<Unit>>
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly ILogger<DeleteDummyCommandHandler> _logger;
@@ -36,43 +36,34 @@ public class DeleteDummyCommandHandler : IRequestHandler<DeleteDummyCommand, Res
     /// </summary>
     /// <param name="request">The command</param>
     /// <param name="cancellationToken">Cancellation token</param>
-    /// <returns>True if the deletion was successful, otherwise false</returns>
-    public async Task<Result<bool>> Handle(DeleteDummyCommand request, CancellationToken cancellationToken)
+    /// <returns>Unit result indicating success or failure</returns>
+    public async Task<Result<Unit>> Handle(DeleteDummyCommand request, CancellationToken cancellationToken)
     {
         try
         {
             _logger.LogInformation("Deleting dummy entity with ID: {Id}", request.Id);
-            
-            // Begin transaction
-            await _unitOfWork.BeginTransactionAsync(cancellationToken);
             
             var dummy = await _unitOfWork.DummyRepository.GetByIdAsync(request.Id, cancellationToken);
             
             if (dummy == null)
             {
                 _logger.LogWarning("Dummy entity with ID: {Id} not found for deletion", request.Id);
-                await _unitOfWork.RollbackTransactionAsync(cancellationToken);
-                return Result<bool>.Failure($"Dummy entity with ID: {request.Id} not found");
+                return Result<Unit>.Failure($"Dummy entity with ID: {request.Id} not found");
             }
             
             await _unitOfWork.DummyRepository.DeleteAsync(dummy, cancellationToken);
             
-            // Save changes and commit transaction
-            await _unitOfWork.SaveChangesAsync(cancellationToken);
-            await _unitOfWork.CommitTransactionAsync(cancellationToken);
-            
-            // Publish domain event after successful deletion
+            // Publish domain event after deletion
             await _publisher.Publish(new DummyDeletedEvent(request.Id), cancellationToken);
             
             _logger.LogInformation("Successfully deleted dummy entity with ID: {Id}", request.Id);
             
-            return Result<bool>.Success(true);
+            return Result<Unit>.Success(Unit.Value);
         }
         catch (Exception ex)
         {
-            await _unitOfWork.RollbackTransactionAsync(cancellationToken);
             _logger.LogError(ex, "Error deleting dummy entity with ID: {Id}", request.Id);
-            return Result<bool>.Failure($"Error deleting dummy entity: {ex.Message}");
+            return Result<Unit>.Failure($"Error deleting dummy entity: {ex.Message}");
         }
     }
 }

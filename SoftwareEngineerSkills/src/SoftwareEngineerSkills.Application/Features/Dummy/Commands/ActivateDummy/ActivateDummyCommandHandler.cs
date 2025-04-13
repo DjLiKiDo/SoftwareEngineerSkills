@@ -8,7 +8,7 @@ namespace SoftwareEngineerSkills.Application.Features.Dummy.Commands.ActivateDum
 /// <summary>
 /// Handler for the ActivateDummyCommand
 /// </summary>
-public class ActivateDummyCommandHandler : IRequestHandler<ActivateDummyCommand, Result<bool>>
+public class ActivateDummyCommandHandler : IRequestHandler<ActivateDummyCommand, Result<Unit>>
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly ILogger<ActivateDummyCommandHandler> _logger;
@@ -31,48 +31,38 @@ public class ActivateDummyCommandHandler : IRequestHandler<ActivateDummyCommand,
     /// </summary>
     /// <param name="request">The command</param>
     /// <param name="cancellationToken">Cancellation token</param>
-    /// <returns>True if the activation was successful, otherwise false</returns>
-    public async Task<Result<bool>> Handle(ActivateDummyCommand request, CancellationToken cancellationToken)
+    /// <returns>Unit result indicating success or failure</returns>
+    public async Task<Result<Unit>> Handle(ActivateDummyCommand request, CancellationToken cancellationToken)
     {
         try
         {
             _logger.LogInformation("Activating dummy entity with ID: {Id}", request.Id);
-            
-            // Begin transaction
-            await _unitOfWork.BeginTransactionAsync(cancellationToken);
             
             var dummy = await _unitOfWork.DummyRepository.GetByIdAsync(request.Id, cancellationToken);
             
             if (dummy == null)
             {
                 _logger.LogWarning("Dummy entity with ID: {Id} not found for activation", request.Id);
-                await _unitOfWork.RollbackTransactionAsync(cancellationToken);
-                return Result<bool>.Failure($"Dummy entity with ID: {request.Id} not found");
+                return Result<Unit>.Failure($"Dummy entity with ID: {request.Id} not found");
             }
             
             if (dummy.IsActive)
             {
                 _logger.LogInformation("Dummy entity with ID: {Id} is already active", request.Id);
-                await _unitOfWork.RollbackTransactionAsync(cancellationToken);
-                return Result<bool>.Success(true);
+                return Result<Unit>.Success(Unit.Value);
             }
             
             dummy.Activate();
             await _unitOfWork.DummyRepository.UpdateAsync(dummy, cancellationToken);
             
-            // Save changes and commit transaction
-            await _unitOfWork.SaveChangesAsync(cancellationToken);
-            await _unitOfWork.CommitTransactionAsync(cancellationToken);
-            
             _logger.LogInformation("Successfully activated dummy entity with ID: {Id}", request.Id);
             
-            return Result<bool>.Success(true);
+            return Result<Unit>.Success(Unit.Value);
         }
         catch (Exception ex)
         {
-            await _unitOfWork.RollbackTransactionAsync(cancellationToken);
             _logger.LogError(ex, "Error activating dummy entity with ID: {Id}", request.Id);
-            return Result<bool>.Failure($"Error activating dummy entity: {ex.Message}");
+            return Result<Unit>.Failure($"Error activating dummy entity: {ex.Message}");
         }
     }
 }

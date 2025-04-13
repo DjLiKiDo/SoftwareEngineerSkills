@@ -1,21 +1,30 @@
+using Microsoft.EntityFrameworkCore;
 using SoftwareEngineerSkills.Domain.Abstractions.Persistence;
 using SoftwareEngineerSkills.Domain.Entities;
 
 namespace SoftwareEngineerSkills.Infrastructure.Persistence.Repositories;
 
 /// <summary>
-/// In-memory implementation of the IDummyRepository interface
+/// Entity Framework Core implementation of the IDummyRepository interface
 /// </summary>
-public class DummyRepository : BaseRepository<Dummy>, IDummyRepository
+public class DummyRepository : Repository<Dummy>, IDummyRepository
 {
-    /// <inheritdoc />
-    public Task<IEnumerable<Dummy>> GetAllAsync(bool includeInactive = false, CancellationToken cancellationToken = default)
+    /// <summary>
+    /// Initializes a new instance of the <see cref="DummyRepository"/> class
+    /// </summary>
+    /// <param name="dbContext">The database context</param>
+    public DummyRepository(ApplicationDbContext dbContext) : base(dbContext)
     {
-        IEnumerable<Dummy> result = _entities;
+    }
+
+    /// <inheritdoc />
+    public async Task<IEnumerable<Dummy>> GetAllAsync(bool includeInactive = false, CancellationToken cancellationToken = default)
+    {
+        IQueryable<Dummy> query = _dbSet.AsNoTracking();
         if (!includeInactive)
         {
-            result = result.Where(d => d.IsActive);
+            query = query.Where(d => d.IsActive);
         }
-        return Task.FromResult(result);
+        return await query.ToListAsync(cancellationToken);
     }
 }
