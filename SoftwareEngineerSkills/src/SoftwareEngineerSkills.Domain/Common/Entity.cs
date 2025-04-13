@@ -5,7 +5,7 @@ namespace SoftwareEngineerSkills.Domain.Common;
 /// <summary>
 /// Base class for all domain entities providing common behavior and properties
 /// </summary>
-public abstract class Entity
+public abstract class Entity : IEntity
 {
     private readonly List<IDomainEvent> _domainEvents = new();
 
