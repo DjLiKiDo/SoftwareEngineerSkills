@@ -1,3 +1,6 @@
+using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 using SoftwareEngineerSkills.Domain.Entities;
 
 namespace SoftwareEngineerSkills.Domain.Abstractions.Persistence;
@@ -14,4 +17,12 @@ public interface IDummyRepository : IRepository<Dummy>
     /// <param name="cancellationToken">Cancellation token</param>
     /// <returns>A collection of all dummy entities</returns>
     Task<IEnumerable<Dummy>> GetAllAsync(bool includeInactive = false, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Gets dummy entities with a specific priority
+    /// </summary>
+    /// <param name="priority">The priority to filter by</param>
+    /// <param name="cancellationToken">Cancellation token</param>
+    /// <returns>A collection of dummy entities with the specified priority</returns>
+    Task<IEnumerable<Dummy>> GetByPriorityAsync(int priority, CancellationToken cancellationToken = default);
 }

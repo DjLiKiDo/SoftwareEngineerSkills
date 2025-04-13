@@ -1,11 +1,17 @@
+using System;
+using System.Collections.Generic;
+using System.Linq.Expressions;
+using System.Threading;
+using System.Threading.Tasks;
 using SoftwareEngineerSkills.Domain.Common;
+using SoftwareEngineerSkills.Domain.Common.Models;
 
 namespace SoftwareEngineerSkills.Domain.Abstractions.Persistence;
 
 /// <summary>
-/// Generic repository interface for entities that inherit from BaseEntity
+/// Generic repository interface for entities that inherit from Entity
 /// </summary>
-/// <typeparam name="T">The entity type that inherits from BaseEntity</typeparam>
+/// <typeparam name="T">The entity type that inherits from Entity</typeparam>
 public interface IRepository<T> where T : Entity
 {
     /// <summary>
@@ -14,6 +20,14 @@ public interface IRepository<T> where T : Entity
     /// <param name="cancellationToken">Cancellation token</param>
     /// <returns>A collection of all entities</returns>
     Task<IEnumerable<T>> GetAllAsync(CancellationToken cancellationToken = default);
+    
+    /// <summary>
+    /// Gets entities by specified criteria
+    /// </summary>
+    /// <param name="predicate">Filter expression</param>
+    /// <param name="cancellationToken">Cancellation token</param>
+    /// <returns>A collection of entities matching the criteria</returns>
+    Task<IEnumerable<T>> FindAsync(Expression<Func<T, bool>> predicate, CancellationToken cancellationToken = default);
     
     /// <summary>
     /// Gets an entity by its ID
@@ -46,4 +60,12 @@ public interface IRepository<T> where T : Entity
     /// <param name="cancellationToken">Cancellation token</param>
     /// <returns>A task representing the asynchronous operation</returns>
     Task DeleteAsync(T entity, CancellationToken cancellationToken = default);
+    
+    /// <summary>
+    /// Checks if an entity with the specified criteria exists
+    /// </summary>
+    /// <param name="predicate">Filter expression</param>
+    /// <param name="cancellationToken">Cancellation token</param>
+    /// <returns>True if an entity matching the criteria exists, false otherwise</returns>
+    Task<bool> ExistsAsync(Expression<Func<T, bool>> predicate, CancellationToken cancellationToken = default);
 }
