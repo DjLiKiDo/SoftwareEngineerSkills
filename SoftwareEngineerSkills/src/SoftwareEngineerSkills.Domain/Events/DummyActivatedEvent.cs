@@ -5,7 +5,7 @@ namespace SoftwareEngineerSkills.Domain.Events;
 /// <summary>
 /// Event raised when a dummy entity is activated
 /// </summary>
-public class DummyActivatedEvent : IDomainEvent
+public record DummyActivatedEvent : IDomainEvent
 {
     /// <summary>
     /// Gets the unique identifier of the activated dummy entity

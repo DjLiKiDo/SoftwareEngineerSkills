@@ -5,7 +5,7 @@ namespace SoftwareEngineerSkills.Domain.Events;
 /// <summary>
 /// Event raised when a dummy entity is deleted
 /// </summary>
-public class DummyDeletedEvent : IDomainEvent
+public record DummyDeletedEvent : IDomainEvent
 {
     /// <summary>
     /// Gets the unique identifier of the deleted dummy entity

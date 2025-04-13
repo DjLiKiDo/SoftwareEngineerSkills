@@ -5,7 +5,7 @@ namespace SoftwareEngineerSkills.Domain.Events;
 /// <summary>
 /// Event raised when a dummy entity is updated
 /// </summary>
-public class DummyUpdatedEvent : IDomainEvent
+public record DummyUpdatedEvent : IDomainEvent
 {
     /// <summary>
     /// Gets the unique identifier of the updated dummy entity

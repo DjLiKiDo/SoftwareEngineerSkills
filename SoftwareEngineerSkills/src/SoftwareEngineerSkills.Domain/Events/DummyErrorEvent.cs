@@ -3,7 +3,7 @@ namespace SoftwareEngineerSkills.Domain.Events;
 /// <summary>
 /// Event raised when an error occurs related to a dummy entity
 /// </summary>
-public class DummyErrorEvent : IDomainEvent
+public record DummyErrorEvent : IDomainEvent
 {
     /// <summary>
     /// Gets the unique identifier of the dummy entity related to the error
