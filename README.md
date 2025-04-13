@@ -238,6 +238,3 @@ Contributions are welcome! Please open an issue to discuss significant changes o
 ## License
 
 This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details. <!-- Ensure you have a LICENSE file -->
-```
-
-This English version maintains the structure, key information, and technical accuracy of the Spanish original, making it suitable for an international audience on GitHub. Remember to update the placeholder links and ensure the file paths and commands match your project exactly.
