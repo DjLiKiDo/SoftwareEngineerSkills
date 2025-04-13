@@ -1,5 +1,3 @@
-using System;
-using System.Collections.Generic;
 using SoftwareEngineerSkills.Domain.Common.Models;
 
 namespace SoftwareEngineerSkills.Domain.ValueObjects;

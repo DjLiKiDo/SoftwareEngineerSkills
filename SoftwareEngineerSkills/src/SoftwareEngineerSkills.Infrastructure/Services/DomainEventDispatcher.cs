@@ -2,7 +2,6 @@ using MediatR;
 using Microsoft.Extensions.Logging;
 using SoftwareEngineerSkills.Application.Common.Events;
 using SoftwareEngineerSkills.Domain.Events;
-using System.Reflection;
 
 namespace SoftwareEngineerSkills.Infrastructure.Services;
 

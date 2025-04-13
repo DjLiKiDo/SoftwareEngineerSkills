@@ -1,6 +1,5 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
-using SoftwareEngineerSkills.Domain.Common;
 using SoftwareEngineerSkills.Domain.Entities;
 using System.Reflection;
 

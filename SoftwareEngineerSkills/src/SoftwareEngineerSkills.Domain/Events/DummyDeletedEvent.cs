@@ -1,5 +1,3 @@
-using SoftwareEngineerSkills.Domain.Entities;
-
 namespace SoftwareEngineerSkills.Domain.Events;
 
 /// <summary>

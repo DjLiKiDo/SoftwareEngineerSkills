@@ -1,4 +1,3 @@
-using MediatR;
 using SoftwareEngineerSkills.Domain.Common.Models;
 using SoftwareEngineerSkills.Application.Common.Commands;
 

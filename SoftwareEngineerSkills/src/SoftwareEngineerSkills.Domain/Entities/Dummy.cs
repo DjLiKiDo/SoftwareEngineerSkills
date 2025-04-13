@@ -1,4 +1,3 @@
-using System;
 using SoftwareEngineerSkills.Domain.Aggregates;
 using SoftwareEngineerSkills.Domain.Common;
 using SoftwareEngineerSkills.Domain.Common.Models;

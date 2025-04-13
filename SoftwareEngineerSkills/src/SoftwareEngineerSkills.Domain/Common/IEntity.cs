@@ -1,5 +1,3 @@
-using System;
-using System.Collections.Generic;
 using SoftwareEngineerSkills.Domain.Events;
 
 namespace SoftwareEngineerSkills.Domain.Common;
