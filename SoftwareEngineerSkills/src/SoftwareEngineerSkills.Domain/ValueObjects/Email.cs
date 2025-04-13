@@ -1,14 +1,16 @@
+using System.Text.RegularExpressions;
+using SoftwareEngineerSkills.Domain.Common;
+
 namespace SoftwareEngineerSkills.Domain.ValueObjects;
 
 /// <summary>
-/// Represents an email address as a value object
+/// Represents a valid email address
 /// </summary>
-public sealed class Email
+public sealed record Email : ValueObject
 {
-    /// <summary>
-    /// Gets the value of the email address
-    /// </summary>
-    public string Value { get; }
+    private static readonly Regex EmailRegex = new(
+        @"^(?!\.)(""([^""\r\\]|\\[""\r\\])*""|([-a-z0-9!#$%&'*+/=?^_`{|}~]|(?<!\.)\.)*)(?<!\.)@[a-z0-9][\w\.-]*[a-z0-9]\.[a-z][a-z\.]*[a-z]$",
+        RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
     private Email(string value)
     {
@@ -16,45 +18,31 @@ public sealed class Email
     }
 
     /// <summary>
-    /// Creates a new Email value object
+    /// Gets the email address value
     /// </summary>
-    /// <param name="email">The email address string</param>
-    /// <returns>A new Email value object</returns>
-    /// <exception cref="ArgumentException">Thrown when the email is invalid</exception>
+    public string Value { get; }
+
+    /// <summary>
+    /// Creates a new Email value object, validating the format
+    /// </summary>
+    /// <param name="email">Email address string to validate</param>
+    /// <returns>New Email instance or throws exception if invalid</returns>
+    /// <exception cref="ArgumentException">Thrown when email format is invalid</exception>
     public static Email Create(string email)
     {
         if (string.IsNullOrWhiteSpace(email))
             throw new ArgumentException("Email cannot be empty", nameof(email));
-
-        if (!IsValidEmail(email))
-            throw new ArgumentException("Email is not in a valid format", nameof(email));
-
+            
+        if (email.Length > 320)
+            throw new ArgumentException("Email is too long", nameof(email));
+            
+        if (!EmailRegex.IsMatch(email))
+            throw new ArgumentException("Email format is invalid", nameof(email));
+            
         return new Email(email);
     }
 
-    private static bool IsValidEmail(string email)
-    {
-        try
-        {
-            var addr = new System.Net.Mail.MailAddress(email);
-            return addr.Address == email;
-        }
-        catch
-        {
-            return false;
-        }
-    }
-
+    public static implicit operator string(Email email) => email.Value;
+    
     public override string ToString() => Value;
-
-    public override bool Equals(object? obj)
-    {
-        if (obj is Email other)
-        {
-            return Value.Equals(other.Value, StringComparison.OrdinalIgnoreCase);
-        }
-        return false;
-    }
-
-    public override int GetHashCode() => Value.ToLowerInvariant().GetHashCode();
 }
