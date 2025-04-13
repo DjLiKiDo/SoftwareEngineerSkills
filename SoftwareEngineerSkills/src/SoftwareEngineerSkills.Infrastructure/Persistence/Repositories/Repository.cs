@@ -8,7 +8,7 @@ namespace SoftwareEngineerSkills.Infrastructure.Persistence.Repositories;
 /// Generic repository implementation for EF Core
 /// </summary>
 /// <typeparam name="T">The entity type that inherits from BaseEntity</typeparam>
-public class Repository<T> : IRepository<T> where T : BaseEntity
+public class Repository<T> : IRepository<T> where T : Entity
 {
     protected readonly ApplicationDbContext _dbContext;
     protected readonly DbSet<T> _dbSet;

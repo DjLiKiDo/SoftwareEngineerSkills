@@ -21,7 +21,7 @@ public interface IUnitOfWork
     /// </summary>
     /// <typeparam name="TEntity">The entity type</typeparam>
     /// <returns>The repository for the entity type</returns>
-    IRepository<TEntity> Repository<TEntity>() where TEntity : Common.BaseEntity;
+    IRepository<TEntity> Repository<TEntity>() where TEntity : Common.Entity;
 
     /// <summary>
     /// Gets the dummy repository

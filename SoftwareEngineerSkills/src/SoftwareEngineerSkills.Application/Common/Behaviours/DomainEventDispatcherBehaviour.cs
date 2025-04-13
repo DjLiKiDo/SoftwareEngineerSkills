@@ -83,7 +83,7 @@ public class DomainEventDispatcherBehaviour<TRequest, TResponse> : IPipelineBeha
             if (value == null) continue;
             
             // Check if it's an entity with domain events
-            if (value is BaseEntity entity)
+            if (value is Entity entity)
             {
                 DomainEventDispatcherBehaviour<TRequest, TResponse>.ProcessEntityDomainEvents(entity, domainEvents);
             }
@@ -102,7 +102,7 @@ public class DomainEventDispatcherBehaviour<TRequest, TResponse> : IPipelineBeha
         }
     }
     
-    private static void ProcessEntityDomainEvents(BaseEntity entity, List<IDomainEvent> domainEvents)
+    private static void ProcessEntityDomainEvents(Entity entity, List<IDomainEvent> domainEvents)
     {
         var entityEvents = GetDomainEventsFromEntity(entity);
         if (entityEvents.Any())
@@ -126,7 +126,7 @@ public class DomainEventDispatcherBehaviour<TRequest, TResponse> : IPipelineBeha
     {
         foreach (var item in collection)
         {
-            if (item is BaseEntity collectionEntity)
+            if (item is Entity collectionEntity)
             {
                 DomainEventDispatcherBehaviour<TRequest, TResponse>.ProcessEntityDomainEvents(collectionEntity, domainEvents);
             }
@@ -137,7 +137,7 @@ public class DomainEventDispatcherBehaviour<TRequest, TResponse> : IPipelineBeha
         }
     }
 
-    private static IEnumerable<IDomainEvent> GetDomainEventsFromEntity(BaseEntity entity)
+    private static IEnumerable<IDomainEvent> GetDomainEventsFromEntity(Entity entity)
     {
         // Get domain events from the entity
         return entity.DomainEvents;

@@ -2,7 +2,7 @@
 
 namespace SoftwareEngineerSkills.Domain.Common;
 
-public abstract class BaseEntity
+public abstract class Entity
 {
     private readonly List<IDomainEvent> _domainEvents = new();
 

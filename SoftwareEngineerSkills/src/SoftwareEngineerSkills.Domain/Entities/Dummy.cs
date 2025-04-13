@@ -7,7 +7,7 @@ namespace SoftwareEngineerSkills.Domain.Entities;
 /// <summary>
 /// Represents a Dummy entity for demonstration purposes
 /// </summary>
-public class Dummy : BaseEntity, IAggregateRoot
+public class Dummy : Entity, IAggregateRoot
 {
     /// <summary>
     /// Gets or sets the name of the dummy entity

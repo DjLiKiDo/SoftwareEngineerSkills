@@ -40,7 +40,7 @@ public class UnitOfWork : IUnitOfWork
     }
 
     /// <inheritdoc />
-    public IRepository<TEntity> Repository<TEntity>() where TEntity : BaseEntity
+    public IRepository<TEntity> Repository<TEntity>() where TEntity : Entity
     {
         return _serviceProvider.GetRequiredService<IRepository<TEntity>>();
     }

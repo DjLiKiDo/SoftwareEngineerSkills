@@ -6,7 +6,7 @@ namespace SoftwareEngineerSkills.Domain.Abstractions.Persistence;
 /// Generic repository interface for entities that inherit from BaseEntity
 /// </summary>
 /// <typeparam name="T">The entity type that inherits from BaseEntity</typeparam>
-public interface IRepository<T> where T : BaseEntity
+public interface IRepository<T> where T : Entity
 {
     /// <summary>
     /// Gets all entities
