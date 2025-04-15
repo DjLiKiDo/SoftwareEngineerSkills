@@ -1,6 +1,7 @@
 using MediatR;
 using Microsoft.Extensions.Logging;
 using SoftwareEngineerSkills.Common;
+using SoftwareEngineerSkills.Domain.Exceptions;
 
 namespace SoftwareEngineerSkills.Application.Common.Behaviours;
 
@@ -40,7 +41,7 @@ public class UnhandledExceptionBehaviour<TRequest, TResponse> : IPipelineBehavio
         catch (Exception ex)
         {
             var requestName = typeof(TRequest).Name;
-            
+
             // Log the exception
             _logger.LogError(ex, "Unhandled Exception for Request {Name} {@Request}", requestName, request);
 
@@ -61,8 +62,8 @@ public class UnhandledExceptionBehaviour<TRequest, TResponse> : IPipelineBehavio
                 var resultMethod = typeof(Result<>).MakeGenericType(resultType)
                     .GetMethod("Failure", new[] { typeof(string) });
 
-                return resultMethod?.Invoke(null, new object[] { errorMessage }) as TResponse 
-                    ?? throw new InvalidOperationException("Could not create failure Result"); 
+                return resultMethod?.Invoke(null, new object[] { errorMessage }) as TResponse
+                    ?? throw new InvalidOperationException("Could not create failure Result");
             }
 
             // For non-Result responses, re-throw the exception

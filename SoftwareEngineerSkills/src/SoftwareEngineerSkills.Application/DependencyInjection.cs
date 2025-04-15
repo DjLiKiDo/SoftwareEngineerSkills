@@ -29,7 +29,7 @@ public static class DependencyInjection
         services.AddTransient(typeof(IPipelineBehavior<,>), typeof(DomainEventDispatcherBehaviour<,>));
         // Domain event publishing should happen last (maintaining existing behavior)
         services.AddTransient(typeof(IPipelineBehavior<,>), typeof(DomainEventPublishingBehaviour<,>));
-        
+
         // Register FluentValidation
         services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
 

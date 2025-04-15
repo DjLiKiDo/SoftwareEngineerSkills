@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
-using SoftwareEngineerSkills.Common;
 using SoftwareEngineerSkills.Domain.Abstractions.Persistence;
 using SoftwareEngineerSkills.Domain.Common;
+using System.Linq.Expressions;
 
 namespace SoftwareEngineerSkills.Infrastructure.Persistence.Repositories;
 
@@ -31,6 +31,13 @@ public class Repository<T> : IRepository<T> where T : Entity
     }
 
     /// <inheritdoc />
+    public Task<IEnumerable<T>> FindAsync(Expression<Func<T, bool>> predicate, CancellationToken cancellationToken = default)
+    {
+        // TODO: 
+        throw new NotImplementedException();
+    }
+
+    /// <inheritdoc />
     public virtual async Task<T?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
     {
         return await _dbSet.AsNoTracking().FirstOrDefaultAsync(e => e.Id == id, cancellationToken);
@@ -50,7 +57,7 @@ public class Repository<T> : IRepository<T> where T : Entity
         {
             _dbSet.Attach(entity);
         }
-        
+
         _dbContext.Entry(entity).State = EntityState.Modified;
         return Task.CompletedTask;
     }
@@ -63,8 +70,15 @@ public class Repository<T> : IRepository<T> where T : Entity
         {
             _dbSet.Attach(entity);
         }
-        
+
         _dbSet.Remove(entity);
         return Task.CompletedTask;
+    }
+
+    /// <inheritdoc />
+    public Task<bool> ExistsAsync(Expression<Func<T, bool>> predicate, CancellationToken cancellationToken = default)
+    {
+        // TODO: 
+        throw new NotImplementedException();
     }
 }

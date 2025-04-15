@@ -1,4 +1,5 @@
 using MediatR;
+using Microsoft.Extensions.Logging;
 using SoftwareEngineerSkills.Common;
 using SoftwareEngineerSkills.Domain.Abstractions.Persistence;
 using SoftwareEngineerSkills.Domain.Exceptions;
@@ -37,13 +38,13 @@ public class CreateDummyCommandHandler : IRequestHandler<CreateDummyCommand, Res
         try
         {
             _logger.LogInformation("Creating new dummy entity");
-            
+
             var dummy = Domain.Entities.Dummy.Create(request.Name, request.Description, request.Priority);
-            
+
             await _unitOfWork.DummyRepository.AddAsync(dummy, cancellationToken);
-            
+
             _logger.LogInformation("Successfully created dummy entity with ID: {Id}", dummy.Id);
-            
+
             return Result<Guid>.Success(dummy.Id);
         }
         catch (DomainException ex)

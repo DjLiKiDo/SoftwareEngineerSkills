@@ -30,18 +30,18 @@ public class DummyUpdatedEventHandler : INotificationHandler<DomainEventNotifica
     public Task Handle(DomainEventNotification<DummyUpdatedEvent> notification, CancellationToken cancellationToken)
     {
         var domainEvent = notification.DomainEvent;
-        
-        _logger.LogInformation("Dummy entity updated with ID: {DummyId}, Name: {Name} at {OccurredOn}", 
-            domainEvent.DummyId, 
+
+        _logger.LogInformation("Dummy entity updated with ID: {DummyId}, Name: {Name} at {OccurredOn}",
+            domainEvent.DummyId,
             domainEvent.Name ?? "Unnamed",
             domainEvent.OccurredOn);
-            
+
         // Additional logic can be added here like:
         // - Sending a notification about the update
         // - Updating related entities or services
         // - Triggering a cache invalidation
         // - Publishing to an external system
-        
+
         return Task.CompletedTask;
     }
 }

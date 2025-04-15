@@ -30,16 +30,16 @@ public class DummyDeletedEventHandler : INotificationHandler<DomainEventNotifica
     public Task Handle(DomainEventNotification<DummyDeletedEvent> notification, CancellationToken cancellationToken)
     {
         var domainEvent = notification.DomainEvent;
-        
-        _logger.LogInformation("Dummy entity deleted with ID: {DummyId} at {OccurredOn}", 
-            domainEvent.DummyId, 
+
+        _logger.LogInformation("Dummy entity deleted with ID: {DummyId} at {OccurredOn}",
+            domainEvent.DummyId,
             domainEvent.OccurredOn);
-            
+
         // Additional logic can be added here like:
         // - Cleaning up related resources
         // - Triggering cascading deletes
         // - Auditing the deletion
-        
+
         return Task.CompletedTask;
     }
 }

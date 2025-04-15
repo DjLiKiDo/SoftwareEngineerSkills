@@ -15,7 +15,7 @@ public class UpdateDummyCommandValidator : AbstractValidator<UpdateDummyCommand>
         RuleFor(x => x.Id)
             .NotEmpty()
             .WithMessage("Id is required");
-            
+
         RuleFor(x => x.Name)
             .MaximumLength(100)
             .WithMessage("Name must not exceed 100 characters");

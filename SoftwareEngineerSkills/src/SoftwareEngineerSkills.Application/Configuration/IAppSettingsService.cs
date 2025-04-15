@@ -9,7 +9,7 @@ public interface IAppSettingsService
     /// Gets the current application settings
     /// </summary>
     AppSettings CurrentSettings { get; }
-    
+
     /// <summary>
     /// Register a callback to be invoked when settings change
     /// </summary>

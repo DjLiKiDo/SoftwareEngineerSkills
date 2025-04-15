@@ -1,5 +1,6 @@
 using MediatR;
 using Microsoft.Extensions.Logging;
+using SoftwareEngineerSkills.Application.Common.Commands;
 using SoftwareEngineerSkills.Common;
 using SoftwareEngineerSkills.Domain.Abstractions.Persistence;
 
@@ -42,26 +43,26 @@ public class UnitOfWorkBehaviour<TRequest, TResponse> : IPipelineBehavior<TReque
     public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
     {
         var requestType = request.GetType().Name;
-        
+
         try
         {
             _logger.LogInformation("Starting transaction for command {CommandType}", requestType);
-            
+
             // Start the transaction before executing the handler
             await _unitOfWork.BeginTransactionAsync(cancellationToken);
-            
+
             // Execute the handler
             var response = await next();
-            
+
             // Check if the operation was successful
             bool isSuccess = true;
-            
+
             // Verify if the response is a Result and if it was successful
             if (response is IResult result)
             {
                 isSuccess = result.IsSuccess;
             }
-            
+
             if (isSuccess)
             {
                 _logger.LogInformation("Committing transaction for command {CommandType}", requestType);
@@ -72,16 +73,16 @@ public class UnitOfWorkBehaviour<TRequest, TResponse> : IPipelineBehavior<TReque
                 _logger.LogWarning("Rolling back transaction for command {CommandType} due to a logical failure", requestType);
                 await _unitOfWork.RollbackTransactionAsync(cancellationToken);
             }
-            
+
             return response;
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Error executing command {CommandType}. Rolling back transaction", requestType);
-            
+
             // In case of exception, rollback the transaction
             await _unitOfWork.RollbackTransactionAsync(cancellationToken);
-            
+
             // Re-throw the exception with additional contextual information
             throw new InvalidOperationException($"An error occurred while executing the command of type {requestType}. See inner exception for details.", ex);
         }

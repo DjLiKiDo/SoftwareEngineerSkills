@@ -1,6 +1,6 @@
 using MediatR;
-using SoftwareEngineerSkills.Common;
 using Microsoft.Extensions.Logging;
+using SoftwareEngineerSkills.Common;
 using SoftwareEngineerSkills.Domain.Aggregates;
 
 namespace SoftwareEngineerSkills.Application.Common.Behaviours;
@@ -72,7 +72,7 @@ public class DomainEventPublishingBehaviour<TRequest, TResponse> : IPipelineBeha
     private async Task PublishDomainEvents(IAggregateRoot aggregateRoot, CancellationToken cancellationToken)
     {
         var events = aggregateRoot.DomainEvents.ToList();
-        
+
         if (!events.Any())
         {
             return;

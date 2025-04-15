@@ -1,4 +1,5 @@
 using MediatR;
+using Microsoft.Extensions.Logging;
 using SoftwareEngineerSkills.Common;
 using SoftwareEngineerSkills.Domain.Abstractions.Persistence;
 using SoftwareEngineerSkills.Domain.Events;
@@ -41,22 +42,22 @@ public class DeleteDummyCommandHandler : IRequestHandler<DeleteDummyCommand, Res
         try
         {
             _logger.LogInformation("Deleting dummy entity with ID: {Id}", request.Id);
-            
+
             var dummy = await _unitOfWork.DummyRepository.GetByIdAsync(request.Id, cancellationToken);
-            
+
             if (dummy == null)
             {
                 _logger.LogWarning("Dummy entity with ID: {Id} not found for deletion", request.Id);
                 return Result<Unit>.Failure($"Dummy entity with ID: {request.Id} not found");
             }
-            
+
             await _unitOfWork.DummyRepository.DeleteAsync(dummy, cancellationToken);
-            
+
             // Publish domain event after deletion
             await _publisher.Publish(new DummyDeletedEvent(request.Id), cancellationToken);
-            
+
             _logger.LogInformation("Successfully deleted dummy entity with ID: {Id}", request.Id);
-            
+
             return Result<Unit>.Success(Unit.Value);
         }
         catch (Exception ex)

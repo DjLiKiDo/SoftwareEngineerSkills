@@ -1,6 +1,4 @@
-using System.Security.Claims;
-using Microsoft.EntityFrameworkCore;
-using SoftwareEngineerSkills.Common;
+using Microsoft.Extensions.DependencyInjection;
 using SoftwareEngineerSkills.Domain.Abstractions.Persistence;
 using SoftwareEngineerSkills.Domain.Common;
 
@@ -14,7 +12,7 @@ public class UnitOfWork : IUnitOfWork
 {
     private readonly IServiceProvider _serviceProvider;
     private readonly ApplicationDbContext _dbContext;
-    
+
     /// <summary>
     /// Initializes a new instance of the <see cref="UnitOfWork"/> class
     /// </summary>

@@ -27,4 +27,11 @@ public class DummyRepository : Repository<Dummy>, IDummyRepository
         }
         return await query.ToListAsync(cancellationToken);
     }
+
+    /// <inheritdoc />
+    public Task<IEnumerable<Dummy>> GetByPriorityAsync(int priority, CancellationToken cancellationToken = default)
+    {
+        // TODO: 
+        throw new NotImplementedException();
+    }
 }

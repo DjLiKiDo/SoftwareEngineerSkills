@@ -1,4 +1,5 @@
 using MediatR;
+using Microsoft.Extensions.Logging;
 using SoftwareEngineerSkills.Common;
 using SoftwareEngineerSkills.Domain.Abstractions.Persistence;
 
@@ -36,26 +37,26 @@ public class DeactivateDummyCommandHandler : IRequestHandler<DeactivateDummyComm
         try
         {
             _logger.LogInformation("Deactivating dummy entity with ID: {Id}", request.Id);
-            
+
             var dummy = await _unitOfWork.DummyRepository.GetByIdAsync(request.Id, cancellationToken);
-            
+
             if (dummy == null)
             {
                 _logger.LogWarning("Dummy entity with ID: {Id} not found for deactivation", request.Id);
                 return Result<Unit>.Failure($"Dummy entity with ID: {request.Id} not found");
             }
-            
+
             if (!dummy.IsActive)
             {
                 _logger.LogInformation("Dummy entity with ID: {Id} is already inactive", request.Id);
                 return Result<Unit>.Success(Unit.Value);
             }
-            
+
             dummy.Deactivate();
             await _unitOfWork.DummyRepository.UpdateAsync(dummy, cancellationToken);
-            
+
             _logger.LogInformation("Successfully deactivated dummy entity with ID: {Id}", request.Id);
-            
+
             return Result<Unit>.Success(Unit.Value);
         }
         catch (Exception ex)

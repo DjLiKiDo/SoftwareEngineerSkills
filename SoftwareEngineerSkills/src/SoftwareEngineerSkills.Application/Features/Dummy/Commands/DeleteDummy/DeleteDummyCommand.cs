@@ -1,6 +1,6 @@
 using MediatR;
-using SoftwareEngineerSkills.Common;
 using SoftwareEngineerSkills.Application.Common.Commands;
+using SoftwareEngineerSkills.Common;
 
 namespace SoftwareEngineerSkills.Application.Features.Dummy.Commands.DeleteDummy;
 

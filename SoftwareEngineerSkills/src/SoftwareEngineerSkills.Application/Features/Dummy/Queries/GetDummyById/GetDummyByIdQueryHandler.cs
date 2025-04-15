@@ -1,7 +1,8 @@
 using AutoMapper;
 using MediatR;
-using SoftwareEngineerSkills.Common;
+using Microsoft.Extensions.Logging;
 using SoftwareEngineerSkills.Application.Features.Dummy.DTOs;
+using SoftwareEngineerSkills.Common;
 using SoftwareEngineerSkills.Domain.Abstractions.Persistence;
 
 namespace SoftwareEngineerSkills.Application.Features.Dummy.Queries.GetDummyById;
@@ -42,20 +43,20 @@ public class GetDummyByIdQueryHandler : IRequestHandler<GetDummyByIdQuery, Resul
         try
         {
             _logger.LogInformation("Retrieving dummy entity with ID: {Id}", request.Id);
-            
+
             // For read operations, we don't need a transaction, but we use the UnitOfWork to get the repository
             var dummy = await _unitOfWork.DummyRepository.GetByIdAsync(request.Id, cancellationToken);
-            
+
             if (dummy == null)
             {
                 _logger.LogWarning("Dummy entity with ID: {Id} not found", request.Id);
                 return Result<DummyDto>.Failure($"Dummy entity with ID: {request.Id} not found");
             }
-            
+
             var dummyDto = _mapper.Map<DummyDto>(dummy);
-            
+
             _logger.LogInformation("Successfully retrieved dummy entity with ID: {Id}", request.Id);
-            
+
             return Result<DummyDto>.Success(dummyDto);
         }
         catch (Exception ex)

@@ -1,4 +1,5 @@
 using MediatR;
+using Microsoft.Extensions.Logging;
 using SoftwareEngineerSkills.Common;
 using SoftwareEngineerSkills.Domain.Abstractions.Persistence;
 using SoftwareEngineerSkills.Domain.Exceptions;
@@ -37,21 +38,21 @@ public class UpdateDummyCommandHandler : IRequestHandler<UpdateDummyCommand, Res
         try
         {
             _logger.LogInformation("Updating dummy entity with ID: {Id}", request.Id);
-            
+
             var dummy = await _unitOfWork.DummyRepository.GetByIdAsync(request.Id, cancellationToken);
-            
+
             if (dummy == null)
             {
                 _logger.LogWarning("Dummy entity with ID: {Id} not found", request.Id);
                 return Result<Unit>.Failure($"Dummy entity with ID: {request.Id} not found");
             }
-            
+
             dummy.Update(request.Name, request.Description, request.Priority);
-            
+
             await _unitOfWork.DummyRepository.UpdateAsync(dummy, cancellationToken);
-            
+
             _logger.LogInformation("Successfully updated dummy entity with ID: {Id}", request.Id);
-            
+
             return Result<Unit>.Success(Unit.Value);
         }
         catch (DomainException ex)

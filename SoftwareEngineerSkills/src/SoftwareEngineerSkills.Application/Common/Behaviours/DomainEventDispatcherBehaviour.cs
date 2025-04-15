@@ -1,5 +1,8 @@
 using MediatR;
+using SoftwareEngineerSkills.Application.Common.Events;
 using SoftwareEngineerSkills.Common;
+using SoftwareEngineerSkills.Domain.Aggregates;
+using SoftwareEngineerSkills.Domain.Common;
 using SoftwareEngineerSkills.Domain.Events;
 
 namespace SoftwareEngineerSkills.Application.Common.Behaviours;
@@ -34,7 +37,7 @@ public class DomainEventDispatcherBehaviour<TRequest, TResponse> : IPipelineBeha
     {
         // Process the request
         var response = await next();
-        
+
         // Check if the response contains domain events that need to be dispatched
         if (response is Result result)
         {
@@ -67,30 +70,30 @@ public class DomainEventDispatcherBehaviour<TRequest, TResponse> : IPipelineBeha
             await _domainEventDispatcher.DispatchAsync(domainEvents, cancellationToken);
         }
     }
-    
+
     private static void CollectDomainEvents(object result, List<IDomainEvent> domainEvents)
     {
         // If the result has an Entity or Aggregate property, extract events from it
         var properties = result.GetType().GetProperties();
-        
+
         foreach (var property in properties)
         {
             // Skip null properties
             var value = property.GetValue(result);
             if (value == null) continue;
-            
+
             // Check if it's an entity with domain events
             if (value is Entity entity)
             {
                 DomainEventDispatcherBehaviour<TRequest, TResponse>.ProcessEntityDomainEvents(entity, domainEvents);
             }
-            
+
             // Check if it's an aggregate root
-            else if (value is IAggregateRoot aggregate) 
+            else if (value is IAggregateRoot aggregate)
             {
                 DomainEventDispatcherBehaviour<TRequest, TResponse>.ProcessAggregateDomainEvents(aggregate, domainEvents);
             }
-            
+
             // Check if it's a collection
             else if (value is IEnumerable<object> collection)
             {
@@ -98,7 +101,7 @@ public class DomainEventDispatcherBehaviour<TRequest, TResponse> : IPipelineBeha
             }
         }
     }
-    
+
     private static void ProcessEntityDomainEvents(Entity entity, List<IDomainEvent> domainEvents)
     {
         var entityEvents = GetDomainEventsFromEntity(entity);
@@ -108,7 +111,7 @@ public class DomainEventDispatcherBehaviour<TRequest, TResponse> : IPipelineBeha
             entity.ClearDomainEvents();
         }
     }
-    
+
     private static void ProcessAggregateDomainEvents(IAggregateRoot aggregate, List<IDomainEvent> domainEvents)
     {
         var aggregateEvents = GetDomainEventsFromAggregate(aggregate);
@@ -118,7 +121,7 @@ public class DomainEventDispatcherBehaviour<TRequest, TResponse> : IPipelineBeha
             aggregate.ClearDomainEvents();
         }
     }
-    
+
     private static void ProcessCollectionDomainEvents(IEnumerable<object> collection, List<IDomainEvent> domainEvents)
     {
         foreach (var item in collection)
@@ -139,7 +142,7 @@ public class DomainEventDispatcherBehaviour<TRequest, TResponse> : IPipelineBeha
         // Get domain events from the entity
         return entity.DomainEvents;
     }
-    
+
     private static IEnumerable<IDomainEvent> GetDomainEventsFromAggregate(IAggregateRoot aggregate)
     {
         // Get domain events from the aggregate

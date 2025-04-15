@@ -1,8 +1,8 @@
 using AutoMapper;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
-using SoftwareEngineerSkills.Common;
+using Microsoft.Extensions.Logging;
 using SoftwareEngineerSkills.Application.Features.Dummy.DTOs;
+using SoftwareEngineerSkills.Common;
 using SoftwareEngineerSkills.Domain.Abstractions.Persistence;
 
 namespace SoftwareEngineerSkills.Application.Features.Dummy.Queries.GetAllDummies;
@@ -43,13 +43,13 @@ public class GetAllDummiesQueryHandler : IRequestHandler<GetAllDummiesQuery, Res
         try
         {
             _logger.LogInformation("Retrieving all dummy entities (includeInactive: {IncludeInactive})", request.IncludeInactive);
-            
+
             // For read operations, we don't need a transaction, but we use the UnitOfWork to get the repository
             var dummies = await _unitOfWork.DummyRepository.GetAllAsync(request.IncludeInactive, cancellationToken);
             var dummyDtos = _mapper.Map<List<DummyDto>>(dummies);
-            
+
             _logger.LogInformation("Successfully retrieved {Count} dummy entities", dummyDtos.Count);
-            
+
             return Result<List<DummyDto>>.Success(dummyDtos);
         }
         catch (Exception ex)

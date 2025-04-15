@@ -30,16 +30,16 @@ public class DummyDeactivatedEventHandler : INotificationHandler<DomainEventNoti
     public Task Handle(DomainEventNotification<DummyDeactivatedEvent> notification, CancellationToken cancellationToken)
     {
         var domainEvent = notification.DomainEvent;
-        
-        _logger.LogInformation("Dummy entity deactivated with ID: {DummyId} at {OccurredOn}", 
-            domainEvent.DummyId, 
+
+        _logger.LogInformation("Dummy entity deactivated with ID: {DummyId} at {OccurredOn}",
+            domainEvent.DummyId,
             domainEvent.OccurredOn);
-            
+
         // Additional logic can be added here like:
         // - Sending a notification
         // - Updating related entities or services
         // - Triggering cleanup processes
-        
+
         return Task.CompletedTask;
     }
 }
