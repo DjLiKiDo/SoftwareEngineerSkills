@@ -1,4 +1,4 @@
-namespace SoftwareEngineerSkills.Domain.Common.Models;
+namespace SoftwareEngineerSkills.Common;
 
 /// <summary>
 /// Interface for result objects that represents the outcome of an operation

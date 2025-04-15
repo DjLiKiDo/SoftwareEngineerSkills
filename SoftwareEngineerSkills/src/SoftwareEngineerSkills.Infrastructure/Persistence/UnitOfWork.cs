@@ -1,4 +1,6 @@
-using Microsoft.Extensions.DependencyInjection;
+using System.Security.Claims;
+using Microsoft.EntityFrameworkCore;
+using SoftwareEngineerSkills.Common;
 using SoftwareEngineerSkills.Domain.Abstractions.Persistence;
 using SoftwareEngineerSkills.Domain.Common;
 

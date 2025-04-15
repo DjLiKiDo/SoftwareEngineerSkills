@@ -1,7 +1,7 @@
 using MediatR;
+using SoftwareEngineerSkills.Common;
 using Microsoft.Extensions.Logging;
 using SoftwareEngineerSkills.Domain.Aggregates;
-using SoftwareEngineerSkills.Domain.Common.Models;
 
 namespace SoftwareEngineerSkills.Application.Common.Behaviours;
 

@@ -1,8 +1,7 @@
 using MediatR;
 using Microsoft.Extensions.Logging;
-using SoftwareEngineerSkills.Application.Common.Commands;
+using SoftwareEngineerSkills.Common;
 using SoftwareEngineerSkills.Domain.Abstractions.Persistence;
-using SoftwareEngineerSkills.Domain.Common.Models;
 
 namespace SoftwareEngineerSkills.Application.Common.Behaviours;
 

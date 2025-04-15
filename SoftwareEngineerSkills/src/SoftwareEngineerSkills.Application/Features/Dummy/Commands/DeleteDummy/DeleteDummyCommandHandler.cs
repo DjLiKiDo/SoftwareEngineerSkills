@@ -1,7 +1,6 @@
 using MediatR;
-using Microsoft.Extensions.Logging;
+using SoftwareEngineerSkills.Common;
 using SoftwareEngineerSkills.Domain.Abstractions.Persistence;
-using SoftwareEngineerSkills.Domain.Common.Models;
 using SoftwareEngineerSkills.Domain.Events;
 
 namespace SoftwareEngineerSkills.Application.Features.Dummy.Commands.DeleteDummy;

@@ -18,6 +18,6 @@ public interface IDummyDomainService
     /// Performs a complex domain operation involving multiple dummy entities
     /// </summary>
     /// <param name="dummies">The collection of dummy entities</param>
-    /// <returns>The result of the operation</returns>
-    Task<Common.Models.Result> ProcessDummiesAsync(IEnumerable<Dummy> dummies);
+    /// <exception cref="DomainException">Thrown when the operation fails due to business rule violations</exception>
+    Task ProcessDummiesAsync(IEnumerable<Dummy> dummies);
 }

@@ -1,7 +1,6 @@
 using MediatR;
 using Microsoft.Extensions.Logging;
-using SoftwareEngineerSkills.Domain.Common.Models;
-using SoftwareEngineerSkills.Domain.Exceptions;
+using SoftwareEngineerSkills.Common;
 
 namespace SoftwareEngineerSkills.Application.Common.Behaviours;
 

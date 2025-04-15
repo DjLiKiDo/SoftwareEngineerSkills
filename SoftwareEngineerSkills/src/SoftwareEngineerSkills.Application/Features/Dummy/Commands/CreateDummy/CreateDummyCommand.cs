@@ -1,4 +1,5 @@
-using SoftwareEngineerSkills.Domain.Common.Models;
+using MediatR;
+using SoftwareEngineerSkills.Common;
 using SoftwareEngineerSkills.Application.Common.Commands;
 
 namespace SoftwareEngineerSkills.Application.Features.Dummy.Commands.CreateDummy;

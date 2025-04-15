@@ -1,6 +1,6 @@
 using FluentValidation;
 using MediatR;
-using SoftwareEngineerSkills.Domain.Common.Models;
+using SoftwareEngineerSkills.Common;
 using System.Text;
 
 namespace SoftwareEngineerSkills.Application.Common.Behaviours;

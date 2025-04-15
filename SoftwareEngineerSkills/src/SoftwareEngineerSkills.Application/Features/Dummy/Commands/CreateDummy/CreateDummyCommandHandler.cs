@@ -1,7 +1,7 @@
 using MediatR;
-using Microsoft.Extensions.Logging;
+using SoftwareEngineerSkills.Common;
 using SoftwareEngineerSkills.Domain.Abstractions.Persistence;
-using SoftwareEngineerSkills.Domain.Common.Models;
+using SoftwareEngineerSkills.Domain.Exceptions;
 
 namespace SoftwareEngineerSkills.Application.Features.Dummy.Commands.CreateDummy;
 
@@ -46,9 +46,9 @@ public class CreateDummyCommandHandler : IRequestHandler<CreateDummyCommand, Res
             
             return Result<Guid>.Success(dummy.Id);
         }
-        catch (ArgumentOutOfRangeException ex)
+        catch (DomainException ex)
         {
-            _logger.LogWarning(ex, "Invalid argument when creating dummy entity");
+            _logger.LogWarning(ex, "Domain validation error when creating dummy entity");
             return Result<Guid>.Failure(ex.Message);
         }
         catch (Exception ex)

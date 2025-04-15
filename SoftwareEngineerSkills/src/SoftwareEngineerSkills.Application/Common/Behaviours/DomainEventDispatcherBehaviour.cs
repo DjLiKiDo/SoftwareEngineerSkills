@@ -1,8 +1,5 @@
 using MediatR;
-using SoftwareEngineerSkills.Application.Common.Events;
-using SoftwareEngineerSkills.Domain.Aggregates;
-using SoftwareEngineerSkills.Domain.Common;
-using SoftwareEngineerSkills.Domain.Common.Models;
+using SoftwareEngineerSkills.Common;
 using SoftwareEngineerSkills.Domain.Events;
 
 namespace SoftwareEngineerSkills.Application.Common.Behaviours;

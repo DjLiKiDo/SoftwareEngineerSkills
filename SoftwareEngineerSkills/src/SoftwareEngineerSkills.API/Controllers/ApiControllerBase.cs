@@ -1,6 +1,6 @@
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using SoftwareEngineerSkills.Domain.Common.Models;
+using SoftwareEngineerSkills.Common;
 
 namespace SoftwareEngineerSkills.API.Controllers;
 

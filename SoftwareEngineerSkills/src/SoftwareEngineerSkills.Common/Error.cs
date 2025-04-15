@@ -1,4 +1,4 @@
-namespace SoftwareEngineerSkills.Domain.Common;
+namespace SoftwareEngineerSkills.Common;
 
 /// <summary>
 /// Represents a domain error with a code and message

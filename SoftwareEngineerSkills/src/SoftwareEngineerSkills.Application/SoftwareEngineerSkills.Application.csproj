@@ -17,6 +17,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\SoftwareEngineerSkills.Domain\SoftwareEngineerSkills.Domain.csproj" />
+    <ProjectReference Include="..\SoftwareEngineerSkills.Common\SoftwareEngineerSkills.Common.csproj" />
   </ItemGroup>
 
 </Project>

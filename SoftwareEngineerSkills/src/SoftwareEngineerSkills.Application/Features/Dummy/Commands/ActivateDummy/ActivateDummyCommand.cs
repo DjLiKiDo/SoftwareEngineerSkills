@@ -1,5 +1,5 @@
 using MediatR;
-using SoftwareEngineerSkills.Domain.Common.Models;
+using SoftwareEngineerSkills.Common;
 using SoftwareEngineerSkills.Application.Common.Commands;
 
 namespace SoftwareEngineerSkills.Application.Features.Dummy.Commands.ActivateDummy;

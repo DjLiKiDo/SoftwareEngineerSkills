@@ -1,7 +1,7 @@
 using MediatR;
-using Microsoft.Extensions.Logging;
+using SoftwareEngineerSkills.Common;
 using SoftwareEngineerSkills.Domain.Abstractions.Persistence;
-using SoftwareEngineerSkills.Domain.Common.Models;
+using SoftwareEngineerSkills.Domain.Exceptions;
 
 namespace SoftwareEngineerSkills.Application.Features.Dummy.Commands.UpdateDummy;
 
@@ -54,9 +54,9 @@ public class UpdateDummyCommandHandler : IRequestHandler<UpdateDummyCommand, Res
             
             return Result<Unit>.Success(Unit.Value);
         }
-        catch (ArgumentOutOfRangeException ex)
+        catch (DomainException ex)
         {
-            _logger.LogWarning(ex, "Invalid argument when updating dummy entity with ID: {Id}", request.Id);
+            _logger.LogWarning(ex, "Domain validation error when updating dummy entity with ID: {Id}", request.Id);
             return Result<Unit>.Failure(ex.Message);
         }
         catch (Exception ex)

@@ -1,7 +1,7 @@
 using SoftwareEngineerSkills.Domain.Aggregates;
 using SoftwareEngineerSkills.Domain.Common;
-using SoftwareEngineerSkills.Domain.Common.Models;
 using SoftwareEngineerSkills.Domain.Events;
+using SoftwareEngineerSkills.Domain.Exceptions;
 
 namespace SoftwareEngineerSkills.Domain.Entities;
 
@@ -45,12 +45,13 @@ public class Dummy : Entity, IAggregateRoot
     /// <param name="name">The name of the dummy entity (can be null)</param>
     /// <param name="description">The description of the dummy entity (can be null)</param>
     /// <param name="priority">The priority level of the dummy entity (default: 0)</param>
-    /// <returns>A Result containing a new Dummy entity if successful, or an error message if validation fails</returns>
-    public static Result<Dummy> Create(string? name, string? description, int priority = 0)
+    /// <returns>A new Dummy entity if successful</returns>
+    /// <exception cref="DomainException">Thrown when priority is invalid</exception>
+    public static Dummy Create(string? name, string? description, int priority = 0)
     {
         // Validate inputs
         if (priority < 0 || priority > 5)
-            return Result<Dummy>.Failure("Priority must be between 0 and 5");
+            throw new DomainException("Priority must be between 0 and 5");
             
         var dummy = new Dummy
         {
@@ -63,7 +64,7 @@ public class Dummy : Entity, IAggregateRoot
         // Add domain event
         dummy.AddDomainEvent(new DummyCreatedEvent(dummy));
         
-        return Result<Dummy>.Success(dummy);
+        return dummy;
     }
     
     /// <summary>
@@ -73,12 +74,13 @@ public class Dummy : Entity, IAggregateRoot
     /// <param name="description">The description of the dummy entity (can be null)</param>
     /// <param name="priority">The priority level of the dummy entity (default: 0)</param>
     /// <param name="userId">The ID of the user creating the entity</param>
-    /// <returns>A Result containing a new Dummy entity if successful, or an error message if validation fails</returns>
-    public static Result<Dummy> Create(string? name, string? description, string userId, int priority = 0)
+    /// <returns>A new Dummy entity if successful</returns>
+    /// <exception cref="DomainException">Thrown when priority is invalid</exception>
+    public static Dummy Create(string? name, string? description, string userId, int priority = 0)
     {
         // Validate inputs
         if (priority < 0 || priority > 5)
-            return Result<Dummy>.Failure("Priority must be between 0 and 5");
+            throw new DomainException("Priority must be between 0 and 5");
             
         var dummy = new Dummy
         {
@@ -91,7 +93,7 @@ public class Dummy : Entity, IAggregateRoot
         // Add domain event
         dummy.AddDomainEvent(new DummyCreatedEvent(dummy));
         
-        return Result<Dummy>.Success(dummy);
+        return dummy;
     }
     
     /// <summary>
@@ -100,12 +102,12 @@ public class Dummy : Entity, IAggregateRoot
     /// <param name="name">The new name (can be null)</param>
     /// <param name="description">The new description (can be null)</param>
     /// <param name="priority">The new priority (default: 0)</param>
-    /// <returns>A Result indicating success or containing an error message if validation fails</returns>
-    public Result Update(string? name, string? description, int priority = 0)
+    /// <exception cref="DomainException">Thrown when priority is invalid</exception>
+    public void Update(string? name, string? description, int priority = 0)
     {
         // Validate inputs
         if (priority < 0 || priority > 5)
-            return Result.Failure("Priority must be between 0 and 5");
+            throw new DomainException("Priority must be between 0 and 5");
             
         Name = name;
         Description = description;
@@ -113,8 +115,6 @@ public class Dummy : Entity, IAggregateRoot
         
         // Add domain event
         AddDomainEvent(new DummyUpdatedEvent(this));
-        
-        return Result.Success();
     }
     
     /// <summary>
@@ -124,12 +124,12 @@ public class Dummy : Entity, IAggregateRoot
     /// <param name="description">The new description (can be null)</param>
     /// <param name="priority">The new priority (default: 0)</param>
     /// <param name="userId">The ID of the user updating the entity</param>
-    /// <returns>A Result indicating success or containing an error message if validation fails</returns>
-    public Result Update(string? name, string? description, string userId, int priority = 0)
+    /// <exception cref="DomainException">Thrown when priority is invalid</exception>
+    public void Update(string? name, string? description, string userId, int priority = 0)
     {
         // Validate inputs
         if (priority < 0 || priority > 5)
-            return Result.Failure("Priority must be between 0 and 5");
+            throw new DomainException("Priority must be between 0 and 5");
             
         Name = name;
         Description = description;
@@ -137,41 +137,33 @@ public class Dummy : Entity, IAggregateRoot
         
         // Add domain event
         AddDomainEvent(new DummyUpdatedEvent(this));
-        
-        return Result.Success();
     }
     
     /// <summary>
     /// Activates the dummy entity
     /// </summary>
-    /// <returns>A Result indicating success or failure</returns>
-    public Result Activate()
+    public void Activate()
     {
         if (IsActive)
-            return Result.Success(); // Already active, no change needed
+            return; // Already active, no change needed
             
         IsActive = true;
         
         // Add domain event
         AddDomainEvent(new DummyActivatedEvent(this));
-        
-        return Result.Success();
     }
     
     /// <summary>
     /// Deactivates the dummy entity
     /// </summary>
-    /// <returns>A Result indicating success or failure</returns>
-    public Result Deactivate()
+    public void Deactivate()
     {
         if (!IsActive)
-            return Result.Success(); // Already inactive, no change needed
+            return; // Already inactive, no change needed
             
         IsActive = false;
         
         // Add domain event
         AddDomainEvent(new DummyDeactivatedEvent(this));
-        
-        return Result.Success();
     }
 }

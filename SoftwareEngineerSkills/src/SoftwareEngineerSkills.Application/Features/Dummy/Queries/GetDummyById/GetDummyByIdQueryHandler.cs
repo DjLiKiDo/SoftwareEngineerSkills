@@ -1,9 +1,8 @@
 using AutoMapper;
 using MediatR;
-using Microsoft.Extensions.Logging;
+using SoftwareEngineerSkills.Common;
 using SoftwareEngineerSkills.Application.Features.Dummy.DTOs;
 using SoftwareEngineerSkills.Domain.Abstractions.Persistence;
-using SoftwareEngineerSkills.Domain.Common.Models;
 
 namespace SoftwareEngineerSkills.Application.Features.Dummy.Queries.GetDummyById;
 
