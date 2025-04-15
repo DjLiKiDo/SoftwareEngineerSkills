@@ -92,9 +92,15 @@ In addition to architectural principles, we utilize several specific design patt
 
 ### Result Pattern
 
-*   **Purpose:** To explicitly represent the outcome of an operation (success or failure) without relying on exceptions for expected control flow.
-*   **Implementation:** Command and query handlers in the Application layer return a `Result<T>` or `Result` object. This object indicates whether the operation was successful and, if it failed, provides error details (codes, messages).
-*   **Benefits:** Improves code clarity, predictability, and facilitates structured error handling.
+*   **Purpose:** To explicitly represent the outcome of an operation (success or failure) at the Application layer boundary.
+*   **Implementation:** 
+    * **Domain Layer:** Uses specific domain exceptions (`DomainException`, `ProductNameTooShortException`, etc.) to signal business rule violations and invariants. This keeps the domain focused purely on expressing business rules and state.
+    * **Application Layer:** Acts as a boundary that catches domain exceptions and translates them into `Result<T>` or `Result` objects. Command and query handlers return these Result objects, which indicate whether the operation succeeded and, if it failed, provide error details (codes, messages).
+*   **Benefits:** 
+    * **Clear Separation of Concerns:** Domain focuses on business rules with appropriate exceptions, while Application handles exception translation.
+    * **Rich Domain Model:** Domain can express its rules through specific exceptions that clearly communicate the violation.
+    * **Consistent API Boundary:** All Application use cases provide a uniform return type for consistent error handling.
+    * **Predictable Control Flow:** Prevents exceptions from propagating beyond the Application boundary, improving robustness.
 
 ### Repository and Unit of Work Patterns
 

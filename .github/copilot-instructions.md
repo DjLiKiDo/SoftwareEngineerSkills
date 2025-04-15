@@ -90,13 +90,13 @@ Use these specific versions or **later compatible stable versions**. Justify any
 ### Domain Layer (`src/YourSolution.Domain`)
 
 *   **Purpose:** Core business logic, rules, state. **FRAMEWORK INDEPENDENT**.
-*   **Contents:** Entities, Value Objects (`record` or `record struct`), Aggregates, Domain Events (`INotification`), Enums, Custom Domain Exceptions (use sparingly), Domain Errors (for `Result`), Abstractions (`/Persistence/IRepository.cs`, `/Persistence/IUnitOfWork.cs`, `/Services/IDomainService.cs`).
+*   **Contents:** Entities, Value Objects (`record` or `record struct`), Aggregates, Domain Events (`INotification`), Enums, Custom Domain Exceptions (for business rule violations), Domain Errors (for exception message consistency), Abstractions (`/Persistence/IRepository.cs`, `/Persistence/IUnitOfWork.cs`, `/Services/IDomainService.cs`).
 *   **Dependencies:** **ZERO** dependencies on other project layers. Minimal external libs (e.g., MediatR.Contracts).
-*   **Key Rules:** Enforce invariants within Entities/Aggregates. Use Factory Methods (`public static Result<Entity> Create(...)`) for valid object creation. Prefer private setters.
+*   **Key Rules:** Enforce invariants within Entities/Aggregates. Use Factory Methods (`public static Entity Create(...)`) which throw domain-specific exceptions if validation fails. Prefer private setters. Domain operations throw specific exceptions when business rules are violated.
 
 ### Application Layer (`src/YourSolution.Application`)
 
-*   **Purpose:** Orchestrates use cases, contains application logic.
+*   **Purpose:** Orchestrates use cases, contains application logic, acts as boundary for domain exceptions.
 *   **Contents:** Organized by **Feature** (Screaming Architecture):
     *   `/Features/[FeatureName]/Commands/[CommandName]/` (`Command.cs` (`record`), `Handler.cs`, `Validator.cs`)
     *   `/Features/[FeatureName]/Queries/[QueryName]/` (`Query.cs` (`record`), `Handler.cs`, `Response.cs` (`record` DTO))
@@ -110,7 +110,7 @@ Use these specific versions or **later compatible stable versions**. Justify any
     *   `/Configuration/` (**IOptions class definitions**: POCOs/`record`s for settings)
     *   `DependencyInjection.cs` (Service registration extension)
 *   **Dependencies:** Depends **ONLY** on **Domain**. **NO** dependencies on Infrastructure or API.
-*   **Key Rules:** Handlers implement single use cases. Use **MediatR** (`ISender`) for dispatching. **Return `Result<T>` MANDATORY**. Interact with Infra **ONLY** via abstractions. Use **FluentValidation** for input validation. Use **AutoMapper** for Entity <-> DTO mapping.
+*   **Key Rules:** Handlers implement single use cases. Use **MediatR** (`ISender`) for dispatching. **Return `Result<T>` MANDATORY**. **Catch domain exceptions and translate to `Result.Failure`**. Interact with Infra **ONLY** via abstractions. Use **FluentValidation** for input validation. Use **AutoMapper** for Entity <-> DTO mapping.
 
 ### Infrastructure Layer (`src/YourSolution.Infrastructure`)
 
@@ -140,8 +140,8 @@ Use these specific versions or **later compatible stable versions**. Justify any
 
 ### Result Pattern (Mandatory)
 
-*   **How:** Define shared `Result` and `Result<T>` types (e.g., in `Application.Common.Models` or a shared kernel). Handlers **MUST** return `Result` or `Result<T>`. Controllers **MUST** map `Result` outcomes (Success/Failure) to appropriate HTTP status codes and `ProblemDetails` responses using the `ApiControllerBase` helper.
-*   **Why:** Explicit, predictable handling of operation outcomes (including expected failures) without relying on exceptions for control flow. Improves clarity and robustness.
+*   **How:** Define shared `Result` and `Result<T>` types (e.g., in `Application.Common.Models` or a shared kernel). Application layer handlers **MUST** return `Result` or `Result<T>`. Domain layer throws exceptions for business rule violations, which Application layer catches and translates to appropriate `Result.Failure` responses. Controllers **MUST** map `Result` outcomes (Success/Failure) to appropriate HTTP status codes and `ProblemDetails` responses using the `ApiControllerBase` helper.
+*   **Why:** Clear separation of concerns: Domain layer focuses on business rules with appropriate exceptions, while Application layer handles exception translation and provides a consistent error handling approach. Explicit, predictable handling of operation outcomes without relying on exceptions flowing beyond the Application boundary. Improves clarity and robustness.
 
 ### Repository Pattern
 
@@ -177,10 +177,11 @@ Use these specific versions or **later compatible stable versions**. Justify any
 
 ### Error Handling Strategy
 
-*   **Global Handling:** Implement global exception handling using **`IExceptionHandler`** (preferred in .NET 8+) or custom middleware in API layer. Catch unhandled exceptions.
+*   **Domain Exceptions:** Domain layer **SHOULD** throw specific domain exceptions when business rules or invariants are violated (`DomainException`, `ProductNameTooShortException`, etc.).
+*   **Application Boundary:** Application layer handlers **MUST** catch all domain exceptions and translate them to appropriate `Result.Failure` responses. 
+*   **Global Handling:** Implement global exception handling using **`IExceptionHandler`** (preferred in .NET 8+) or custom middleware in API layer. Catch unhandled exceptions (infrastructure issues, bugs, etc.).
 *   **Standard Response:** **Mandatory:** Standardize **all** API error responses using **`ProblemDetails`** (RFC 7807). Global handler maps uncaught exceptions to 500 `ProblemDetails`.
 *   **Result Mapping:** Controllers **MUST** map `Result.Failure` outcomes to appropriate `ProblemDetails` responses with correct HTTP status codes (400, 404, 409, etc.) via `ApiControllerBase` helper.
-*   **Custom Exceptions:** Use **sparingly**. Define specific exceptions (e.g., `DomainException`, `NotFoundException`) only if `Result` is insufficient or special handling is needed higher up. Prefer `Result` for predictable failures.
 *   **Logging:** Log errors comprehensively in the global handler (including stack trace for unexpected errors). **DO NOT** expose stack traces or sensitive details in HTTP responses.
 
 ### Security Best Practices
@@ -264,6 +265,7 @@ using YourSolution.Domain.Entities;           // Product entity lives here
 using YourSolution.Domain.Abstractions.Persistence; // IProductRepository lives here
 using YourSolution.Domain.Errors;             // ProductErrors lives here
 using YourSolution.Domain.ValueObjects;       // If using VOs like SKU
+using YourSolution.Domain.Exceptions;         // Domain exceptions live here
 
 // **Use 'record' for immutable messages**
 public record CreateProductCommand(string Name, decimal Price, string Sku) : IRequest<Result<Guid>>;
@@ -283,27 +285,37 @@ public class CreateProductCommandHandler : IRequestHandler<CreateProductCommand,
 
     public async Task<Result<Guid>> Handle(CreateProductCommand request, CancellationToken cancellationToken)
     {
-        // 1. Use Domain Factory Method for creation & validation
-        Result<Product> productResult = Product.Create(
-            request.Name,
-            request.Price,
-            request.Sku // Assuming Sku is handled correctly (maybe as a VO)
-        );
-
-        // 2. **Check domain Result for failure**
-        if (productResult.IsFailure)
+        try
         {
-            return Result.Failure<Guid>(productResult.Error); // **Forward domain error**
+            // 1. Call Domain Factory Method which may throw domain exceptions
+            // Note: No Result<T> at Domain level - uses exceptions instead
+            Product product = Product.Create(
+                request.Name,
+                request.Price,
+                request.Sku
+            );
+
+            // 2. Add to Repository (does not save)
+            await _productRepository.AddAsync(product, cancellationToken);
+
+            // 3. Save Changes -> Handled by UnitOfWorkBehavior pipeline
+
+            // 4. **Return Success Result**
+            return Result.Success(product.Id);
         }
-        Product product = productResult.Value;
-
-        // 3. Add to Repository (does not save)
-        await _productRepository.AddAsync(product, cancellationToken);
-
-        // 4. Save Changes -> Handled by UnitOfWorkBehavior pipeline
-
-        // 5. **Return Success Result**
-        return Result.Success(product.Id);
+        catch (ProductNameTooShortException ex)
+        {
+            // **Translate domain exceptions to Result.Failure**
+            return Result.Failure<Guid>(ProductErrors.InvalidName(ex.Message));
+        }
+        catch (InvalidSkuException ex)
+        {
+            return Result.Failure<Guid>(ProductErrors.InvalidSku(ex.Message));
+        }
+        catch (DomainException ex) // Base domain exception
+        {
+            return Result.Failure<Guid>(ProductErrors.General(ex.Message));
+        }
     }
 }
 
@@ -386,168 +398,4 @@ public record ExternalApiSettings
 }
 */
 // Local Dev: dotnet user-secrets set "ExternalApi:ApiKey" "..."
-// Azure: Use Key Vault reference in App Service Configuration
-
-// --- 3. Register and Bind in Program.cs (API Layer) ---
-// Location: /src/YourSolution.API/Program.cs
-using YourSolution.Application.Configuration;
-// using YourSolution.Infrastructure.Configuration.Validators; // For IValidateOptions
-
-var builder = WebApplication.CreateBuilder(args);
-
-builder.Services.AddOptions<ExternalApiSettings>()
-    .BindConfiguration(ExternalApiSettings.SectionName) // **Bind to section**
-    .ValidateDataAnnotations() // Optional: If using DataAnnotations
-    // .Validate<IValidateOptions<ExternalApiSettings>>() // Example custom validation
-    .ValidateOnStart(); // **Mandatory: Validate at startup**
-
-// Example: Register custom validator (implemented in Infrastructure)
-// builder.Services.AddSingleton<IValidateOptions<ExternalApiSettings>, ExternalApiSettingsValidator>();
-
-// ... other services
-
-// --- 4. Inject and Use (e.g., Infrastructure Service) ---
-// Location: /src/Infrastructure/YourSolution.Infrastructure/Services/ExternalServiceClient.cs
-using Microsoft.Extensions.Options;
-using YourSolution.Application.Configuration;
-
-public class ExternalServiceClient // : IExternalServiceClient
-{
-    private readonly HttpClient _httpClient;
-    private readonly ExternalApiSettings _settings; // **Store the value**
-
-    // **Inject IOptions<T>**
-    public ExternalServiceClient(HttpClient httpClient, IOptions<ExternalApiSettings> settingsOptions)
-    {
-        _httpClient = httpClient;
-        _settings = settingsOptions.Value; // **Access via .Value**
-
-        _httpClient.BaseAddress = new Uri(_settings.BaseUrl);
-        _httpClient.Timeout = TimeSpan.FromSeconds(_settings.TimeoutSeconds);
-        _httpClient.DefaultRequestHeaders.Add("X-Api-Key", _settings.ApiKey);
-    }
-    // ... service methods using _httpClient and _settings ...
-}
-```
-
-### Controller Implementation Pattern
-
-```csharp
-// --- Base API Controller (Recommended) ---
-// Location: /src/YourSolution.API/Common/ApiControllerBase.cs
-using MediatR;
-using Microsoft.AspNetCore.Mvc;
-using YourSolution.Application.Common.Models; // **For Result<T>**
-using Microsoft.AspNetCore.Http; // For StatusCodes
-using YourSolution.Domain.Errors; // For Error Codes/Types
-
-namespace YourSolution.API.Common;
-
-[ApiController]
-[Route("api/v{version:apiVersion}/[controller]")] // Example versioning
-public abstract class ApiControllerBase : ControllerBase
-{
-    private ISender? _mediator;
-    // **Use ISender for dispatching**
-    protected ISender Mediator => _mediator ??= HttpContext.RequestServices.GetRequiredService<ISender>();
-
-    // **Helper to handle Result<T> consistently**
-    protected ActionResult HandleResult<T>(Result<T> result)
-    {
-        if (result.IsSuccess)
-        {
-            // Handle cases where T is void/Unit represented by null or a specific type
-            return result.Value is null || result.Value.GetType().Name == "Unit"
-                ? NoContent() // Success with no content
-                : Ok(result.Value); // Success with content
-        }
-
-        // **Map Failure Results to ProblemDetails**
-        return MapErrorToActionResult(result.Error);
-    }
-
-    // **Helper for non-generic Result**
-    protected ActionResult HandleResult(Result result)
-    {
-        return result.IsSuccess ? NoContent() : MapErrorToActionResult(result.Error);
-    }
-
-    // **Centralized Error Mapping Logic**
-    private ActionResult MapErrorToActionResult(Error error)
-    {
-        // Example mapping based on Error codes/types defined in Domain/Application
-        var statusCode = error.Type switch // Assuming Error has a 'Type' property/enum
-        {
-            ErrorType.Validation => StatusCodes.Status400BadRequest,
-            ErrorType.NotFound => StatusCodes.Status404NotFound,
-            ErrorType.Conflict => StatusCodes.Status409Conflict,
-            ErrorType.Unauthorized => StatusCodes.Status401Unauthorized,
-            ErrorType.Forbidden => StatusCodes.Status403Forbidden,
-            _ => StatusCodes.Status500InternalServerError // Default or specific Server Error type
-        };
-
-        // Create ProblemDetails matching RFC 7807
-        return Problem(
-            title: error.Code, // Use Error Code as Title (or a more descriptive title)
-            detail: error.Description,
-            statusCode: statusCode
-            // instance: HttpContext.Request.Path // Optional
-            // extensions: // Optional additional details
-        );
-
-        // Alternative for specific status codes without Problem helper:
-        // return StatusCode(statusCode, new { error.Code, error.Description });
-    }
-}
-
-
-// --- Feature Controller ---
-// Location: /src/YourSolution.API/Controllers/ProductsController.cs
-using Microsoft.AspNetCore.Mvc;
-using YourSolution.API.Common; // **Inherit from base**
-using YourSolution.Application.Features.Products.Commands.CreateProduct;
-using YourSolution.Application.Features.Products.Queries.GetProductById;
-using YourSolution.Application.Features.Products.DTOs;
-using Microsoft.AspNetCore.Authorization;
-using Asp.Versioning; // For versioning
-
-namespace YourSolution.API.Controllers;
-
-[ApiVersion("1.0")]
-// [Authorize] // Apply auth as needed
-public class ProductsController : ApiControllerBase // **Inherit base**
-{
-    // POST api/v1/products
-    [HttpPost]
-    // **Use ProducesResponseType for OpenAPI documentation**
-    [ProducesResponseType(typeof(Guid), StatusCodes.Status201Created)] // Return ID on create
-    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status409Conflict)]
-    public async Task<IActionResult> CreateProduct([FromBody] CreateProductCommand command)
-    {
-        Result<Guid> result = await Mediator.Send(command); // **Dispatch via Mediator**
-
-        // **Use HandleResult for consistent response mapping**
-        // Use CreatedAtRoute for POST success
-        return result.IsSuccess
-            ? CreatedAtRoute(nameof(GetProductById), new { version = "1.0", id = result.Value }, result.Value)
-            : HandleResult(result); // Let base handle failure mapping
-    }
-
-    // GET api/v1/products/{id}
-    [HttpGet("{id:guid}", Name = nameof(GetProductById))] // **Route name for CreatedAtRoute**
-    [ProducesResponseType(typeof(ProductDto), StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
-    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> GetProductById(Guid id, ApiVersion apiVersion) // Inject version if needed
-    {
-        var query = new GetProductByIdQuery(id);
-        Result<ProductDto> result = await Mediator.Send(query); // **Dispatch via Mediator**
-
-        // **Use HandleResult for consistent response mapping**
-        return HandleResult(result);
-    }
-
-    // ... other PUT, DELETE, GET (List) endpoints ...
-}
 ```
