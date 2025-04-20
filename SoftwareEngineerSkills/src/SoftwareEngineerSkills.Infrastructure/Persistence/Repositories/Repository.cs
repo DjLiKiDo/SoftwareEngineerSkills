@@ -1,7 +1,7 @@
+using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
 using SoftwareEngineerSkills.Domain.Abstractions.Persistence;
 using SoftwareEngineerSkills.Domain.Common;
-using System.Linq.Expressions;
 
 namespace SoftwareEngineerSkills.Infrastructure.Persistence.Repositories;
 
@@ -25,28 +25,50 @@ public class Repository<T> : IRepository<T> where T : Entity
     }
 
     /// <inheritdoc />
-    public virtual async Task<IEnumerable<T>> GetAllAsync(CancellationToken cancellationToken = default)
+    public virtual async Task<IReadOnlyList<T>> GetAllAsync(CancellationToken cancellationToken = default)
     {
         return await _dbSet.AsNoTracking().ToListAsync(cancellationToken);
     }
 
     /// <inheritdoc />
-    public Task<IEnumerable<T>> FindAsync(Expression<Func<T, bool>> predicate, CancellationToken cancellationToken = default)
+    public virtual async Task<IReadOnlyList<T>> FindAsync(Expression<Func<T, bool>> predicate, CancellationToken cancellationToken = default)
     {
-        // TODO: 
-        throw new NotImplementedException();
+        return await _dbSet.AsNoTracking()
+            .Where(predicate)
+            .ToListAsync(cancellationToken);
     }
 
     /// <inheritdoc />
     public virtual async Task<T?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
     {
-        return await _dbSet.AsNoTracking().FirstOrDefaultAsync(e => e.Id == id, cancellationToken);
+        return await _dbSet.AsNoTracking()
+            .FirstOrDefaultAsync(e => e.Id == id, cancellationToken);
+    }
+
+    /// <inheritdoc />
+    public virtual async Task<T?> FirstOrDefaultAsync(Expression<Func<T, bool>> predicate, CancellationToken cancellationToken = default)
+    {
+        return await _dbSet.AsNoTracking()
+            .FirstOrDefaultAsync(predicate, cancellationToken);
+    }
+
+    /// <inheritdoc />
+    public virtual async Task<T?> SingleOrDefaultAsync(Expression<Func<T, bool>> predicate, CancellationToken cancellationToken = default)
+    {
+        return await _dbSet.AsNoTracking()
+            .SingleOrDefaultAsync(predicate, cancellationToken);
     }
 
     /// <inheritdoc />
     public virtual async Task AddAsync(T entity, CancellationToken cancellationToken = default)
     {
         await _dbSet.AddAsync(entity, cancellationToken);
+    }
+
+    /// <inheritdoc />
+    public virtual async Task AddRangeAsync(IEnumerable<T> entities, CancellationToken cancellationToken = default)
+    {
+        await _dbSet.AddRangeAsync(entities, cancellationToken);
     }
 
     /// <inheritdoc />
@@ -57,7 +79,7 @@ public class Repository<T> : IRepository<T> where T : Entity
         {
             _dbSet.Attach(entity);
         }
-
+        
         _dbContext.Entry(entity).State = EntityState.Modified;
         return Task.CompletedTask;
     }
@@ -70,15 +92,33 @@ public class Repository<T> : IRepository<T> where T : Entity
         {
             _dbSet.Attach(entity);
         }
-
+        
         _dbSet.Remove(entity);
         return Task.CompletedTask;
     }
 
     /// <inheritdoc />
-    public Task<bool> ExistsAsync(Expression<Func<T, bool>> predicate, CancellationToken cancellationToken = default)
+    public virtual Task DeleteRangeAsync(IEnumerable<T> entities, CancellationToken cancellationToken = default)
     {
-        // TODO: 
-        throw new NotImplementedException();
+        _dbSet.RemoveRange(entities);
+        return Task.CompletedTask;
+    }
+
+    /// <inheritdoc />
+    public virtual async Task<bool> AnyAsync(Expression<Func<T, bool>> predicate, CancellationToken cancellationToken = default)
+    {
+        return await _dbSet.AnyAsync(predicate, cancellationToken);
+    }
+
+    /// <inheritdoc />
+    public virtual async Task<int> CountAsync(CancellationToken cancellationToken = default)
+    {
+        return await _dbSet.CountAsync(cancellationToken);
+    }
+
+    /// <inheritdoc />
+    public virtual async Task<int> CountAsync(Expression<Func<T, bool>> predicate, CancellationToken cancellationToken = default)
+    {
+        return await _dbSet.CountAsync(predicate, cancellationToken);
     }
 }

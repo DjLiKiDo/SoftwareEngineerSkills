@@ -30,17 +30,17 @@ public class DummyCreatedEventHandler : INotificationHandler<DomainEventNotifica
     public Task Handle(DomainEventNotification<DummyCreatedEvent> notification, CancellationToken cancellationToken)
     {
         var domainEvent = notification.DomainEvent;
-
-        _logger.LogInformation("Dummy entity created with ID: {DummyId}, Name: {Name} at {OccurredOn}",
+        
+        _logger.LogInformation("Dummy entity created with ID: {DummyId}, Name: {Name} at {OccurredOn}", 
             domainEvent.DummyId,
             domainEvent.Name ?? "Unnamed",
             domainEvent.OccurredOn);
-
+            
         // Additional logic can be added here like:
         // - Sending welcome notifications
         // - Setting up related resources
         // - Initializing additional data
-
+        
         return Task.CompletedTask;
     }
 }

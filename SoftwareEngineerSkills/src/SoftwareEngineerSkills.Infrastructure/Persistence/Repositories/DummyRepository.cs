@@ -5,7 +5,7 @@ using SoftwareEngineerSkills.Domain.Entities;
 namespace SoftwareEngineerSkills.Infrastructure.Persistence.Repositories;
 
 /// <summary>
-/// Entity Framework Core implementation of the IDummyRepository interface
+/// Implementation of the dummy repository
 /// </summary>
 public class DummyRepository : Repository<Dummy>, IDummyRepository
 {
@@ -18,20 +18,18 @@ public class DummyRepository : Repository<Dummy>, IDummyRepository
     }
 
     /// <inheritdoc />
-    public async Task<IEnumerable<Dummy>> GetAllAsync(bool includeInactive = false, CancellationToken cancellationToken = default)
+    public async Task<IReadOnlyList<Dummy>> GetAllAsync(bool includeInactive = false, CancellationToken cancellationToken = default)
     {
-        IQueryable<Dummy> query = _dbSet.AsNoTracking();
-        if (!includeInactive)
-        {
-            query = query.Where(d => d.IsActive);
-        }
-        return await query.ToListAsync(cancellationToken);
+        return await _dbSet.AsNoTracking()
+            .Where(d => includeInactive || d.IsActive)
+            .ToListAsync(cancellationToken);
     }
 
     /// <inheritdoc />
-    public Task<IEnumerable<Dummy>> GetByPriorityAsync(int priority, CancellationToken cancellationToken = default)
+    public async Task<IReadOnlyList<Dummy>> GetByPriorityAsync(int priority, CancellationToken cancellationToken = default)
     {
-        // TODO: 
-        throw new NotImplementedException();
+        return await _dbSet.AsNoTracking()
+            .Where(d => d.IsActive && d.Priority == priority)
+            .ToListAsync(cancellationToken);
     }
 }

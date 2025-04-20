@@ -9,37 +9,37 @@ public record DummyDto
     /// Gets the unique identifier of the dummy entity
     /// </summary>
     public Guid Id { get; init; }
-
+    
     /// <summary>
     /// Gets the name of the dummy entity
     /// </summary>
     public string? Name { get; init; }
-
+    
     /// <summary>
     /// Gets the description of the dummy entity
     /// </summary>
     public string? Description { get; init; }
-
+    
     /// <summary>
     /// Gets the priority level of the dummy entity
     /// </summary>
     public int Priority { get; init; }
-
+    
     /// <summary>
     /// Gets whether the dummy entity is active
     /// </summary>
     public bool IsActive { get; init; }
-
+    
     /// <summary>
     /// Gets a string representation of the entity status (Active/Inactive)
     /// </summary>
     public string Status { get; init; } = string.Empty;
-
+    
     /// <summary>
     /// Gets the date and time when the dummy entity was created
     /// </summary>
     public DateTime CreatedAt { get; init; }
-
+    
     /// <summary>
     /// Gets the date and time when the dummy entity was last updated
     /// </summary>
@@ -55,12 +55,12 @@ public record CreateDummyDto
     /// Gets the name of the dummy entity
     /// </summary>
     public string? Name { get; init; }
-
+    
     /// <summary>
     /// Gets the description of the dummy entity
     /// </summary>
     public string? Description { get; init; }
-
+    
     /// <summary>
     /// Gets the priority level of the dummy entity
     /// </summary>
@@ -76,17 +76,17 @@ public record UpdateDummyDto
     /// Gets the unique identifier of the dummy entity to update
     /// </summary>
     public Guid Id { get; init; }
-
+    
     /// <summary>
     /// Gets the name of the dummy entity
     /// </summary>
     public string? Name { get; init; }
-
+    
     /// <summary>
     /// Gets the description of the dummy entity
     /// </summary>
     public string? Description { get; init; }
-
+    
     /// <summary>
     /// Gets the priority level of the dummy entity
     /// </summary>

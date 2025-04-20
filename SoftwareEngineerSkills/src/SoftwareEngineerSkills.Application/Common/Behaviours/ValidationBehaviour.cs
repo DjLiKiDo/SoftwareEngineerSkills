@@ -40,16 +40,16 @@ public class ValidationBehaviour<TRequest, TResponse> : IPipelineBehavior<TReque
         }
 
         var context = new ValidationContext<TRequest>(request);
-
+        
         // Run all validators and collect the results
         var validationResults = await Task.WhenAll(
             _validators.Select(v => v.ValidateAsync(context, cancellationToken)));
-
+        
         var failures = validationResults
             .Where(r => !r.IsValid)
             .SelectMany(r => r.Errors)
             .ToList();
-
+        
         if (failures.Any())
         {
             // Build an error message that includes all validation failures
@@ -62,15 +62,15 @@ public class ValidationBehaviour<TRequest, TResponse> : IPipelineBehavior<TReque
             }
 
             // If the response is a Result type, return a failure Result
-            if (typeof(TResponse).IsGenericType &&
+            if (typeof(TResponse).IsGenericType && 
                 (typeof(TResponse).GetGenericTypeDefinition() == typeof(Result<>)))
             {
                 // Use reflection to create a failure Result with the error message
                 var resultType = typeof(TResponse).GetGenericArguments()[0];
                 var resultMethod = typeof(Result<>).MakeGenericType(resultType)
                     .GetMethod("Failure", new[] { typeof(string) });
-
-                return resultMethod?.Invoke(null, new object[] { errorBuilder.ToString() }) as TResponse
+                
+                return resultMethod?.Invoke(null, new object[] { errorBuilder.ToString() }) as TResponse 
                     ?? throw new InvalidOperationException("Could not create failure Result");
             }
 

@@ -30,17 +30,17 @@ public class DummyErrorEventHandler : INotificationHandler<DomainEventNotificati
     public Task Handle(DomainEventNotification<DummyErrorEvent> notification, CancellationToken cancellationToken)
     {
         var domainEvent = notification.DomainEvent;
-
-        _logger.LogError("Error occurred in dummy entity with ID: {DummyId}, Error: {ErrorMessage} at {OccurredOn}",
-            domainEvent.DummyId,
+        
+        _logger.LogError("Error occurred in dummy entity with ID: {DummyId}, Error: {ErrorMessage} at {OccurredOn}", 
+            domainEvent.DummyId, 
             domainEvent.ErrorMessage,
             domainEvent.OccurredOn);
-
+            
         // Additional logic can be added here like:
         // - Sending error alerts or notifications
         // - Initiating recovery procedures
         // - Logging to specialized monitoring systems
-
+        
         return Task.CompletedTask;
     }
 }

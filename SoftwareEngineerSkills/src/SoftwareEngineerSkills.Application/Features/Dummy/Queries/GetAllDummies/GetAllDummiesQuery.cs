@@ -1,6 +1,6 @@
 using MediatR;
-using SoftwareEngineerSkills.Application.Features.Dummy.DTOs;
 using SoftwareEngineerSkills.Common;
+using SoftwareEngineerSkills.Application.Features.Dummy.DTOs;
 
 namespace SoftwareEngineerSkills.Application.Features.Dummy.Queries.GetAllDummies;
 
