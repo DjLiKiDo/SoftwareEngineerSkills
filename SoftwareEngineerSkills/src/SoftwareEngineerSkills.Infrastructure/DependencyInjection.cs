@@ -29,7 +29,6 @@ public static class DependencyInjection
         services
             .AddOptions<AppSettings>()
             .BindConfiguration(AppSettings.SectionName)
-            .ValidateDataAnnotations()
             .ValidateOnStart();
 
         // Register the AppSettingsValidator
