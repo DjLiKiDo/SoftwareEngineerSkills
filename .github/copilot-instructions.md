@@ -75,5 +75,6 @@ Este repositorio es una plantilla base para proyectos de software desarrollados 
 
 *   **Respeta `.editorconfig`:** Asegúrate de que el formato del código se adhiera a las reglas definidas en el archivo `.editorconfig` del repositorio.
 *   **Archivos de Solución y Proyecto (.sln, .csproj):** Si añades nuevos archivos o proyectos, asegúrate de que se referencian correctamente.
+*   **Ubicación de Nuevos Archivos/Documentos:** Cuando se solicite la generación de nuevos documentos o un conjunto de archivos para una nueva funcionalidad o proyecto, la ruta de salida por defecto deberá ser `src/NombreDelProyectoSugerido/`. El usuario se encargará de mover o ajustar la ubicación final de estos archivos según sea necesario. Por ejemplo, si se pide generar un nuevo proyecto API llamado "MyNewApi", los archivos se generarán en `src/MyNewApi/`.
 
 Estas instrucciones ayudarán a GitHub Copilot a ser un asistente más efectivo y alineado con los objetivos de este proyecto.
