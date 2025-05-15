@@ -44,13 +44,27 @@ Este repositorio es una plantilla base para proyectos de software desarrollados 
 
 4.  **Uso de Documentación del Proyecto:**
     *   Consulta el `README.md` para entender el propósito general y la estructura.
-    *   Si se te indica, consulta archivos específicos en la carpeta `Docs/` para obtener información detallada sobre requisitos, diseño o decisiones de arquitectura. Por ejemplo, el archivo `Docs/Implementación de IaC con Bicep en Entorno Azure M.md` es clave para tareas relacionadas con Infrastructure as Code.
+    *   Si se te indica, consulta archivos específicos en la carpeta `Docs/` para obtener información detallada sobre requisitos, diseño o decisiones de arquitectura. Por ejemplo, el archivo `Docs/Implementación de IaC con Bicep en Entorno Azure M.md` (o ahora en `src/IaCProyect/Docs/`) es clave para tareas relacionadas con Infrastructure as Code.
 
-5.  **Trabajando con Archivos Específicos:**
-    *   **`.github/copilot-instructions.md` (este archivo):** Estas son las directrices generales.
-    *   **`.github/prompts/*.prompt.md`:** Estos archivos contienen prompts detallados para tareas específicas o flujos de trabajo. Cuando se te pida ejecutar uno de estos prompts, sigue sus instrucciones cuidadosamente.
-    *   **`README.md`:** La guía principal del proyecto.
-    *   **Archivos de configuración (`.editorconfig`, `*.csproj`, `*.sln`, `appsettings.json`):** Presta atención a estos archivos para entender las configuraciones del proyecto y generar código compatible.
+5.  **Trabajando con Archivos Específicos y Estructura de Instrucciones de Copilot:**
+    *   **Instrucciones Globales (Este Archivo):**
+        *   **Ubicación:** `.github/copilot-instructions.md`
+        *   **Propósito:** Contiene las directrices generales para todo el workspace. Estas son las instrucciones de más alto nivel.
+    *   **Instrucciones Específicas de Código Fuente (Opcional):**
+        *   **Ubicación Potencial:** `SoftwareEngineerSkills/src/.copilot/instructions.md`
+        *   **Propósito:** Si se crea, contendría directrices aplicables a todo el código fuente dentro de la carpeta `SoftwareEngineerSkills/src/`.
+    *   **Instrucciones por Proyecto/Componente (Opcional y Recomendado para Especificidad):**
+        *   **Ubicación Potencial:** `SoftwareEngineerSkills/src/{NombreDelProyecto}/.copilot/instructions.md` (ej. `SoftwareEngineerSkills/src/SoftwareEngineerSkills.API/.copilot/instructions.md`)
+        *   **Propósito:** Contendría directrices muy específicas para un proyecto o componente individual (API, Application, Domain, etc.). Estas instrucciones tendrían precedencia para los archivos dentro de ese proyecto/componente.
+    *   **Prompts Detallados para Tareas:**
+        *   **Ubicación:** `.github/prompts/*.prompt.md` (o subcarpetas como `src/IaCProyect/prompts/`)
+        *   **Propósito:** Contienen prompts detallados para tareas específicas o flujos de trabajo. Cuando se te pida ejecutar uno de estos prompts, sigue sus instrucciones cuidadosamente.
+    *   **Documentación Principal del Proyecto:**
+        *   **Ubicación:** `README.md`
+        *   **Propósito:** La guía principal del proyecto.
+    *   **Archivos de Configuración:**
+        *   **Ejemplos:** `.editorconfig`, `*.csproj`, `*.sln`, `appsettings.json`
+        *   **Propósito:** Presta atención a estos archivos para entender las configuraciones del proyecto y generar código compatible.
 
 ## Directrices Específicas para "SoftwareEngineerSkills" (Ejemplo .NET)
 
