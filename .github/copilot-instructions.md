@@ -205,7 +205,7 @@ SourceCode/SoftwareEngineerSkills/
 
 ## 3. Formatting Instructions
 
-- **Language:** Use clear, concise C# for code examples.
+- **Language:** Use clear, concise C# for code examples. All generated code and comments must be in English.
 - **Code Examples:** Provide relevant C# code examples for patterns related to ASP.NET Core for .NET 9, EF Core for .NET 9, xUnit, and Moq as shown above.
 - **Links to Documentation:**
     - [.NET 9 Overview](https://learn.microsoft.com/en-us/dotnet/core/whats-new/dotnet-9/overview)
@@ -223,5 +223,6 @@ SourceCode/SoftwareEngineerSkills/
 
 ## 4. Aditional context
 If official documentation is needed use context7 to retrieve it
+Utilize the documents in the `Docs` folder as they contain relevant information about architecture, design patterns, and other project-specific guidelines.
 
 This document should be updated as the project evolves and new patterns or standards are adopted.
