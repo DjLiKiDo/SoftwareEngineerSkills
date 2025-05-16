@@ -32,24 +32,13 @@ La arquitectura propuesta sigue un flujo de dependencias hacia el interior, como
 
 La estructura de proyectos para una API con Clean Architecture en ASP.NET Core 9 típicamente sigue esta organización:
 
-1. **MyApp.Core** (Application Core)
-    - Entities
-    - Interfaces
-    - Services
-    - DTOs (Data Transfer Objects)
-    - Exceptions
-2. **MyApp.Infrastructure**
-    - Data (Implementaciones de Entity Framework Core)
-    - External Services
-    - Logging
-    - Identity
-3. **MyApp.API** (Presentación/UI)
-    - Controllers
-    - Middleware
-    - Filters
-    - Startup Configuration
+1.  **`MyApp.Domain`**: Contiene las entidades del dominio, agregados, objetos de valor, interfaces de repositorios y lógica de negocio central. Esta es la capa más interna y no depende de ninguna otra capa.
+2.  **`MyApp.Application`**: Contiene la lógica de la aplicación, casos de uso (comandos y consultas si se usa CQRS), DTOs, interfaces de servicios de aplicación y validaciones. Depende de `MyApp.Domain`.
+3.  **`MyApp.API`** (Presentación/UI): Contiene los controladores de API, middleware, filtros, configuración de inicio y cualquier otra lógica relacionada con la interfaz de usuario o la exposición de la API. Depende de `MyApp.Application`.
+4.  **`MyApp.Infrastructure`**: Implementa las interfaces definidas en las capas `MyApp.Domain` y `MyApp.Application` (por ejemplo, repositorios, servicios externos). Contiene el `DbContext` de Entity Framework Core, migraciones, implementaciones de servicios de correo electrónico, etc. Depende de `MyApp.Application` y `MyApp.Domain`.
+5.  **`MyApp.Common`** o **`MyApp.Shared`** (Opcional): Un proyecto para utilidades compartidas, como clases de ayuda, extensiones, objetos `Result`, errores comunes, etc., que pueden ser utilizados por múltiples capas sin introducir dependencias no deseadas.
 
-Esta estructura separa claramente las responsabilidades y permite que cada capa evolucione independientemente. El proyecto Core no tiene referencias a los otros proyectos, mientras que Infrastructure y API dependen del Core[^4].
+Esta estructura separa claramente las responsabilidades y permite que cada capa evolucione independientemente. El proyecto `MyApp.Domain` no tiene referencias a los otros proyectos. `MyApp.Application` depende de `MyApp.Domain`. `MyApp.Infrastructure` y `MyApp.API` dependen de `MyApp.Application` y, a través de él, pueden acceder a `MyApp.Domain`[^4].
 
 ### Gestión de dependencias
 
