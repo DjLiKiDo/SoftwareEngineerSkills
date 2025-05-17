@@ -5,7 +5,7 @@ namespace SoftwareEngineerSkills.Application.Configuration;
 /// <summary>
 /// Configuration options for the email notification system
 /// </summary>
-public class EmailOptions : BaseOptions
+public class EmailOptions : IOptionsSection
 {
     /// <summary>
     /// Section name in configuration
@@ -13,7 +13,7 @@ public class EmailOptions : BaseOptions
     public const string SectionNameConst = "EmailSettings";
 
     /// <inheritdoc />
-    public override string SectionName => SectionNameConst;
+    public static string SectionName => SectionNameConst;
     
     /// <summary>
     /// Gets or sets the SMTP server address

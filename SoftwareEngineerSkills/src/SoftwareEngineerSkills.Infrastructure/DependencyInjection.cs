@@ -36,7 +36,7 @@ public static class DependencyInjection
         services.AddSingleton<IValidateOptions<ApplicationOptions>, AppSettingsValidator>();
 
         // Register configuration service
-        services.AddSingleton<IAppSettingsService, AppSettingsService>();
+        services.AddSingleton<IApplicationService, ApplicationService>();
 
         // Register DateTimeProvider
         services.AddSingleton<IDateTimeProvider, DateTimeProvider>();
@@ -56,6 +56,29 @@ public static class DependencyInjection
 
         // Register domain event dispatcher
         services.AddScoped<IDomainEventDispatcher, DomainEventDispatcher>();
+
+        return services;
+    }
+
+    /// <summary>
+    /// Adds email services to the service collection
+    /// </summary>
+    /// <param name="services">The service collection</param>
+    /// <returns>The service collection for chaining</returns>
+    private static IServiceCollection AddEmailServices(this IServiceCollection services)
+    {
+        // Register Email configuration with validation
+        services
+            .AddOptions<EmailOptions>()
+            .BindConfiguration(EmailOptions.SectionName)
+            .ValidateDataAnnotations()
+            .ValidateOnStart();
+
+        // Register custom validator for more complex validation rules
+        services.AddSingleton<IValidateOptions<EmailOptions>, EmailOptionsValidator>();
+
+        // Register email service
+        services.AddSingleton<IEmailService, EmailService>();
 
         return services;
     }

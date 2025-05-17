@@ -223,3 +223,4 @@ Al seguir estas recomendaciones, se puede desarrollar una API robusta, escalable
 
 [^42]: https://www.freecodecamp.org/news/learn-aspnet-core-mvc-with-net-9/
 
+use context7

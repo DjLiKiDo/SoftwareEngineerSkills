@@ -6,7 +6,7 @@ namespace SoftwareEngineerSkills.Application.Configuration;
 /// <summary>
 /// Represents the application settings defined in appsettings.json
 /// </summary>
-public class ApplicationOptions : BaseOptions
+public class ApplicationOptions : IOptionsSection
 {
     /// <summary>
     /// The name of the section in appsettings.json
@@ -14,7 +14,7 @@ public class ApplicationOptions : BaseOptions
     public const string SectionNameConst = "ApplicationSettings";
 
     /// <inheritdoc />
-    public override string SectionName => SectionNameConst;
+    public static string SectionName => SectionNameConst;
 
     /// <summary>
     /// The name of the application

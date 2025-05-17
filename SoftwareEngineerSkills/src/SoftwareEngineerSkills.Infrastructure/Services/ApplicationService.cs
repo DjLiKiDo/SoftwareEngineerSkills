@@ -6,11 +6,11 @@ namespace SoftwareEngineerSkills.Infrastructure.Configuration;
 /// <summary>
 /// Implementation of the app settings service using IOptionsMonitor
 /// </summary>
-public class AppSettingsService : IAppSettingsService
+public class ApplicationService : IApplicationService
 {
     private readonly IOptionsMonitor<ApplicationOptions> _optionsMonitor;
 
-    public AppSettingsService(IOptionsMonitor<ApplicationOptions> optionsMonitor)
+    public ApplicationService(IOptionsMonitor<ApplicationOptions> optionsMonitor)
     {
         _optionsMonitor = optionsMonitor;
     }

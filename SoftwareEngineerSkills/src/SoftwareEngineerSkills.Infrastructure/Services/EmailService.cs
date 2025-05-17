@@ -12,6 +12,8 @@ public class EmailService : IEmailService
     private readonly IOptionsMonitor<EmailOptions> _optionsMonitor;
     private readonly ILogger<EmailService> _logger;
 
+    public ApplicationOptions CurrentSettings => throw new NotImplementedException();
+
     /// <summary>
     /// Initializes a new instance of the <see cref="EmailService"/> class.
     /// </summary>
@@ -47,5 +49,10 @@ public class EmailService : IEmailService
     public IDisposable OnEmailSettingsChange(Action<EmailOptions> listener)
     {
         return _optionsMonitor.OnChange(listener)!;
+    }
+
+    public IDisposable OnChange(Action<EmailOptions> listener)
+    {
+        throw new NotImplementedException();
     }
 }

@@ -271,3 +271,4 @@ En resumen, el patrón IOptions es una herramienta esencial en el arsenal de cua
 
 [^34]: https://www.reddit.com/r/dotnet/comments/17a2o3e/best_practices_in_aspnet_core_when_logging_with/?tl=es-419
 
+use context7
