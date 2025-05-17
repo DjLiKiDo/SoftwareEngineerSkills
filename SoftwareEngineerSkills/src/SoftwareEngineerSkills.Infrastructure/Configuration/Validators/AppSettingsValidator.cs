@@ -8,9 +8,9 @@ namespace SoftwareEngineerSkills.Infrastructure.Configuration.Validators;
 /// <summary>
 /// Validates AppSettings configuration using IValidateOptions pattern
 /// </summary>
-public class AppSettingsValidator : IValidateOptions<AppSettings>
+public class AppSettingsValidator : IValidateOptions<ApplicationOptions>
 {
-    public ValidateOptionsResult Validate(string? name, AppSettings options)
+    public ValidateOptionsResult Validate(string? name, ApplicationOptions options)
     {
         var errors = new List<string>();
         

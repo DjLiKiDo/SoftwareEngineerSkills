@@ -8,18 +8,18 @@ namespace SoftwareEngineerSkills.Infrastructure.Configuration;
 /// </summary>
 public class AppSettingsService : IAppSettingsService
 {
-    private readonly IOptionsMonitor<AppSettings> _optionsMonitor;
+    private readonly IOptionsMonitor<ApplicationOptions> _optionsMonitor;
 
-    public AppSettingsService(IOptionsMonitor<AppSettings> optionsMonitor)
+    public AppSettingsService(IOptionsMonitor<ApplicationOptions> optionsMonitor)
     {
         _optionsMonitor = optionsMonitor;
     }
 
     /// <inheritdoc />
-    public AppSettings CurrentSettings => _optionsMonitor.CurrentValue;
+    public ApplicationOptions CurrentSettings => _optionsMonitor.CurrentValue;
 
     /// <inheritdoc />
-    public IDisposable OnChange(Action<AppSettings> listener)
+    public IDisposable OnChange(Action<ApplicationOptions> listener)
     {
         return _optionsMonitor.OnChange(listener)!;
     }

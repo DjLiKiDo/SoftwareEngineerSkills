@@ -22,17 +22,18 @@ public static class DependencyInjection
     /// Adds infrastructure services to the service collection
     /// </summary>
     /// <param name="services">The service collection</param>
-    /// <returns>The service collection for chaining</returns>
+    /// <returns>The service collection for chaining</returns>    
     public static IServiceCollection AddInfrastructureServices(this IServiceCollection services)
     {
         // Register configuration
         services
-            .AddOptions<AppSettings>()
-            .BindConfiguration(AppSettings.SectionName)
+            .AddOptions<ApplicationOptions>()
+            .BindConfiguration(ApplicationOptions.SectionName)
+            .ValidateDataAnnotations()  // Add data annotations validation
             .ValidateOnStart();
 
         // Register the AppSettingsValidator
-        services.AddSingleton<IValidateOptions<AppSettings>, AppSettingsValidator>();
+        services.AddSingleton<IValidateOptions<ApplicationOptions>, AppSettingsValidator>();
 
         // Register configuration service
         services.AddSingleton<IAppSettingsService, AppSettingsService>();
