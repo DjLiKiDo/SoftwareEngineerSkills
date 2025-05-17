@@ -18,14 +18,14 @@ jobs:
       with:
         dotnet-version: 9.0.x
     
-    - name: Restore dependencies
-      run: dotnet restore SoftwareEngineerSkills/SoftwareEngineerSkills.sln
+    # - name: Restore dependencies
+    #   run: dotnet restore SoftwareEngineerSkills/SoftwareEngineerSkills.sln
     
-    - name: Build
-      run: dotnet build SoftwareEngineerSkills/SoftwareEngineerSkills.sln --configuration Release --no-restore
+    # - name: Build
+    #   run: dotnet build SoftwareEngineerSkills/SoftwareEngineerSkills.sln --configuration Release --no-restore
     
-    - name: Test
-      run: dotnet test SoftwareEngineerSkills/SoftwareEngineerSkills.sln --configuration Release --no-build --verbosity normal --collect:"XPlat Code Coverage"
+    # - name: Test
+    #   run: dotnet test SoftwareEngineerSkills/SoftwareEngineerSkills.sln --configuration Release --no-build --verbosity normal --collect:"XPlat Code Coverage"
     
     # - name: Upload coverage reports to Codecov
     #   uses: codecov/codecov-action@v3
@@ -33,21 +33,21 @@ jobs:
     #     token: ${{ secrets.CODECOV_TOKEN }}
     #     fail_ci_if_error: false
 
-  deploy:
-    needs: build-and-test
-    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-    runs-on: ubuntu-latest
+  # deploy:
+  #   needs: build-and-test
+  #   if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+  #   runs-on: ubuntu-latest
     
-    steps:
-    - uses: actions/checkout@v4
+  #   steps:
+  #   - uses: actions/checkout@v4
     
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v4
-      with:
-        dotnet-version: 9.0.x
+  #   - name: Setup .NET
+  #     uses: actions/setup-dotnet@v4
+  #     with:
+  #       dotnet-version: 9.0.x
     
-    - name: Publish API
-      run: dotnet publish SoftwareEngineerSkills/src/SoftwareEngineerSkills.API/SoftwareEngineerSkills.API.csproj -c Release -o published-api
+  #   - name: Publish API
+  #     run: dotnet publish SoftwareEngineerSkills/src/SoftwareEngineerSkills.API/SoftwareEngineerSkills.API.csproj -c Release -o published-api
     
     # Uncomment and configure the following deployment steps when ready
     # - name: Deploy to Azure

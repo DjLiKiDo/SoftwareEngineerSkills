@@ -8,7 +8,7 @@ This document provides specific instructions for GitHub Copilot to optimize AI a
 ### Primary Domain and Tech Stack
 - **Primary Domain:** A RESTful API to manage and expose software engineering skills-related data.
 - **Tech Stack:**
-    - **Language:** C# (latest version, leveraging C# 12+ features)
+    - **Language:** C# (latest version, leveraging C# 14+ features)
     - **Framework:** .NET 9
     - **Web Framework:** ASP.NET Core for .NET 9
     - **Data Access:** Entity Framework Core for .NET 9
