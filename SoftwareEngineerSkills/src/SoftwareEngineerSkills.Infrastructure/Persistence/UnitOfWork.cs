@@ -1,4 +1,3 @@
-using Microsoft.EntityFrameworkCore.Storage;
 using SoftwareEngineerSkills.Domain.Abstractions.Persistence;
 
 namespace SoftwareEngineerSkills.Infrastructure.Persistence;
@@ -11,7 +10,6 @@ internal class UnitOfWork : IUnitOfWork
     private readonly ApplicationDbContext _context;
     private ISkillRepository? _skillRepository;
     private bool _disposed = false;
-    private IDbContextTransaction? _currentTransaction;
 
     /// <summary>
     /// Creates a new instance of the UnitOfWork class

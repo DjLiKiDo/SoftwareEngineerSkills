@@ -1,6 +1,5 @@
 using SoftwareEngineerSkills.Infrastructure.Configuration;
 using System.ComponentModel.DataAnnotations;
-using System.Net;
 
 namespace SoftwareEngineerSkills.Infrastructure.Services.Email;
 

@@ -1,5 +1,3 @@
-using System;
-
 namespace SoftwareEngineerSkills.Domain.Common.Interfaces;
 
 /// <summary>

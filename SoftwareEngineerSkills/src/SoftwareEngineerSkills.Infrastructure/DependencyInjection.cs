@@ -2,7 +2,6 @@
 using Microsoft.Extensions.DependencyInjection;
 using SoftwareEngineerSkills.Infrastructure.Logging;
 using SoftwareEngineerSkills.Infrastructure.Persistence;
-using SoftwareEngineerSkills.Infrastructure.Services;
 using SoftwareEngineerSkills.Infrastructure.Services.BackgroundProcessing;
 using SoftwareEngineerSkills.Infrastructure.Services.Caching;
 using SoftwareEngineerSkills.Infrastructure.Services.Email;

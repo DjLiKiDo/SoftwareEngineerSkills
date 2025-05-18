@@ -1,5 +1,3 @@
-using System;
-
 namespace SoftwareEngineerSkills.Domain.Abstractions.Services;
 
 /// <summary>

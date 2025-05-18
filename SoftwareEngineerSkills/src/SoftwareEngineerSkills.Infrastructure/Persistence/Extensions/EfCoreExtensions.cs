@@ -1,6 +1,5 @@
 using Microsoft.EntityFrameworkCore;
 using SoftwareEngineerSkills.Domain.Common.Interfaces;
-using System.Linq.Expressions;
 
 namespace SoftwareEngineerSkills.Infrastructure.Persistence.Extensions;
 

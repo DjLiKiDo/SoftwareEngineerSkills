@@ -1,6 +1,5 @@
 using SoftwareEngineerSkills.API;
 using SoftwareEngineerSkills.API.Extensions;
-using SoftwareEngineerSkills.API.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 

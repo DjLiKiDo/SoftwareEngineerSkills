@@ -1,5 +1,3 @@
-using Microsoft.OpenApi.Models;
-
 namespace SoftwareEngineerSkills.API.Extensions;
 
 public static class OpenApiExtensions

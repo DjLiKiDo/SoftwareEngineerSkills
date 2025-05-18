@@ -1,4 +1,3 @@
-using SoftwareEngineerSkills.Domain.Common.Events;
 using SoftwareEngineerSkills.Domain.Enums;
 using SoftwareEngineerSkills.Domain.Exceptions;
 
