@@ -1,6 +1,7 @@
 using System.ComponentModel.DataAnnotations;
+using SoftwareEngineerSkills.Infrastructure.Configuration;
 
-namespace SoftwareEngineerSkills.Infrastructure.Configuration;
+namespace SoftwareEngineerSkills.Infrastructure.Persistence;
 
 /// <summary>
 /// Database settings
