@@ -7,8 +7,8 @@
 [V] BackgroundTaskQueue: Separar en ficheros
 [V] Añadir sectionname a todo lo que sean settings. quizas que haya una clase base o interfaz para asegurarse de que todas las setting tienen esa propiedad
 [ ] Refinar la base de dtos y revisar que este bien
-[ ] REvisar validacion de settings, decidir si con data anotations o fluentvalidation o pipeline o que
-[ ] Mover databasesettings a la carpeta persistence
+[ ] Revisar validacion de settings, decidir si con data anotations o fluentvalidation o pipeline o que
+[V] Mover databasesettings a la carpeta persistence
 [ ] IOptionsMonitor
 [ ] 
 [ ] 
