@@ -410,6 +410,7 @@ public class CreateCustomerCommandHandlerTests
 - **README:** Keep the project README up-to-date
 - **API Documentation:** Swagger with examples and descriptions
 - **Architecture Decision Records:** Document key architectural decisions
+- **Changelog:** Maintain a changelog for versioning
 
 ### Security Considerations
 
