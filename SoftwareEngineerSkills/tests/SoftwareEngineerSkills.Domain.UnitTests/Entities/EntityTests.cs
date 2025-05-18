@@ -1,9 +1,5 @@
-// filepath: /Users/marquez/Downloads/Pablo/Repos/SoftwareEngineerSkills/SoftwareEngineerSkills/tests/SoftwareEngineerSkills.Domain.UnitTests/Entities/EntityTests.cs
-using FluentAssertions;
 using SoftwareEngineerSkills.Domain.Common.Events;
 using SoftwareEngineerSkills.Domain.Entities;
-using Xunit;
-using System; // Required for Guid, DateTime
 
 namespace SoftwareEngineerSkills.Domain.UnitTests.Entities;
 

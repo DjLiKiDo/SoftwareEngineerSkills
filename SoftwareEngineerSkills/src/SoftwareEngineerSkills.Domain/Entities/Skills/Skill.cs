@@ -58,7 +58,7 @@ public class Skill : Entity
         DifficultyLevel = difficultyLevel;
         IsInDemand = isInDemand;
         
-        AddDomainEvent(new SkillCreatedEvent(Id, name, category.ToString()));
+        AddDomainEvent(new SkillCreatedEvent(Id, name, category, category.ToString())); // Updated to use the correct constructor
     }
     
     /// <summary>
@@ -80,13 +80,14 @@ public class Skill : Entity
         ValidateName(name);
         ValidateDescription(description);
         
+        var originalName = Name; // Store original name before updating
         Name = name;
         Category = category;
         Description = description;
         DifficultyLevel = difficultyLevel;
         IsInDemand = isInDemand;
         
-        AddDomainEvent(new SkillUpdatedEvent(Id, name));
+        AddDomainEvent(new SkillUpdatedEvent(Id, originalName, name)); // Pass original and new name
     }
     
     /// <summary>
@@ -110,8 +111,9 @@ public class Skill : Entity
     {
         if (DifficultyLevel != level)
         {
+            var originalName = Name; // Store original name
             DifficultyLevel = level;
-            AddDomainEvent(new SkillUpdatedEvent(Id, Name));
+            AddDomainEvent(new SkillUpdatedEvent(Id, originalName, Name)); // Pass original and current name (which is the new name in this context)
         }
     }
     

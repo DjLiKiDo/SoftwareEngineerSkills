@@ -1,4 +1,5 @@
 using SoftwareEngineerSkills.Domain.Common.Events;
+using SoftwareEngineerSkills.Domain.Enums;
 
 namespace SoftwareEngineerSkills.Domain.Entities.Skills;
 
@@ -21,17 +22,24 @@ public class SkillCreatedEvent : DomainEvent, IDomainEvent
     /// The category of the skill that was created
     /// </summary>
     public string Category { get; }
-    
+
+    /// <summary>
+    /// The skill category of the skill that was created
+    /// </summary>
+    public SkillCategory SkillCategory { get; } 
+
     /// <summary>
     /// Creates a new instance of the SkillCreatedEvent class
     /// </summary>
     /// <param name="skillId">The ID of the skill</param>
     /// <param name="skillName">The name of the skill</param>
-    /// <param name="category">The category of the skill</param>
-    public SkillCreatedEvent(Guid skillId, string skillName, string category)
+    /// <param name="skillCategory">The skill category of the skill</param>
+    /// <param name="category">The category of the skill as a string</param>
+    public SkillCreatedEvent(Guid skillId, string skillName, SkillCategory skillCategory, string category)
     {
         SkillId = skillId;
         SkillName = skillName;
+        SkillCategory = skillCategory;
         Category = category;
     }
 }
@@ -50,16 +58,23 @@ public class SkillUpdatedEvent : DomainEvent, IDomainEvent
     /// The name of the skill that was updated
     /// </summary>
     public string SkillName { get; }
-    
+
+    /// <summary>
+    /// The new name of the skill
+    /// </summary>
+    public string NewName { get; } 
+
     /// <summary>
     /// Creates a new instance of the SkillUpdatedEvent class
     /// </summary>
     /// <param name="skillId">The ID of the skill</param>
-    /// <param name="skillName">The name of the skill</param>
-    public SkillUpdatedEvent(Guid skillId, string skillName)
+    /// <param name="skillName">The original name of the skill</param>
+    /// <param name="newName">The new name of the skill</param>
+    public SkillUpdatedEvent(Guid skillId, string skillName, string newName)
     {
         SkillId = skillId;
-        SkillName = skillName;
+        SkillName = skillName; // This is the original name before update for context
+        NewName = newName;
     }
 }
 

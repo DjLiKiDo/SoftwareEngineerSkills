@@ -46,15 +46,34 @@ public class Email : ValueObject
     /// <returns>True if the email is valid; otherwise, false</returns>
     private static bool IsValidEmail(string email)
     {
-        try
-        {
-            var addr = new System.Net.Mail.MailAddress(email);
-            return addr.Address == email;
-        }
-        catch
+        // Basic regex for email validation
+        if (!System.Text.RegularExpressions.Regex.IsMatch(email, 
+            @"^[^@\s]+@[^@\s]+\.[^@\s]{2,}$"))
         {
             return false;
         }
+
+        // Additional validations that System.Net.Mail.MailAddress might not catch
+        var parts = email.Split('@');
+        if (parts.Length != 2)
+            return false;
+
+        var domainParts = parts[1].Split('.');
+        if (domainParts.Length < 2)
+            return false;
+
+        // Check if TLD is at least 2 characters
+        if (domainParts[^1].Length < 2)
+            return false;
+
+        // Ensure no part is empty
+        foreach (var part in domainParts)
+        {
+            if (string.IsNullOrEmpty(part))
+                return false;
+        }
+        
+        return true;
     }
     
     /// <summary>

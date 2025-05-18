@@ -16,7 +16,7 @@ public class SkillTests
     private const string LongName = "ThisIsAVeryLongSkillNameThatExceedsTheMaximumAllowedLengthOfOneHundredCharactersAndThereforeShouldFailValidation";
     private const string EmptyDescription = "";
     private const string WhitespaceDescription = "   ";
-    private const string LongDescription = "This is a very long skill description that exceeds the maximum allowed length of one thousand characters. This description is intentionally made excessively long to test the validation logic within the Skill entity. It should trigger a BusinessRuleException because the length constraint is violated. We need to ensure that our domain model correctly enforces these kinds of business rules to maintain data integrity and prevent unexpected issues in the application. This detailed description serves no other purpose than to be exceptionally long for this specific test case.";
+    private const string LongDescription = "This is a very long skill description that exceeds the maximum allowed length of one thousand characters. This description is intentionally made excessively long to test the validation logic within the Skill entity. It should trigger a BusinessRuleException because the length constraint is violated. We need to ensure that our domain model correctly enforces these kinds of business rules to maintain data integrity and prevent unexpected issues in the application. This detailed description serves no other purpose than to be exceptionally long for this specific test case. Adding more text to make this description exceed one thousand characters. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Curabitur pretium tincidunt lacus. Nulla gravida orci a odio. Nullam varius, turpis et commodo pharetra, est eros bibendum elit, nec luctus magna felis sollicitudin mauris. Integer in mauris eu nibh euismod gravida. Duis ac tellus et risus vulputate vehicula. Donec lobortis risus a elit. Etiam tempor. Ut ullamcorper, ligula eu tempor congue, eros est euismod turpis, id tincidunt sapien risus a quam.";
 
 
     [Fact]
@@ -44,14 +44,14 @@ public class SkillTests
         skillCreatedEvent.Should().NotBeNull();
         skillCreatedEvent?.SkillId.Should().Be(skill.Id);
         skillCreatedEvent?.SkillName.Should().Be(name);
-        skillCreatedEvent?.SkillCategory.Should().Be(category.ToString());
+        skillCreatedEvent?.SkillCategory.Should().Be(category); // Corrected assertion
     }
 
     [Theory]
     [InlineData(null)]
     [InlineData(EmptyName)]
     [InlineData(WhitespaceName)]
-    public void Constructor_WithInvalidName_ShouldThrowBusinessRuleException(string invalidName)
+    public void Constructor_WithInvalidName_ShouldThrowBusinessRuleException(string? invalidName) // Made string nullable
     {
         // Arrange
         var category = SkillCategory.ProgrammingLanguage;
@@ -85,7 +85,7 @@ public class SkillTests
     [InlineData(null)]
     [InlineData(EmptyDescription)]
     [InlineData(WhitespaceDescription)]
-    public void Constructor_WithInvalidDescription_ShouldThrowBusinessRuleException(string invalidDescription)
+    public void Constructor_WithInvalidDescription_ShouldThrowBusinessRuleException(string? invalidDescription) // Made string nullable
     {
         // Arrange
         var name = ValidName;
@@ -147,7 +147,7 @@ public class SkillTests
     [InlineData(null)]
     [InlineData(EmptyName)]
     [InlineData(WhitespaceName)]
-    public void Update_WithInvalidName_ShouldThrowBusinessRuleException(string invalidName)
+    public void Update_WithInvalidName_ShouldThrowBusinessRuleException(string? invalidName) // Made string nullable
     {
         // Arrange
         var skill = new Skill(ValidName, SkillCategory.ProgrammingLanguage, ValidDescription, SkillLevel.Beginner, false);
@@ -176,7 +176,7 @@ public class SkillTests
     [InlineData(null)]
     [InlineData(EmptyDescription)]
     [InlineData(WhitespaceDescription)]
-    public void Update_WithInvalidDescription_ShouldThrowBusinessRuleException(string invalidDescription)
+    public void Update_WithInvalidDescription_ShouldThrowBusinessRuleException(string? invalidDescription) // Made string nullable
     {
         // Arrange
         var skill = new Skill(ValidName, SkillCategory.ProgrammingLanguage, ValidDescription, SkillLevel.Beginner, false);

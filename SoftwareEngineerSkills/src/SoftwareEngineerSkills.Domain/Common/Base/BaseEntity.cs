@@ -14,6 +14,11 @@ public abstract class BaseEntity : IAuditableEntity
     /// </summary>
     public Guid Id { get; protected set; }
 
+    protected BaseEntity()
+    {
+        Id = Guid.NewGuid();
+    }
+
     /// <summary>
     /// Date when the entity was created
     /// </summary>
