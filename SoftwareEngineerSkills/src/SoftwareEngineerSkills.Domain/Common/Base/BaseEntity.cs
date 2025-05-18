@@ -1,12 +1,13 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using SoftwareEngineerSkills.Domain.Common.Events;
+using SoftwareEngineerSkills.Domain.Common.Interfaces;
 
 namespace SoftwareEngineerSkills.Domain.Common.Base;
 
 /// <summary>
 /// Base class for all entities in the domain model
 /// </summary>
-public abstract class BaseEntity
+public abstract class BaseEntity : IAuditableEntity
 {
     /// <summary>
     /// Unique identifier for the entity
@@ -16,22 +17,22 @@ public abstract class BaseEntity
     /// <summary>
     /// Date when the entity was created
     /// </summary>
-    public DateTime Created { get; private set; }
+    public DateTime Created { get; set; }
 
     /// <summary>
     /// User or system who created the entity
     /// </summary>
-    public string? CreatedBy { get; private set; }
+    public string? CreatedBy { get; set; }
 
     /// <summary>
     /// Date when the entity was last modified
     /// </summary>
-    public DateTime? LastModified { get; private set; }
+    public DateTime? LastModified { get; set; }
 
     /// <summary>
     /// User or system who last modified the entity
     /// </summary>
-    public string? LastModifiedBy { get; private set; }
+    public string? LastModifiedBy { get; set; }
 
     /// <summary>
     /// Collection of domain events raised by this entity

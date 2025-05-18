@@ -1,5 +1,6 @@
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using SoftwareEngineerSkills.Domain.Common.Interfaces;
 using System.Net;
 using System.Net.Mail;
 

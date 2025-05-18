@@ -1,9 +1,13 @@
+using System;
+using System.Collections.Generic;
 using System.Net.Mail;
+using System.Threading;
+using System.Threading.Tasks;
 
-namespace SoftwareEngineerSkills.Infrastructure.Services.Email;
+namespace SoftwareEngineerSkills.Domain.Common.Interfaces;
 
 /// <summary>
-/// Interface for email service
+/// Service for sending emails as part of domain processes
 /// </summary>
 public interface IEmailService
 {

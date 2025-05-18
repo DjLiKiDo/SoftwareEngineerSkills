@@ -56,6 +56,7 @@ This template implements **Clean Architecture** with a focus on **Domain-Driven 
 - **Repository Pattern with Unit of Work** for data access abstraction
 - **IOptions Pattern** for strongly-typed configuration management
 - **Result Pattern** for exception-free error handling
+- **Entity Auditing System** with sophisticated tracking and soft delete capabilities
 
 ### API Documentation & Versioning
 - **OpenAPI/Swagger** using Swashbuckle for API documentation

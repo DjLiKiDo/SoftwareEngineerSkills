@@ -14,7 +14,10 @@ public class Email : ValueObject
     public string Value { get; }
     
     // Private constructor for EF Core
-    private Email() {}
+    private Email() 
+    {
+        Value = string.Empty;
+    }
     
     /// <summary>
     /// Creates a new instance of the Email value object

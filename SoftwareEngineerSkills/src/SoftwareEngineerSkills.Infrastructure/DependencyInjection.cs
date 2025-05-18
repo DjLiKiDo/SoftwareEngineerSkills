@@ -2,9 +2,11 @@
 using Microsoft.Extensions.DependencyInjection;
 using SoftwareEngineerSkills.Infrastructure.Logging;
 using SoftwareEngineerSkills.Infrastructure.Persistence;
+using SoftwareEngineerSkills.Infrastructure.Services;
 using SoftwareEngineerSkills.Infrastructure.Services.BackgroundProcessing;
 using SoftwareEngineerSkills.Infrastructure.Services.Caching;
 using SoftwareEngineerSkills.Infrastructure.Services.Email;
+using SoftwareEngineerSkills.Infrastructure.Services.User;
 
 namespace SoftwareEngineerSkills.Infrastructure;
 
@@ -26,14 +28,16 @@ public static class DependencyInjection
         
         // Register repositories
         services.AddRepositoryServices();
-        
-        // Configure logging services
+          // Configure logging services
         services.AddLoggingServices(configuration);
         
         // Register external infrastructure services
         services.AddEmailServices(configuration);
         services.AddCachingServices(configuration);
         services.AddBackgroundProcessingServices(configuration);
+        
+        // Register user services (for auditing)
+        services.AddUserServices(configuration);
 
         return services;
     }

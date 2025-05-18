@@ -475,4 +475,7 @@ public class CreateCustomerCommandHandlerTests
 - [Clean Architecture](https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html)
 - [Domain-Driven Design Reference](https://www.domainlanguage.com/ddd/reference/)
 
-use context 7 to retrieve official documentation if needed
+
+- use context 7 to retrieve official documentation if needed
+- Maintain changelog.md file with version history
+- Review and update README.md file for project overview if needed

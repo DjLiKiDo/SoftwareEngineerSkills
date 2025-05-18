@@ -2,7 +2,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using SoftwareEngineerSkills.Domain.Common.Base;
 using SoftwareEngineerSkills.Domain.Common.Events;
+using SoftwareEngineerSkills.Domain.Common.Interfaces;
 using SoftwareEngineerSkills.Domain.Entities.Skills;
+using System.Linq.Expressions;
 using System.Reflection;
 
 namespace SoftwareEngineerSkills.Infrastructure.Persistence;
@@ -13,6 +15,7 @@ namespace SoftwareEngineerSkills.Infrastructure.Persistence;
 public class ApplicationDbContext : DbContext
 {
     private IDbContextTransaction? _currentTransaction;
+    private readonly ICurrentUserService _currentUserService;
 
     /// <summary>
     /// Gets the skills DbSet
@@ -28,8 +31,12 @@ public class ApplicationDbContext : DbContext
     /// Creates a new instance of the ApplicationDbContext class
     /// </summary>
     /// <param name="options">The options for this context</param>
-    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
+    /// <param name="currentUserService">The current user service for auditing</param>
+    public ApplicationDbContext(
+        DbContextOptions<ApplicationDbContext> options,
+        ICurrentUserService currentUserService) : base(options)
     {
+        _currentUserService = currentUserService;
     }
 
     /// <summary>
@@ -39,6 +46,22 @@ public class ApplicationDbContext : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
+        
+        // Configure global query filter for soft delete
+        foreach (var entityType in modelBuilder.Model.GetEntityTypes())
+        {
+            // Check if entity implements ISoftDelete interface
+            if (typeof(ISoftDelete).IsAssignableFrom(entityType.ClrType))
+            {
+                var parameter = Expression.Parameter(entityType.ClrType, "e");
+                var property = Expression.Property(parameter, nameof(ISoftDelete.IsDeleted));
+                var falseConstant = Expression.Constant(false);
+                var expression = Expression.Equal(property, falseConstant);
+                var lambda = Expression.Lambda(expression, parameter);
+                
+                modelBuilder.Entity(entityType.ClrType).HasQueryFilter(lambda);
+            }
+        }
         
         base.OnModelCreating(modelBuilder);
     }
@@ -115,19 +138,34 @@ public class ApplicationDbContext : DbContext
     /// <returns>The number of state entries written to the database</returns>
     public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {
+        var utcNow = DateTime.UtcNow;
+        var userName = _currentUserService.IsAuthenticated ? _currentUserService.UserName : "system";
+        
         // Update audit properties
-        foreach (var entry in ChangeTracker.Entries<BaseEntity>())
+        foreach (var entry in ChangeTracker.Entries<IAuditableEntity>())
         {
             switch (entry.State)
             {
                 case EntityState.Added:
-                    entry.Entity.Created = DateTime.UtcNow;
-                    entry.Entity.CreatedBy = "system"; // This should come from an identity service in a real app
+                    entry.Entity.Created = utcNow;
+                    entry.Entity.CreatedBy = userName;
                     break;
                 case EntityState.Modified:
-                    entry.Entity.LastModified = DateTime.UtcNow;
-                    entry.Entity.LastModifiedBy = "system"; // This should come from an identity service in a real app
+                    entry.Entity.LastModified = utcNow;
+                    entry.Entity.LastModifiedBy = userName;
                     break;
+            }
+        }
+        
+        // Handle soft delete
+        foreach (var entry in ChangeTracker.Entries<ISoftDelete>())
+        {
+            if (entry.State == EntityState.Deleted && entry.Entity is ISoftDelete softDeleteEntity)
+            {
+                entry.State = EntityState.Modified; // Change state to modified instead of deleted
+                softDeleteEntity.IsDeleted = true;
+                softDeleteEntity.DeletedAt = utcNow;
+                softDeleteEntity.DeletedBy = userName;
             }
         }
 

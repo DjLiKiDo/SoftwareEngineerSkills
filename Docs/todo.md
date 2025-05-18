@@ -10,6 +10,15 @@
 [ ] Revisar validacion de settings, decidir si con data anotations o fluentvalidation o pipeline o que
 [V] Mover databasesettings a la carpeta persistence
 [ ] IOptionsMonitor
+[ ] Añadir DateTimeService y utilizar de manera consistente en todo el proyecto
+[ ] Domain: Revisar la estructura de carpetas. Analizar donde deben de ir las Interfaces de los servicios
+[ ] 
+[ ] 
+[ ] 
+[ ] 
+[ ] 
+[ ] 
+[ ] 
 [ ] 
 [ ] 
 [ ] 
