@@ -21,6 +21,7 @@ Requirements:
    - Cover happy path and error scenarios
    - Validate exception handling
    - Test boundary conditions
+   - Coverage >= 80% for all methods
 
 4. Implementation Guidelines:
    - Mock external dependencies using Moq
