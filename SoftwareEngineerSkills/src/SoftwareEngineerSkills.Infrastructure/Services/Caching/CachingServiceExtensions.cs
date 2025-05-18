@@ -1,5 +1,11 @@
+using Microsoft.Extensions.Caching.Distributed;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
+using SoftwareEngineerSkills.Infrastructure.Configuration;
+using System;
 
 namespace SoftwareEngineerSkills.Infrastructure.Services.Caching;
 
@@ -16,65 +22,52 @@ public static class CachingServiceExtensions
     /// <returns>The service collection for chaining</returns>
     public static IServiceCollection AddCachingServices(this IServiceCollection services, IConfiguration configuration)
     {
-        // Configure Caching
-        services.Configure<CacheSettings>(configuration.GetSection("Cache"));
+        // Configure Caching with validation
+        services.AddSettings<CacheSettings>(configuration, CacheSettings.SectionName)
+            .Validate(settings => settings.Validate(out _), "Cache settings validation failed");
         
-        // Get cache settings from configuration
-        var cacheSettings = configuration.GetSection("Cache").Get<CacheSettings>() ?? new CacheSettings();
+        // Register base caching services
+        services.AddMemoryCache();
+        services.AddDistributedMemoryCache();
         
-        // Register different cache implementations based on configuration
-        var cacheProvider = configuration.GetValue<string>("Cache:Provider")?.ToLowerInvariant() ?? "memory";
-        
-        switch (cacheProvider)
+        // Configure the appropriate cache implementation based on settings
+        services.AddSingleton<ICacheService>(serviceProvider =>
         {
-            case "redis":
-                ConfigureRedisCache(services, cacheSettings);
-                break;
-                
-            case "distributed":
-                ConfigureDistributedCache(services);
-                break;
-                
-            case "memory":
-            default:
-                ConfigureMemoryCache(services, cacheSettings);
-                break;
-        }
-        
-        return services;
-    }
-    
-    /// <summary>
-    /// Configures Redis cache services
-    /// </summary>
-    private static void ConfigureRedisCache(IServiceCollection services, CacheSettings cacheSettings)
-    {
-        // If using Redis, you would need to add the Redis distributed cache implementation
-        // services.AddStackExchangeRedisCache(options => { /* Configure Redis */ });
-        services.AddSingleton<ICacheService, DistributedCacheService>();
-    }
-    
-    /// <summary>
-    /// Configures distributed memory cache services
-    /// </summary>
-    private static void ConfigureDistributedCache(IServiceCollection services)
-    {
-        services.AddDistributedMemoryCache(); // Use this for development/testing
-        services.AddSingleton<ICacheService, DistributedCacheService>();
-    }
-    
-    /// <summary>
-    /// Configures in-memory cache services
-    /// </summary>
-    private static void ConfigureMemoryCache(IServiceCollection services, CacheSettings cacheSettings)
-    {
-        services.AddMemoryCache(options =>
-        {
-            if (cacheSettings.SizeLimitInMB > 0)
+            var options = serviceProvider.GetRequiredService<IOptions<CacheSettings>>();
+            var cacheSettings = options.Value;
+            
+            // Choose the appropriate implementation based on the provider setting
+            if (cacheSettings.Provider.Equals("redis", StringComparison.OrdinalIgnoreCase) ||
+                cacheSettings.Provider.Equals("distributed", StringComparison.OrdinalIgnoreCase))
             {
-                options.SizeLimit = cacheSettings.SizeLimitInMB * 1024 * 1024; // Convert MB to bytes
+                var distributedCache = serviceProvider.GetRequiredService<IDistributedCache>();
+                var logger = serviceProvider.GetRequiredService<ILogger<DistributedCacheService>>();
+                
+                return new DistributedCacheService(distributedCache, options, logger);
+            }
+            else
+            {
+                var memoryCache = serviceProvider.GetRequiredService<IMemoryCache>();
+                var logger = serviceProvider.GetRequiredService<ILogger<MemoryCacheService>>();
+                
+                return new MemoryCacheService(memoryCache, options, logger);
             }
         });
-        services.AddSingleton<ICacheService, MemoryCacheService>();
+        
+        return services;
+        // Configure Redis if needed based on settings
+        services.PostConfigure<CacheSettings>(settings =>
+        {
+            if (settings.Provider.Equals("redis", StringComparison.OrdinalIgnoreCase) && 
+                !string.IsNullOrEmpty(settings.RedisConnectionString))
+            {
+                // In a real implementation, we would register Redis here
+                // services.AddStackExchangeRedisCache(options => 
+                // {
+                //     options.Configuration = settings.RedisConnectionString;
+                //     options.InstanceName = settings.RedisInstanceName;
+                // });
+            }
+        });
     }
 }

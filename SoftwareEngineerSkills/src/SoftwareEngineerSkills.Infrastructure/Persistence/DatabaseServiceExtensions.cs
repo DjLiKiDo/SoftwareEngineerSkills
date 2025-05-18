@@ -21,17 +21,15 @@ public static class DatabaseServiceExtensions
     /// <returns>The service collection for chaining</returns>
     public static IServiceCollection AddDatabaseServices(this IServiceCollection services, IConfiguration configuration)
     {
-        // Configure database settings
-        services.Configure<DatabaseSettings>(configuration.GetSection("Database"));
-        services.AddSingleton(sp => sp.GetRequiredService<Microsoft.Extensions.Options.IOptions<DatabaseSettings>>().Value);
+        // Configure database settings using our pattern with validation
+        services.AddDatabaseSettings(configuration);
         
-        // Get database settings from configuration
-        var dbSettings = configuration.GetSection("Database").Get<DatabaseSettings>() 
-                       ?? new DatabaseSettings();
-        
-        // Register DbContext
-        services.AddDbContext<ApplicationDbContext>(options =>
+        // Register DbContext with access to options
+        services.AddDbContext<ApplicationDbContext>((provider, options) =>
         {
+            // Get database settings through DI properly at context creation time
+            var dbSettings = provider.GetRequiredService<Microsoft.Extensions.Options.IOptionsMonitor<DatabaseSettings>>().CurrentValue;
+            
             ConfigureDatabaseProvider(options, dbSettings, configuration);
             
             // Enable sensitive data logging and detailed errors
@@ -48,6 +46,32 @@ public static class DatabaseServiceExtensions
 
         return services;
     }
+    
+    /// <summary>
+    /// Adds database settings to the service collection
+    /// </summary>
+    /// <param name="services">The service collection</param>
+    /// <param name="configuration">The configuration</param>
+    /// <returns>The service collection for chaining</returns>
+    public static IServiceCollection AddDatabaseSettings(this IServiceCollection services, IConfiguration configuration)
+    {
+        services.AddSettings<DatabaseSettings>(configuration, DatabaseSettings.SectionName)
+            .Validate(settings =>
+            {
+                if (!settings.Validate(out var results))
+                {
+                    foreach (var result in results)
+                    {
+                        // The validation error messages will be reported during startup
+                        // due to ValidateOnStart()
+                    }
+                    return false;
+                }
+                return true;
+            }, "Database settings validation failed");
+        
+        return services;
+    }
 
     /// <summary>
     /// Configures the database provider based on the settings
@@ -56,39 +80,48 @@ public static class DatabaseServiceExtensions
     /// <param name="dbSettings">The database settings</param>
     /// <param name="configuration">The configuration</param>
     private static void ConfigureDatabaseProvider(
-        DbContextOptionsBuilder options, 
+        DbContextOptionsBuilder options,
         DatabaseSettings dbSettings,
         IConfiguration configuration)
     {
+        // Get the connection string from settings
+        var connectionString = dbSettings.ConnectionString;
+
+        // If connection string is empty, we have a validation issue
+        if (string.IsNullOrEmpty(connectionString))
+        {
+            throw new InvalidOperationException("Database connection string is not configured");
+        }
+
         switch (dbSettings.Provider.ToLowerInvariant())
         {
             case "sqlserver":
                 options.UseSqlServer(
-                    dbSettings.ConnectionString ?? configuration.GetConnectionString("DefaultConnection"),
+                    connectionString,
                     sqlOptions =>
                     {
                         sqlOptions.MigrationsAssembly(typeof(ApplicationDbContext).Assembly.FullName);
                         sqlOptions.EnableRetryOnFailure(
-                            dbSettings.MaxRetryCount, 
-                            TimeSpan.FromSeconds(dbSettings.MaxRetryDelaySeconds), 
+                            dbSettings.MaxRetryCount,
+                            TimeSpan.FromSeconds(dbSettings.MaxRetryDelaySeconds),
                             null);
                     });
                 break;
-                
+
             case "postgres":
             case "postgresql":
                 options.UseNpgsql(
-                    dbSettings.ConnectionString ?? configuration.GetConnectionString("DefaultConnection"),
+                    connectionString,
                     npgsqlOptions =>
                     {
                         npgsqlOptions.MigrationsAssembly(typeof(ApplicationDbContext).Assembly.FullName);
                         npgsqlOptions.EnableRetryOnFailure(
-                            dbSettings.MaxRetryCount, 
-                            TimeSpan.FromSeconds(dbSettings.MaxRetryDelaySeconds), 
+                            dbSettings.MaxRetryCount,
+                            TimeSpan.FromSeconds(dbSettings.MaxRetryDelaySeconds),
                             null);
                     });
                 break;
-                
+
             case "inmemory":
             default:
                 options.UseInMemoryDatabase("SoftwareEngineerSkillsDb");

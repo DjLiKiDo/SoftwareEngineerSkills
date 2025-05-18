@@ -1,5 +1,6 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using SoftwareEngineerSkills.Infrastructure.Configuration;
 
 namespace SoftwareEngineerSkills.Infrastructure.Services.Email;
 
@@ -16,8 +17,13 @@ public static class EmailServiceExtensions
     /// <returns>The service collection for chaining</returns>
     public static IServiceCollection AddEmailServices(this IServiceCollection services, IConfiguration configuration)
     {
-        // Configure Email Service
-        services.Configure<EmailSettings>(configuration.GetSection("Email"));
+        // Configure Email Service with validation
+        services.AddSettings<EmailSettings>(configuration, EmailSettings.SectionName)
+            .Validate(settings => 
+            {
+                return settings.Validate(out _);
+            }, "Email settings validation failed");
+        
         services.AddScoped<IEmailService, SmtpEmailService>();
         
         return services;

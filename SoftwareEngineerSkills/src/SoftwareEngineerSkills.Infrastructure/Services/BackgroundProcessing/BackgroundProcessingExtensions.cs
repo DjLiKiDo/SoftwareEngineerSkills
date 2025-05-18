@@ -1,5 +1,7 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
+using SoftwareEngineerSkills.Infrastructure.Configuration;
 
 namespace SoftwareEngineerSkills.Infrastructure.Services.BackgroundProcessing;
 
@@ -16,9 +18,17 @@ public static class BackgroundProcessingExtensions
     /// <returns>The service collection for chaining</returns>
     public static IServiceCollection AddBackgroundProcessingServices(this IServiceCollection services, IConfiguration configuration)
     {
-        // Register Background Processing
-        var queueCapacity = configuration.GetValue<int>("BackgroundTasks:QueueCapacity", 100);
-        services.AddSingleton<IBackgroundTaskQueue>(sp => new BackgroundTaskQueue(queueCapacity));
+        // Register Background Processing settings with validation
+        services.AddSettings<BackgroundTaskSettings>(configuration, BackgroundTaskSettings.SectionName)
+            .Validate(settings => settings.Validate(out _), "Background task settings validation failed");
+
+        // Register Background Task Queue using options pattern
+        services.AddSingleton<IBackgroundTaskQueue>(sp => 
+        {
+            var settings = sp.GetRequiredService<IOptions<BackgroundTaskSettings>>().Value;
+            return new BackgroundTaskQueue(settings.QueueCapacity);
+        });
+        
         services.AddHostedService<QueuedHostedService>();
         
         return services;
