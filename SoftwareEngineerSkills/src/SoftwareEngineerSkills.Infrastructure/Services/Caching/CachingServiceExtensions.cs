@@ -55,8 +55,6 @@ public static class CachingServiceExtensions
             }
         });
         
-        return services;
-        
         // Configure Redis if needed based on settings
         services.PostConfigure<CacheSettings>(settings =>
         {
@@ -71,5 +69,7 @@ public static class CachingServiceExtensions
                 // });
             }
         });
+        
+        return services;
     }
 }
