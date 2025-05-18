@@ -34,7 +34,7 @@ This document provides instructions for GitHub Copilot to optimize AI assistance
   - camelCase for local variables and private fields
   - _camelCase for private fields (underscore prefix)
   - Interfaces prefixed with 'I' (e.g., IRepository)
-  - Abstract classes may be prefixed with 'Base' or 'Abstract'
+  - Abstract classes may be prefixed with 'Base'
   - Use meaningful, descriptive names
 
 - **Organization:**
@@ -59,32 +59,40 @@ This document provides instructions for GitHub Copilot to optimize AI assistance
 
 ### Project Structure and Organization
 ```
+├── SoftwareEngineerSkills.sln
 ├── src
-│   ├── Core
-│   │   ├── Domain              # Entities, Value Objects, Domain Events
-│   │   └── Application         # Business Logic, Commands, Queries
-│   ├── Infrastructure          # Data Access, External Services
-│   └── Presentation
-│       └── WebApi              # Controllers, Middleware, Configuration
+│   ├── SoftwareEngineerSkills.API              # Web API Controllers, Configuration
+│   ├── SoftwareEngineerSkills.Application      # Business Logic, Commands, Queries
+│   ├── SoftwareEngineerSkills.Common           # Shared utilities and helpers
+│   ├── SoftwareEngineerSkills.Domain           # Entities, Value Objects, Domain Events
+│   └── SoftwareEngineerSkills.Infrastructure   # Data Access, External Services
 └── tests
-    ├── UnitTests
-    ├── IntegrationTests
-    └── FunctionalTests
+    ├── SoftwareEngineerSkills.API.UnitTests
+    ├── SoftwareEngineerSkills.Application.UnitTests
+    ├── SoftwareEngineerSkills.Domain.UnitTests
+    ├── SoftwareEngineerSkills.Infrastructure.UnitTests
+    └── SoftwareEngineerSkills.IntegrationTests
 ```
 
-- **Core Layer:**
-  - **Domain:** Contains business entities, value objects, and domain logic
-  - **Application:** Contains application services, commands/queries, validators
+- **Domain Layer:**
+  - **SoftwareEngineerSkills.Domain:** Contains business entities, value objects, and domain logic
+
+- **Application Layer:**
+  - **SoftwareEngineerSkills.Application:** Contains application services, commands/queries, validators
 
 - **Infrastructure Layer:**
-  - Implements interfaces defined in the Core layer
+  - **SoftwareEngineerSkills.Infrastructure:** Implements interfaces defined in the Domain layer
   - Contains data access, external service integrations, logging, etc.
 
-- **Presentation Layer:**
-  - WebApi project with controllers, middleware, configuration
+- **API Layer:**
+  - **SoftwareEngineerSkills.API:** Web API controllers, middleware, configuration 
+
+- **Common Layer:**
+  - **SoftwareEngineerSkills.Common:** Shared utilities and helpers used across projects
 
 - **Tests:**
-  - Organized by test type (Unit, Integration, Functional)
+  - **Unit Tests:** Individual test projects for each layer (API, Application, Domain, Infrastructure)
+  - **Integration Tests:** End-to-end tests covering multiple layers
 
 ## 2. Workspace-Specific Instructions
 
