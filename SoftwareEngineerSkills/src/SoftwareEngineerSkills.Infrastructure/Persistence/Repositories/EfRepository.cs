@@ -8,7 +8,7 @@ namespace SoftwareEngineerSkills.Infrastructure.Persistence.Repositories;
 /// Implementation of the generic repository pattern using Entity Framework Core
 /// </summary>
 /// <typeparam name="TEntity">The entity type</typeparam>
-public class EfRepository<TEntity> : IRepository<TEntity> where TEntity : class
+internal class EfRepository<TEntity> : IRepository<TEntity> where TEntity : class
 {
     /// <summary>
     /// The database context

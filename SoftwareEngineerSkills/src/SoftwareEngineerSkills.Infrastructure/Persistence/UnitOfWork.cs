@@ -6,7 +6,7 @@ namespace SoftwareEngineerSkills.Infrastructure.Persistence;
 /// <summary>
 /// Implementation of the unit of work pattern
 /// </summary>
-public class UnitOfWork : IUnitOfWork
+internal class UnitOfWork : IUnitOfWork
 {
     private readonly ApplicationDbContext _context;
     private ISkillRepository? _skillRepository;

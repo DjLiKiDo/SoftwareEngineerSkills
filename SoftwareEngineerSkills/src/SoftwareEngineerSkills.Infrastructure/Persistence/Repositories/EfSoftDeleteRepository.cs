@@ -10,7 +10,7 @@ namespace SoftwareEngineerSkills.Infrastructure.Persistence.Repositories;
 /// Implementation of the repository pattern with soft delete support using Entity Framework Core
 /// </summary>
 /// <typeparam name="TEntity">The entity type</typeparam>
-public class EfSoftDeleteRepository<TEntity> : EfRepository<TEntity>, ISoftDeleteRepository<TEntity> 
+internal class EfSoftDeleteRepository<TEntity> : EfRepository<TEntity>, ISoftDeleteRepository<TEntity> 
     where TEntity : BaseEntity, ISoftDelete
 {
     /// <summary>
