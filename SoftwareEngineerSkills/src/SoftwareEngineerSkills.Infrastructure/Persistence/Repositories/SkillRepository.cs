@@ -8,7 +8,7 @@ namespace SoftwareEngineerSkills.Infrastructure.Persistence.Repositories;
 /// <summary>
 /// Implementation of the skill repository
 /// </summary>
-public class SkillRepository : EfRepository<Skill>, ISkillRepository
+internal class SkillRepository : EfRepository<Skill>, ISkillRepository
 {
     /// <summary>
     /// Creates a new instance of the SkillRepository class

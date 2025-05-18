@@ -1,7 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using SoftwareEngineerSkills.Domain.Common.Base;
-using SoftwareEngineerSkills.Domain.Common.Events;
 using SoftwareEngineerSkills.Domain.Common.Interfaces;
 using SoftwareEngineerSkills.Domain.Entities.Skills;
 using SoftwareEngineerSkills.Domain.Abstractions.Services;
@@ -13,7 +12,7 @@ namespace SoftwareEngineerSkills.Infrastructure.Persistence;
 /// <summary>
 /// The database context for the application
 /// </summary>
-public class ApplicationDbContext : DbContext
+internal class ApplicationDbContext : DbContext
 {
     private IDbContextTransaction? _currentTransaction;
     private readonly ICurrentUserService _currentUserService;
