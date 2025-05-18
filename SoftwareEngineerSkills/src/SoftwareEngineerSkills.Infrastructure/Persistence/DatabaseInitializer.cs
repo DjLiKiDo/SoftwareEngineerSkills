@@ -54,71 +54,70 @@ public static class DatabaseInitializer
         {
             new Skill(
                 "C# Programming", 
+                SkillCategory.ProgrammingLanguage, 
                 "Object-oriented programming language developed by Microsoft", 
-                SkillCategory.Programming, 
                 SkillLevel.Intermediate, 
                 isInDemand: true),
                 
             new Skill(
                 "ASP.NET Core",
+                SkillCategory.Framework, 
                 "Cross-platform framework for building web applications", 
-                SkillCategory.Backend, 
                 SkillLevel.Advanced, 
                 isInDemand: true),
                 
             new Skill(
                 "Entity Framework Core", 
+                SkillCategory.Framework, 
                 "Object-relational mapper for .NET", 
-                SkillCategory.Database, 
                 SkillLevel.Intermediate, 
                 isInDemand: true),
-                
-            new Skill(
+                 new Skill(
                 "Clean Architecture", 
+                SkillCategory.Architecture,
                 "Software design philosophy emphasizing separation of concerns", 
-                SkillCategory.Architecture, 
-                SkillLevel.Advanced, 
+                SkillLevel.Advanced,
                 isInDemand: true),
                 
             new Skill(
                 "Domain-Driven Design", 
+                SkillCategory.Architecture,
                 "Approach to software development focusing on the core domain", 
-                SkillCategory.Architecture, 
                 SkillLevel.Advanced, 
                 isInDemand: true),
                 
             new Skill(
                 "SQL", 
+                SkillCategory.Database,
                 "Standard language for managing and querying relational databases", 
-                SkillCategory.Database, 
                 SkillLevel.Intermediate, 
                 isInDemand: true),
                 
             new Skill(
                 "Git", 
+                SkillCategory.Tool,
                 "Distributed version control system", 
-                SkillCategory.DevTools, 
-                SkillLevel.Basic, 
+                SkillLevel.Beginner, 
                 isInDemand: true),
                 
             new Skill(
                 "Docker", 
+                SkillCategory.DevOps,
                 "Platform for containerizing applications", 
-                SkillCategory.DevOps, 
                 SkillLevel.Intermediate, 
                 isInDemand: true),
                 
             new Skill(
                 "Azure", 
+                SkillCategory.Cloud,
                 "Microsoft's cloud computing platform", 
-                SkillCategory.Cloud, 
                 SkillLevel.Intermediate, 
                 isInDemand: true),
                 
             new Skill(
                 "Unit Testing", 
+                SkillCategory.Testing,
                 "Software testing method where individual units are tested", 
-                SkillCategory.Testing, 
                 SkillLevel.Intermediate, 
                 isInDemand: true)
         };
