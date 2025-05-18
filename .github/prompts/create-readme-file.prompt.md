@@ -1,4 +1,4 @@
-Create a production-ready README.md file for a .NET 9 Web API Template implementing enterprise-level best practices and industry standards. The template should serve as a foundation for building scalable, maintainable, and secure APIs.
+Populate README.md file for a .NET 9 Web API Template implementing enterprise-level best practices and industry standards. The template should serve as a foundation for building scalable, maintainable, and secure APIs.
 
 Architecture & Design Patterns:
 - Clean Architecture with DDD principles and Screaming Architecture
@@ -54,4 +54,4 @@ Technical Requirements:
 
 The solution should include documentation, examples, and best practices for extending the template for specific business requirements.
 
-#fetch https://docs.github.com/es/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-readmes to get mar info about readme files
+#fetch https://docs.github.com/es/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-readmes to get mar info about readme files and to make it a valueable resource for the user.
