@@ -1,195 +1,309 @@
-# .NET 9 Web API Template: Enterprise Edition
+# .NET 9 Enterprise Web API Template
 
-[![.NET Version](https://img.shields.io/badge/.NET-9-blueviolet)](https://dotnet.microsoft.com/download/dotnet/9.0)
-[![C# Version](https://img.shields.io/badge/C%23-14%2B-green)](https://learn.microsoft.com/en-us/dotnet/csharp/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-<!-- Add other relevant badges here: Build Status, Code Coverage, NuGet, etc. -->
+[![Build Status](https://github.com/yourusername/SoftwareEngineerSkills/actions/workflows/dotnet.yml/badge.svg)](https://github.com/yourusername/SoftwareEngineerSkills/actions/workflows/dotnet.yml)
+[![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![.NET](https://img.shields.io/badge/.NET-9.0-purple.svg)](https://dotnet.microsoft.com/download)
 
-## Overview
+A production-ready .NET 9 Web API template implementing enterprise-level best practices for building scalable, maintainable, and secure APIs following Clean Architecture and Domain-Driven Design principles.
 
-This repository provides a production-ready .NET 9 Web API template designed for building scalable, maintainable, and secure enterprise-level applications. It incorporates a comprehensive set of best practices, modern architectural patterns, and industry-standard tools to accelerate development and ensure high-quality results.
+## Table of Contents
+- [Architecture Overview](#architecture-overview)
+- [Key Features](#key-features)
+- [Getting Started](#getting-started)
+  - [Prerequisites](#prerequisites)
+  - [Installation](#installation)
+  - [Configuration](#configuration)
+- [Project Structure](#project-structure)
+- [Design Patterns & Principles](#design-patterns--principles)
+- [API Documentation](#api-documentation)
+- [Testing](#testing)
+- [Observability](#observability)
+- [Security](#security)
+- [Performance Optimization](#performance-optimization)
+- [CI/CD & DevOps](#cicd--devops)
+- [Contributing](#contributing)
+- [License](#license)
+- [Support](#support)
 
-The template serves as a robust foundation, emphasizing Clean Architecture, Domain-Driven Design (DDD) principles, and a clear separation of concerns.
+## Architecture Overview
+
+This template implements **Clean Architecture** with a focus on **Domain-Driven Design** principles and **Screaming Architecture**. The solution is organized into multiple layers with clear separation of concerns:
+
+```
+├── src
+│   ├── Core
+│   │   ├── Domain              # Entities, Value Objects, Domain Events
+│   │   └── Application         # Business Logic, Commands, Queries
+│   ├── Infrastructure          # Data Access, External Services
+│   └── Presentation
+│       └── WebApi              # Controllers, Middleware, Configuration
+└── tests
+    ├── UnitTests
+    ├── IntegrationTests
+    └── FunctionalTests
+```
 
 ## Key Features
 
-### Architecture & Design Patterns:
-*   **Clean Architecture:** Promotes separation of concerns, testability, and maintainability by organizing the codebase into distinct layers (Domain, Application, Infrastructure, API).
-*   **Domain-Driven Design (DDD) Principles:** Focuses on the core domain and domain logic, using entities, aggregates, value objects, and domain services.
-*   **Screaming Architecture:** The project structure clearly communicates its intent and business domain.
-*   **CQRS (Command Query Responsibility Segregation) with MediatR:** Separates read and write operations, improving performance and scalability. MediatR is used for in-process messaging.
-*   **Repository Pattern & Unit of Work:** Abstracts data access logic, providing a consistent way to interact with the data store and manage transactions.
-*   **IOptions Pattern:** For strongly-typed configuration management, making it easy to access settings throughout the application.
-*   **Result Pattern:** Enables exception-free error handling, improving code clarity and predictability by returning explicit success or failure outcomes.
+### Core Technologies
+- **.NET 9 / ASP.NET Core** - Latest framework version
+- **C# 14+** - Modern language features
+- **Entity Framework Core 9** - Data access (abstracted via Repository Pattern)
 
-### Core Technologies:
-*   **.NET 9 / ASP.NET Core 9:** Leverages the latest features and performance improvements of the .NET platform.
-*   **C# 14+:** Utilizes modern C# language features for concise and expressive code.
-*   **Entity Framework Core 9:** Provides powerful data access capabilities with support for LINQ, migrations, and performance optimizations.
+### Architecture & Design Patterns
+- **Clean Architecture** with DDD principles and Screaming Architecture
+- **CQRS with MediatR** for separating read and write operations
+- **Repository Pattern with Unit of Work** for data access abstraction
+- **IOptions Pattern** for strongly-typed configuration management
+- **Result Pattern** for exception-free error handling
 
-### API Documentation & Versioning:
-*   **OpenAPI/Swagger with Swashbuckle:** Generates interactive API documentation, making it easy for developers and consumers to understand and test the API.
-*   **API Versioning:** Supports multiple API versions to manage changes and ensure backward compatibility.
+### API Documentation & Versioning
+- **OpenAPI/Swagger** using Swashbuckle for API documentation
+- **API Versioning** support for backward compatibility
 
-### Testing Framework:
-*   **xUnit:** A popular testing framework for writing unit and integration tests.
-*   **Moq:** A powerful mocking library for isolating dependencies in unit tests.
-*   **FluentAssertions:** Provides a more readable and expressive way to write assertions in tests.
-*   **Testcontainers:** Facilitates reliable integration testing by providing ephemeral, dockerized instances of external dependencies (e.g., databases).
+### Testing Framework
+- **xUnit** for unit and integration tests
+- **Moq** for mocking dependencies
+- **FluentAssertions** for readable test assertions
+- **Testcontainers** for integration testing with real dependencies
 
-### Observability Stack:
-*   **Structured Logging with Serilog:** Enables rich, structured logging for better diagnostics and analysis.
-*   **OpenTelemetry:** Implements distributed tracing to monitor requests across multiple services.
-*   **Health Checks:** Provides endpoints to monitor the health and availability of the API and its dependencies.
-*   **Metrics Exposure (Prometheus/AppMetrics):** Exposes application and system metrics for monitoring and alerting.
-*   **Correlation ID Tracking:** Ensures traceability of requests throughout the system.
+### Observability Stack
+- **Structured logging** with Serilog
+- **OpenTelemetry** for distributed tracing
+- **Health checks** implementation for monitoring
+- **Metrics exposure** (Prometheus/AppMetrics)
+- **Correlation ID tracking** across service calls
 
-### Security Features:
-*   **JWT/OAuth2 Authentication:** Implements robust authentication mechanisms for securing API endpoints.
-*   **HTTPS Enforcement:** Ensures all communication is encrypted.
-*   **FluentValidation:** Provides a fluent interface for building strongly-typed validation rules for input DTOs.
-*   **CORS Policy Configuration:** Manages cross-origin requests securely.
-*   **Secrets Management:** Guidelines and integration points for secure management of sensitive configuration (e.g., Azure Key Vault, HashiCorp Vault, User Secrets).
+### Security Features
+- **JWT/OAuth2 authentication** and authorization
+- **HTTPS enforcement** with proper configuration
+- **FluentValidation** for comprehensive input validation
+- **CORS policy** configuration
+- **Secrets management** solution
 
-### Performance Optimizations:
-*   **Async/Await Implementation:** Maximizes scalability and responsiveness by using asynchronous programming for I/O-bound operations.
-*   **Caching Strategy (In-memory/Redis):** Includes support for caching to improve response times and reduce database load.
-*   **Response Compression:** Reduces the size of API responses, improving network performance.
-*   **Rate Limiting Middleware:** Protects the API from abuse and ensures fair usage.
+### Performance Optimizations
+- **Async/await** implementation throughout
+- **Caching strategy** (In-memory/Redis)
+- **Response compression** middleware
+- **Rate limiting** implementation
 
-### Operational Features:
-*   **Dependency Injection:** Extensively used for managing dependencies and promoting loose coupling.
-*   **Background Job Processing (e.g., Hangfire/Quartz.NET):** Provides a framework for running background tasks reliably.
-*   **Feature Flags Implementation (e.g., FeatureManagement.AspNetCore):** Allows for controlled rollout and testing of new features.
-*   **Resilience Patterns with Polly:** Implements retry, circuit breaker, and other resilience patterns to handle transient failures.
-*   **Docker Containerization:** Includes a `Dockerfile` for easy containerization and deployment.
-*   **CI/CD Pipeline with GitHub Actions:** Pre-configured workflow for continuous integration and continuous deployment.
-
-## Project Structure
-
-The solution follows the principles of Clean Architecture, with a clear separation of concerns:
-
-```
-SoftwareEngineerSkills/
-├── SoftwareEngineerSkills.sln
-├── src/
-│   ├── SoftwareEngineerSkills.API/             # API layer (Controllers, Middleware, Program.cs, DTOs)
-│   ├── SoftwareEngineerSkills.Application/     # Application logic (CQRS Handlers, Services, Interfaces, Validation)
-│   ├── SoftwareEngineerSkills.Domain/          # Core domain model (Entities, Aggregates, Value Objects, Domain Events, Enums, Exceptions)
-│   ├── SoftwareEngineerSkills.Infrastructure/  # Data persistence (EF Core DbContext, Repositories), external services (Email, File Storage)
-│   └── SoftwareEngineerSkills.Common/          # Shared utilities (Result pattern, Error objects, Helpers)
-└── tests/
-    ├── SoftwareEngineerSkills.API.UnitTests/
-    ├── SoftwareEngineerSkills.Application.UnitTests/
-    ├── SoftwareEngineerSkills.Domain.UnitTests/
-    ├── SoftwareEngineerSkills.Infrastructure.UnitTests/
-    └── SoftwareEngineerSkills.IntegrationTests/    # End-to-end tests, API endpoint tests
-```
-
-*(Refer to the `Docs/` folder for more detailed architectural diagrams and design pattern explanations.)*
+### Operational Features
+- **Dependency injection** configuration
+- **Background job processing**
+- **Feature flags** implementation
+- **Resilience patterns** using Polly
+- **Docker containerization**
+- **CI/CD pipeline** with GitHub Actions
 
 ## Getting Started
 
 ### Prerequisites
-*   [.NET 9 SDK](https://dotnet.microsoft.com/download/dotnet/9.0)
-*   [Docker Desktop](https://www.docker.com/products/docker-desktop) (for Testcontainers and running in a container)
-*   An IDE like Visual Studio 2022, JetBrains Rider, or VS Code.
 
-### Setup & Configuration
-1.  **Clone the repository:**
-    ```bash
-    git clone <repository-url>
-    cd <repository-name>
-    ```
-2.  **Restore dependencies:**
-    ```bash
-    dotnet restore
-    ```
-3.  **Configure `appsettings.json`:**
-    Update `appsettings.Development.json` (or other environment-specific files) with your local configuration, such as database connection strings and external service keys. For sensitive data, use User Secrets:
-    ```bash
-    dotnet user-secrets init
-    dotnet user-secrets set "ConnectionStrings:DefaultConnection" "your_connection_string"
-    # Add other secrets as needed
-    ```
-4.  **Apply Entity Framework Core Migrations:**
-    ```bash
-    cd src/SoftwareEngineerSkills.Infrastructure # Or wherever your DbContext project is
-    dotnet ef database update -s ../SoftwareEngineerSkills.API # Specify startup project
-    ```
-    *(Ensure you have the EF Core tools installed: `dotnet tool install --global dotnet-ef`)*
+- [.NET 9 SDK](https://dotnet.microsoft.com/download)
+- [Docker Desktop](https://www.docker.com/products/docker-desktop) (optional, for containerization)
+- IDE of choice ([Visual Studio 2022+](https://visualstudio.microsoft.com/vs/), [VS Code](https://code.visualstudio.com/), [JetBrains Rider](https://www.jetbrains.com/rider/))
 
-5.  **Run the application:**
-    ```bash
-    cd src/SoftwareEngineerSkills.API
-    dotnet run
-    ```
-    The API should now be running, typically at `https://localhost:5001` or `http://localhost:5000`. Swagger UI will be available at `/swagger`.
+### Installation
 
-## Running Tests
-
-To run the tests:
+1. Clone this repository:
 ```bash
-dotnet test
+git clone https://github.com/yourusername/SoftwareEngineerSkills.git
+cd SoftwareEngineerSkills
 ```
-This command will execute all unit and integration tests in the solution.
 
-## Extending the Template
+2. Build the solution:
+```bash
+dotnet build
+```
 
-This template is designed to be a starting point. To adapt it for your specific business requirements:
+3. Run the API:
+```bash
+cd src/Presentation/WebApi
+dotnet run
+```
 
-1.  **Define Your Domain:**
-    *   Start by modeling your core domain entities, aggregates, and value objects in the `SoftwareEngineerSkills.Domain` project.
-    *   Identify domain events that are significant within your business processes.
-2.  **Implement Application Logic:**
-    *   Create Commands and Queries (and their Handlers using MediatR) in the `SoftwareEngineerSkills.Application` project to represent use cases.
-    *   Define interfaces for any new repository or service abstractions needed.
-    *   Implement validation for your request DTOs using FluentValidation.
-3.  **Develop Infrastructure:**
-    *   Implement repository interfaces in `SoftwareEngineerSkills.Infrastructure` using Entity Framework Core.
-    *   Configure your `DbContext` with new entities and relationships.
-    *   Create EF Core migrations for schema changes:
-        ```bash
-        dotnet ef migrations add <MigrationName> -p ../SoftwareEngineerSkills.Infrastructure -s ../SoftwareEngineerSkills.API
-        dotnet ef database update -s ../SoftwareEngineerSkills.API
-        ```
-    *   Integrate with any external services (e.g., payment gateways, notification services).
-4.  **Expose API Endpoints:**
-    *   Create new Controllers in `SoftwareEngineerSkills.API` to handle incoming HTTP requests.
-    *   Define DTOs (Data Transfer Objects) for API requests and responses.
-    *   Map requests to application layer commands/queries.
-5.  **Add Tests:**
-    *   Write unit tests for your domain logic, application services, and API controllers.
-    *   Develop integration tests to verify the interaction between different layers and with external dependencies (using Testcontainers where appropriate).
-6.  **Configure Services:**
-    *   Register your new services, repositories, and handlers in the respective `DependencyInjection.cs` files or in `Program.cs`.
+4. Navigate to `https://localhost:5001/swagger` to view the API documentation.
 
-### Best Practices for Extension:
-*   **Adhere to Clean Architecture:** Keep dependencies flowing inwards (API -> Application -> Domain). Infrastructure implements interfaces defined in Application or Domain.
-*   **SOLID Principles:** Apply SOLID principles in your design.
-*   **Keep Controllers Thin:** Controllers should primarily delegate to the application layer.
-*   **Use the Result Pattern:** For all operations that can fail, return a `Result` object from your application services.
-*   **Secure Your Endpoints:** Apply appropriate authentication and authorization.
-*   **Document Your API:** Ensure Swagger documentation is updated with new endpoints and DTOs (use XML comments).
+### Configuration
+
+The template uses the IOptions pattern for configuration management:
+
+1. Update settings in `appsettings.json` or use environment-specific files like `appsettings.Development.json`
+2. For sensitive data, use:
+   - User Secrets during development (`dotnet user-secrets`)
+   - Environment variables
+   - Azure Key Vault or other secret management solutions for production
+
+## Project Structure
+
+The solution follows Clean Architecture principles with these main projects:
+
+### Core Layer
+- **Domain Project**: Contains entities, value objects, enums, exceptions, interfaces, and domain events
+- **Application Project**: Contains business logic, commands/queries (CQRS), validators, and application services
+
+### Infrastructure Layer
+- **Persistence Project**: EF Core configurations, repositories, migrations, and data access
+- **Infrastructure Project**: External service implementations, logging, caching, messaging, etc.
+
+### Presentation Layer
+- **WebApi Project**: Controllers, filters, middleware, API versioning, and Swagger configuration
+
+### Tests
+- **UnitTests**: For testing individual components in isolation
+- **IntegrationTests**: For testing components with their dependencies
+- **FunctionalTests**: For testing the API endpoints from client perspective
+
+## Design Patterns & Principles
+
+### Clean Architecture
+The solution is structured around the dependency rule where dependencies flow inward, with the Domain at the center. External concerns like UI, database, and third-party services are on the outer layers.
+
+### Domain-Driven Design
+- **Entities**: Domain objects with identity and lifecycle
+- **Value Objects**: Immutable domain objects without identity
+- **Domain Events**: For side-effect processing
+- **Aggregates**: Cluster of domain objects treated as a single unit
+
+### CQRS (Command Query Responsibility Segregation)
+- **Commands**: For write operations that change state
+- **Queries**: For read operations that return data without changing state
+- **MediatR**: Used to dispatch commands and queries
+
+### Repository Pattern
+- Abstracts data access
+- Provides collection-like interface for domain entities
+- Coupled with Unit of Work for transaction management
+
+### Result Pattern
+- Eliminates exceptions for expected error paths
+- Returns rich result objects with status, errors, and data
+
+## API Documentation
+
+API documentation is automatically generated using Swagger/OpenAPI:
+
+- **Swagger UI**: Available at `/swagger` endpoint
+- **API Versioning**: Supports URL path, query string, and header versioning
+- **XML Comments**: Used to document API endpoints and models
+
+## Testing
+
+### Unit Testing
+- Uses xUnit as the test framework
+- Moq for creating test doubles
+- FluentAssertions for more readable assertions
+
+### Integration Testing
+- Testcontainers for testing with real database and dependencies
+- In-memory database for faster tests
+- Respects application boundaries
+
+### Functional Testing
+- Tests the entire application stack
+- Uses WebApplicationFactory to bootstrap the application
+- Real HTTP requests against in-memory test server
+
+## Observability
+
+### Logging
+- Structured logging with Serilog
+- Multiple sinks configuration (Console, File, Elasticsearch)
+- Log enrichment with contextual information
+
+### Tracing
+- OpenTelemetry integration for distributed tracing
+- Trace context propagation
+- Exporters for Jaeger/Zipkin/other tracing systems
+
+### Health Checks
+- Endpoint: `/health` provides system health
+- Custom health checks for critical dependencies
+- Integration with monitoring systems
+
+### Metrics
+- Exposes application metrics in Prometheus format
+- Custom metrics for business KPIs
+- Dashboard templates included
+
+## Security
+
+### Authentication & Authorization
+- JWT Bearer token authentication
+- Role-based and policy-based authorization
+- OAuth2/OpenID Connect support
+
+### Data Protection
+- Input validation using FluentValidation
+- Output sanitization to prevent XSS
+- HTTPS enforcement
+- Proper CORS configuration
+
+### Security Headers
+- Content Security Policy
+- X-Content-Type-Options
+- X-Frame-Options
+- And other security headers
+
+## Performance Optimization
+
+### Caching
+- Response caching middleware
+- Distributed cache abstraction with Redis implementation
+- Cache invalidation strategy
+
+### Asynchronous Processing
+- Async/await usage throughout the codebase
+- Task-based Asynchronous Pattern
+- Background job processing for long-running tasks
+
+### Efficiency
+- Response compression
+- Rate limiting to protect resources
+- Pagination for large result sets
+
+## CI/CD & DevOps
+
+### Containerization
+- Dockerfile and docker-compose configuration
+- Multi-stage builds for optimized images
+- Container orchestration support (Kubernetes manifests)
+
+### GitHub Actions
+- Build and test workflows
+- Code quality analysis
+- Security scanning
+- Automated deployments
+
+### Infrastructure as Code
+- Deployment templates for Azure/AWS
+- Environment configuration
+- Resource provisioning scripts
 
 ## Contributing
 
-Contributions are welcome! Please follow these steps:
-1.  Fork the repository.
-2.  Create a new feature branch (`git checkout -b feature/your-feature-name`).
-3.  Make your changes.
-4.  Write tests for your changes.
-5.  Ensure all tests pass (`dotnet test`).
-6.  Commit your changes (`git commit -m 'Add some feature'`).
-7.  Push to the branch (`git push origin feature/your-feature-name`).
-8.  Open a Pull Request.
+We welcome contributions! Please follow these steps:
 
-Please ensure your code adheres to the project's coding standards and includes appropriate documentation.
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add some amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+Please ensure your code adheres to our coding standards and includes appropriate tests.
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details (assuming you will add one).
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## Support
+
+If you need help with this template, please:
+
+- Open an issue on GitHub
+- Contact the maintainers at [example@example.com](mailto:example@example.com)
+- Join our community on [Discord](https://discord.gg/example)
 
 ---
 
-*This README provides a comprehensive guide to understanding, using, and extending the .NET 9 Web API Template. For more detailed information on specific patterns or technologies, refer to the official documentation linked within the features section or in the `Docs/` folder.*
+## 🌟 Star this repository if you find it useful! 🌟
