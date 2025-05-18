@@ -7,10 +7,10 @@
 [V] BackgroundTaskQueue: Separar en ficheros
 [V] Añadir sectionname a todo lo que sean settings. quizas que haya una clase base o interfaz para asegurarse de que todas las setting tienen esa propiedad
 [ ] Refinar la base de dtos y revisar que este bien
-[ ] Revisar validacion de settings, decidir si con data anotations o fluentvalidation o pipeline o que
+[V] Revisar validacion de settings, decidir si con data anotations o fluentvalidation o pipeline o que
 [V] Mover databasesettings a la carpeta persistence
 [ ] IOptionsMonitor
-[-] Añadir DateTimeService y utilizar de manera consistente en todo el proyecto
+[ ] Añadir DateTimeService y utilizar de manera consistente en todo el proyecto
 [V] Domain: Revisar la estructura de carpetas. Analizar donde deben de ir las Interfaces de los servicios
 [ ] 
 [ ] 
