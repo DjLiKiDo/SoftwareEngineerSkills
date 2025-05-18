@@ -48,4 +48,3 @@ public class BackgroundTaskQueue : IBackgroundTaskQueue
         return await _queue.Reader.ReadAsync(cancellationToken);
     }
 }
-}
