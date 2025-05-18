@@ -18,11 +18,11 @@ jobs:
       with:
         dotnet-version: 9.0.x
     
-    # - name: Restore dependencies
-    #   run: dotnet restore SoftwareEngineerSkills/SoftwareEngineerSkills.sln
+    - name: Restore dependencies
+      run: dotnet restore SoftwareEngineerSkills/SoftwareEngineerSkills.sln
     
-    # - name: Build
-    #   run: dotnet build SoftwareEngineerSkills/SoftwareEngineerSkills.sln --configuration Release --no-restore
+    - name: Build
+      run: dotnet build SoftwareEngineerSkills/SoftwareEngineerSkills.sln --configuration Release --no-restore
     
     # - name: Test
     #   run: dotnet test SoftwareEngineerSkills/SoftwareEngineerSkills.sln --configuration Release --no-build --verbosity normal --collect:"XPlat Code Coverage"
