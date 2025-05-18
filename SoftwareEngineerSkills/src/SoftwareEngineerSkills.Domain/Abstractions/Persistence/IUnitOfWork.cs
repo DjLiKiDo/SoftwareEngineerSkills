@@ -6,6 +6,11 @@ namespace SoftwareEngineerSkills.Domain.Abstractions.Persistence;
 public interface IUnitOfWork : IDisposable
 {
     /// <summary>
+    /// Gets the skill repository
+    /// </summary>
+    ISkillRepository Skills { get; }
+    
+    /// <summary>
     /// Commits all changes made in a transaction to the database
     /// </summary>
     /// <param name="cancellationToken">A token for cancelling the operation</param>
