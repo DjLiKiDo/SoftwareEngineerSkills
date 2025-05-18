@@ -21,7 +21,8 @@ public static class LoggingExtensions
     public static IServiceCollection AddLoggingServices(this IServiceCollection services, IConfiguration configuration)
     {
         // Register and validate logging settings
-        services.AddSettings<LoggingSettings>(configuration, LoggingSettings.SectionName)
+        services
+            .AddSettings<LoggingSettings>(configuration, LoggingSettings.SectionName)
             .Validate(settings => settings.Validate(out _), "Logging settings validation failed");
         
         // Configure logging using the IOptions pattern correctly

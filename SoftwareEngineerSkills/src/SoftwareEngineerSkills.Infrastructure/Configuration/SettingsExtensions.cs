@@ -1,26 +1,13 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
-using System.ComponentModel.DataAnnotations;
 
 namespace SoftwareEngineerSkills.Infrastructure.Configuration;
 
 /// <summary>
-/// Base interface for infrastructure settings
+/// Extension methods for infrastructure settings registration
 /// </summary>
-public interface IValidatableSettings
-{
-    /// <summary>
-    /// Validates the settings
-    /// </summary>
-    /// <returns>True if settings are valid, otherwise false</returns>
-    bool Validate(out ICollection<ValidationResult> validationResults);
-}
-
-/// <summary>
-/// Base class for infrastructure settings registration
-/// </summary>
-public static class InfrastructureSettings
+public static class SettingsExtensions
 {
     /// <summary>
     /// Adds settings to the service collection with validation and startup validation

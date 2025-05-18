@@ -18,7 +18,8 @@ public static class EmailServiceExtensions
     public static IServiceCollection AddEmailServices(this IServiceCollection services, IConfiguration configuration)
     {
         // Configure Email Service with validation
-        services.AddSettings<EmailSettings>(configuration, EmailSettings.SectionName)
+        services
+            .AddSettings<EmailSettings>(configuration, EmailSettings.SectionName)
             .Validate(settings => 
             {
                 return settings.Validate(out _);

@@ -1,19 +1,16 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using SoftwareEngineerSkills.API.Extensions;
-using SoftwareEngineerSkills.Application;
+﻿using SoftwareEngineerSkills.Application;
 using SoftwareEngineerSkills.Infrastructure;
 
 namespace SoftwareEngineerSkills.API;
 
 public static class DependencyInjection
-{    public static IServiceCollection AddApiServices(this IServiceCollection services)
+{
+    public static IServiceCollection AddApiServices(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddApplicationServices();
-        services.AddInfrastructureServices();
-        services.AddEmailServices(); // TODO: Move this to applicationServices// Add email services
+        services.AddInfrastructureServices(configuration);
 
         services.AddControllers();
-        services.AddCustomOpenApi(); //Add custom instead of services.AddOpenApi();
 
         return services;
     }

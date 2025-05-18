@@ -1,7 +1,6 @@
 ﻿using FluentValidation;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
-using SoftwareEngineerSkills.Application.Common.Behaviours;
 using System.Reflection;
 
 namespace SoftwareEngineerSkills.Application;

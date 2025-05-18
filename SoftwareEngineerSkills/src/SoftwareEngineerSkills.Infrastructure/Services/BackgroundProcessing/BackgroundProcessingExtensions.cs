@@ -19,7 +19,8 @@ public static class BackgroundProcessingExtensions
     public static IServiceCollection AddBackgroundProcessingServices(this IServiceCollection services, IConfiguration configuration)
     {
         // Register Background Processing settings with validation
-        services.AddSettings<BackgroundTaskSettings>(configuration, BackgroundTaskSettings.SectionName)
+        services
+            .AddSettings<BackgroundTaskSettings>(configuration, BackgroundTaskSettings.SectionName)
             .Validate(settings => settings.Validate(out _), "Background task settings validation failed");
 
         // Register Background Task Queue using options pattern

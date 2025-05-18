@@ -23,7 +23,8 @@ public static class CachingServiceExtensions
     public static IServiceCollection AddCachingServices(this IServiceCollection services, IConfiguration configuration)
     {
         // Configure Caching with validation
-        services.AddSettings<CacheSettings>(configuration, CacheSettings.SectionName)
+        services
+            .AddSettings<CacheSettings>(configuration, CacheSettings.SectionName)
             .Validate(settings => settings.Validate(out _), "Cache settings validation failed");
         
         // Register base caching services
@@ -55,6 +56,7 @@ public static class CachingServiceExtensions
         });
         
         return services;
+        
         // Configure Redis if needed based on settings
         services.PostConfigure<CacheSettings>(settings =>
         {

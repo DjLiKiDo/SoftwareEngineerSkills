@@ -55,7 +55,8 @@ public static class DatabaseServiceExtensions
     /// <returns>The service collection for chaining</returns>
     public static IServiceCollection AddDatabaseSettings(this IServiceCollection services, IConfiguration configuration)
     {
-        services.AddSettings<DatabaseSettings>(configuration, DatabaseSettings.SectionName)
+        services
+            .AddSettings<DatabaseSettings>(configuration, DatabaseSettings.SectionName)
             .Validate(settings =>
             {
                 if (!settings.Validate(out var results))
