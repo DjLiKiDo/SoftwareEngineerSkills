@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using SoftwareEngineerSkills.Domain.Abstractions.Persistence;
+using SoftwareEngineerSkills.Domain.Common.Base;
 using SoftwareEngineerSkills.Domain.Common.Interfaces;
 using SoftwareEngineerSkills.Infrastructure.Persistence.Extensions;
 
@@ -10,7 +11,7 @@ namespace SoftwareEngineerSkills.Infrastructure.Persistence.Repositories;
 /// </summary>
 /// <typeparam name="TEntity">The entity type</typeparam>
 public class EfSoftDeleteRepository<TEntity> : EfRepository<TEntity>, ISoftDeleteRepository<TEntity> 
-    where TEntity : class, ISoftDelete
+    where TEntity : BaseEntity, ISoftDelete
 {
     /// <summary>
     /// Creates a new instance of the EfSoftDeleteRepository class

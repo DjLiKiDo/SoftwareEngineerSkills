@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Http;
+using SoftwareEngineerSkills.Domain.Abstractions.Services;
 using SoftwareEngineerSkills.Domain.Common.Interfaces;
 using System.Security.Claims;
 

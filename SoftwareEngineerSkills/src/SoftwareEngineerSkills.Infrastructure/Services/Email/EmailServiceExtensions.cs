@@ -1,5 +1,6 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using SoftwareEngineerSkills.Domain.Abstractions.Services;
 using SoftwareEngineerSkills.Domain.Common.Interfaces;
 using SoftwareEngineerSkills.Infrastructure.Configuration;
 

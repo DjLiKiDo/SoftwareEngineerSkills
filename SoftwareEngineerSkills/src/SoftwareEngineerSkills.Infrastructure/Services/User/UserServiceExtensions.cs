@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using SoftwareEngineerSkills.Domain.Abstractions.Services;
 using SoftwareEngineerSkills.Domain.Common.Interfaces;
 
 namespace SoftwareEngineerSkills.Infrastructure.Services.User;

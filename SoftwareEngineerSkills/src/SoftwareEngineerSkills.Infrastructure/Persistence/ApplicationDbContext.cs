@@ -4,6 +4,7 @@ using SoftwareEngineerSkills.Domain.Common.Base;
 using SoftwareEngineerSkills.Domain.Common.Events;
 using SoftwareEngineerSkills.Domain.Common.Interfaces;
 using SoftwareEngineerSkills.Domain.Entities.Skills;
+using SoftwareEngineerSkills.Domain.Abstractions.Services;
 using System.Linq.Expressions;
 using System.Reflection;
 

@@ -5,11 +5,7 @@ using SoftwareEngineerSkills.API.Middleware;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container
-builder.Services.AddApiServices();
-
-// Register the exception handler (modern approach)
-builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
-builder.Services.AddProblemDetails();
+builder.Services.AddApiServices(builder.Configuration); // Pass configuration
 
 // Build the application
 var app = builder.Build();

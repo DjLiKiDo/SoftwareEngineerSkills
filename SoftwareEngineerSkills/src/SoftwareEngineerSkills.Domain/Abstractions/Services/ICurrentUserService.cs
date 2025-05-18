@@ -1,6 +1,6 @@
 using System;
 
-namespace SoftwareEngineerSkills.Domain.Common.Interfaces;
+namespace SoftwareEngineerSkills.Domain.Abstractions.Services;
 
 /// <summary>
 /// Service for providing the current user information for auditing

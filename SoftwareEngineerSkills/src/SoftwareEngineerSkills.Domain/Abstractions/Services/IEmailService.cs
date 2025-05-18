@@ -1,10 +1,6 @@
-using System;
-using System.Collections.Generic;
 using System.Net.Mail;
-using System.Threading;
-using System.Threading.Tasks;
 
-namespace SoftwareEngineerSkills.Domain.Common.Interfaces;
+namespace SoftwareEngineerSkills.Domain.Abstractions.Services;
 
 /// <summary>
 /// Service for sending emails as part of domain processes
