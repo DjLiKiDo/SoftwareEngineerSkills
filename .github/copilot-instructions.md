@@ -474,3 +474,5 @@ public class CreateCustomerCommandHandlerTests
 - [Entity Framework Core](https://docs.microsoft.com/en-us/ef/core/)
 - [Clean Architecture](https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html)
 - [Domain-Driven Design Reference](https://www.domainlanguage.com/ddd/reference/)
+
+use context 7 to retrieve official documentation if needed
