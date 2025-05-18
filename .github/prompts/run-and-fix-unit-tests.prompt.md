@@ -18,4 +18,4 @@ Execute all unit tests and address any failures found, following these steps:
 
 4. Document any test modifications in code comments
 
-Note: Focus on improving test quality and coverage while preserving existing application functionality.
+Note: Focus on improving test quality and coverage while preserving existing application functionality, unless tge changes are necessary to fix the tests and improves the implementation
