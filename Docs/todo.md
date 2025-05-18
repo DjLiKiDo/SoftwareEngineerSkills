@@ -1,20 +1,20 @@
 [V] revisar el patron ioptions y como obtenemos las settings en infraestructure dependencyinjection
 [V] Refactorizar dependencyinjection para hacerlo mas legible
 [V] Revisar uso de options en LoggingExtensions
-[ ] Revisar implementacion de IUnitOfWOrk + Repository + EF Core inmemory
+[V] Revisar implementacion de IUnitOfWOrk + Repository + EF Core inmemory
 [V] CacheService: Separar en ficheros
 [V] EmailService: Separar en ficheros
 [V] BackgroundTaskQueue: Separar en ficheros
 [V] Añadir sectionname a todo lo que sean settings. quizas que haya una clase base o interfaz para asegurarse de que todas las setting tienen esa propiedad
-[ ] Refinar la base de dtos y revisar que este bien
+[V] Refinar la base de dtos y revisar que este bien
 [V] Revisar validacion de settings, decidir si con data anotations o fluentvalidation o pipeline o que
 [V] Mover databasesettings a la carpeta persistence
 [ ] IOptionsMonitor
 [ ] Añadir DateTimeService y utilizar de manera consistente en todo el proyecto
 [V] Domain: Revisar la estructura de carpetas. Analizar donde deben de ir las Interfaces de los servicios
-[ ] 
-[ ] 
-[ ] 
+[ ] Estudiar despliegue en containers
+[ ] Pipeline de github actions
+[ ] Despliegue en Azure?
 [ ] 
 [ ] 
 [ ] 
