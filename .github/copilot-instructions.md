@@ -20,14 +20,24 @@ This document provides instructions for GitHub Copilot to optimize AI assistance
 
 ### Key Architectural Patterns
 - **Clean Architecture:** Layered structure with Domain at the center
-- **Domain-Driven Design (DDD):** Rich domain model with entities, value objects, domain events
+- **Domain-Driven Design (DDD):**
+  - Rich domain model with entities, value objects, domain events
+  - Enhanced `BaseEntity` with invariant validation system
+  - Improved `AggregateRoot` for thread-safe domain event handling
+  - Comprehensive `ValueObject` implementation 
 - **CQRS Pattern:** Separation of command and query responsibilities
-- **Repository Pattern with Unit of Work:** Abstraction over data access
+- **Repository Pattern with Unit of Work:** 
+  - Abstraction over data access
+  - Specialized repositories for soft-delete entities
+  - EF Core extensions for working with soft-deleted entities
 - **Result Pattern:** Exception-free error handling
 - **Mediator Pattern:** For handling commands and queries
 - **Options Pattern:** For configuration management
 - **Screaming Architecture:** Structure reveals intent
-- **Entity Auditing System:** Sophisticated tracking and soft delete capabilities through interfaces
+- **Entity Auditing System:** 
+  - Sophisticated tracking through `IAuditableEntity` interface
+  - Soft delete capabilities with `ISoftDelete` interface
+  - `SoftDeleteEntity` base class for easy implementation
 
 ### Coding Conventions and Standards
 - **Naming:**
@@ -77,6 +87,10 @@ This document provides instructions for GitHub Copilot to optimize AI assistance
 
 - **Domain Layer:**
   - **SoftwareEngineerSkills.Domain:** Contains business entities, value objects, and domain logic
+  - **Common/Base:** Core DDD components (`BaseEntity`, `AggregateRoot`, `ValueObject`, `SoftDeleteEntity`)
+  - **Common/Events:** Domain event handling (`IDomainEvent`, `DomainEvent`)
+  - **Common/Interfaces:** Core interfaces (`IAggregateRoot`, `IAuditableEntity`, `ISoftDelete`)
+  - **Exceptions:** Domain-specific exceptions (`BusinessRuleException`, `DomainValidationException`)
 
 - **Application Layer:**
   - **SoftwareEngineerSkills.Application:** Contains application services, commands/queries, validators
@@ -440,6 +454,10 @@ public class CreateCustomerCommandHandlerTests
 - Use private setters for properties that should only be changed through methods
 - Implement value objects for concepts with no identity
 - Use domain events for cross-aggregate communication
+- Use the invariant validation system (`CheckInvariants`, `EnforceInvariants`) to enforce business rules
+- Ensure thread safety when handling domain events
+- Extend `SoftDeleteEntity` for entities that need soft deletion capabilities
+- Implement proper validation in value objects for domain consistency
 
 ### Application Layer
 - Implement CQRS pattern (separate commands and queries)
@@ -454,6 +472,9 @@ public class CreateCustomerCommandHandlerTests
 - Configure entities using fluent API
 - Implement Unit of Work pattern
 - Use dependency injection for services
+- Implement specialized repositories for soft-delete entities (`ISoftDeleteRepository<T>`)
+- Configure global query filters to automatically exclude soft-deleted entities
+- Properly handle audit properties through DbContext for `IAuditableEntity` entities
 
 ### WebApi Layer
 - Implement API versioning
