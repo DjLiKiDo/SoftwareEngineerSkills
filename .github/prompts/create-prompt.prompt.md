@@ -65,3 +65,13 @@ To provide comprehensive guidance to Copilot, we advocate for a two-part prompti
 *   **Improved Quality:** Enables Copilot to act as a more informed pair programmer, leading to more robust and maintainable code.
 
 By adopting this structured prompting methodology, you can significantly improve the effectiveness of GitHub Copilot for the SoftwareEngineerSkills project.
+
+
+#fetch 
+   https://code.visualstudio.com/docs/copilot/copilot-customization
+   https://code.visualstudio.com/docs/copilot/copilot-tips-and-tricks
+   https://docs.github.com/en/copilot
+   https://docs.github.com/en/copilot/using-github-copilot/best-practices-for-using-github-copilot
+   https://docs.github.com/en/copilot/using-github-copilot/copilot-chat/prompt-engineering-for-copilot-chat
+
+use context 7 to query the knowledge from the official documentation.
