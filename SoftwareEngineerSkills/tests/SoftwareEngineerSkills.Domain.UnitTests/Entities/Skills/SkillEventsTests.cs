@@ -28,7 +28,7 @@ public class SkillEventsTests
         skillCreatedEvent.Category.Should().Be(category);
         skillCreatedEvent.Should().BeAssignableTo<IDomainEvent>();
         skillCreatedEvent.Should().BeAssignableTo<DomainEvent>();
-        skillCreatedEvent.EventId.Should().NotBeEmpty();
+        skillCreatedEvent.Id.Should().NotBeEmpty();
         skillCreatedEvent.OccurredOn.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromSeconds(5));
     }
 
@@ -49,7 +49,7 @@ public class SkillEventsTests
         skillUpdatedEvent.NewName.Should().Be(newName);
         skillUpdatedEvent.Should().BeAssignableTo<IDomainEvent>();
         skillUpdatedEvent.Should().BeAssignableTo<DomainEvent>();
-        skillUpdatedEvent.EventId.Should().NotBeEmpty();
+        skillUpdatedEvent.Id.Should().NotBeEmpty();
         skillUpdatedEvent.OccurredOn.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromSeconds(5));
     }
 
@@ -70,7 +70,7 @@ public class SkillEventsTests
         skillDemandChangedEvent.IsInDemand.Should().Be(isInDemand);
         skillDemandChangedEvent.Should().BeAssignableTo<IDomainEvent>();
         skillDemandChangedEvent.Should().BeAssignableTo<DomainEvent>();
-        skillDemandChangedEvent.EventId.Should().NotBeEmpty();
+        skillDemandChangedEvent.Id.Should().NotBeEmpty();
         skillDemandChangedEvent.OccurredOn.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromSeconds(5));
     }
 }

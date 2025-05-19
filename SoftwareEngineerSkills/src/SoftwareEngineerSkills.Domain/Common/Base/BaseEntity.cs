@@ -1,6 +1,7 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using SoftwareEngineerSkills.Domain.Common.Events;
 using SoftwareEngineerSkills.Domain.Common.Interfaces;
+using SoftwareEngineerSkills.Domain.Exceptions;
 
 namespace SoftwareEngineerSkills.Domain.Common.Base;
 
@@ -13,6 +14,11 @@ public abstract class BaseEntity : IAuditableEntity
     /// Unique identifier for the entity
     /// </summary>
     public Guid Id { get; protected set; }
+
+    /// <summary>
+    /// The entity version for optimistic concurrency control
+    /// </summary>
+    public int Version { get; protected set; } = 1;
 
     protected BaseEntity()
     {
@@ -38,6 +44,58 @@ public abstract class BaseEntity : IAuditableEntity
     /// User or system who last modified the entity
     /// </summary>
     public string? LastModifiedBy { get; set; }
+
+    /// <summary>
+    /// Validates that the entity state satisfies all invariants
+    /// </summary>
+    /// <returns>A list of validation errors if any invariants are violated</returns>
+    protected virtual IEnumerable<string> CheckInvariants()
+    {
+        yield break;
+    }
+    
+    /// <summary>
+    /// Enforces that all entity invariants are satisfied
+    /// </summary>
+    /// <exception cref="DomainValidationException">Thrown when one or more invariants are violated</exception>
+    public void EnforceInvariants()
+    {
+        var errors = CheckInvariants().ToList();
+        if (errors.Any())
+        {
+            throw new DomainValidationException(errors);
+        }
+    }
+    
+    /// <summary>
+    /// Asynchronously validates that the entity state satisfies all invariants
+    /// </summary>
+    /// <returns>A list of validation errors if any invariants are violated</returns>
+    protected virtual Task<IEnumerable<string>> CheckInvariantsAsync()
+    {
+        return Task.FromResult(CheckInvariants());
+    }
+    
+    /// <summary>
+    /// Asynchronously enforces that all entity invariants are satisfied
+    /// </summary>
+    /// <exception cref="DomainValidationException">Thrown when one or more invariants are violated</exception>
+    public async Task EnforceInvariantsAsync()
+    {
+        var errors = (await CheckInvariantsAsync()).ToList();
+        if (errors.Any())
+        {
+            throw new DomainValidationException(errors);
+        }
+    }
+    
+    /// <summary>
+    /// Increments the entity version for optimistic concurrency control
+    /// </summary>
+    protected void IncrementVersion()
+    {
+        Version++;
+    }
 
     /// <summary>
     /// Collection of domain events raised by this entity

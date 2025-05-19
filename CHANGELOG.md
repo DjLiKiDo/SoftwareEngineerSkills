@@ -8,6 +8,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased] - yyyy-mm-dd
 
 ### Added
+- **Domain-Driven Design Core Components**:
+  - Enhanced `BaseEntity` with invariant validation system
+  - Improved `AggregateRoot` class for domain event handling and invariant enforcement
+  - Extended `IAggregateRoot` interface with versioning and boundary enforcement methods
+  - Added `DomainValidationException` for domain invariant violations
+  - Implemented thread-safe domain event handling
+  - Created comprehensive documentation of DDD core components
 - **Entity Auditing System**:
   - Enhanced architecture with interfaces for separation of concerns
   - `IAuditableEntity` interface for tracking entity changes (creation/modification timestamps and users)
@@ -20,6 +27,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Global query filters to automatically exclude soft-deleted entities
 - **Documentation**:
   - Comprehensive documentation on the entity auditing approach and implementation
+  - Added new documentation for DDD core components and invariant validation system
 
 ### Changed
 - **Code Organization**:
