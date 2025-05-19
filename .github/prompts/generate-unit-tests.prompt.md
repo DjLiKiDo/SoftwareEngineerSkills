@@ -37,4 +37,4 @@ If no C# class is currently open in the editor, respond with:
 
 Reference: https://learn.microsoft.com/en-us/dotnet/core/testing/unit-testing-best-practices
 
-use context7 to retrieve documentation and best practices.
+Please use context7 to query the knowledge from the official documentation.

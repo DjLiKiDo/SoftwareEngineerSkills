@@ -15,7 +15,7 @@
 [ ] Estudiar despliegue en containers
 [ ] Pipeline de github actions
 [ ] Despliegue en Azure?
-[ ] 
+[ ] Accesibility de ApplicationDbContext
 [ ] 
 [ ] 
 [ ] 
