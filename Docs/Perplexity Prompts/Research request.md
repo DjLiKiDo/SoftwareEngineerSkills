@@ -1,1 +1,0 @@
-Quiero un informe completo sobre [Subject here] en una aplicacion de aspnet core 9 en c#, detallando las mejores practicas y los estandares de la industria, utilizando la documentacion oficial
