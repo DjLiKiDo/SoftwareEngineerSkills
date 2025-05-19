@@ -1,5 +1,7 @@
 Execute all unit tests and address any failures found, following these steps:
 
+use context7 to query the knowledge from the official documentation.
+
 1. Run the unit test suite in Visual Studio Code
 2. If any tests fail:
    - Review test failures and error messages
@@ -17,5 +19,3 @@ Execute all unit tests and address any failures found, following these steps:
      - Meaningful test data
 
 Note: Focus on improving test quality and coverage while preserving existing application functionality, unless tge changes are necessary to fix the tests and improves the implementation
-
-Please use context7 to query the knowledge from the official documentation.

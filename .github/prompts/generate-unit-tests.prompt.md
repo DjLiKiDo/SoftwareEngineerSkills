@@ -1,5 +1,7 @@
 Generate comprehensive unit tests for the active C# class using xUnit, following Microsoft's recommended best practices:
 
+use context7 to query the knowledge from the official documentation.
+
 Requirements:
 1. Test Framework & Libraries:
    - xUnit for test framework
@@ -35,6 +37,4 @@ Requirements:
 If no C# class is currently open in the editor, respond with:
 "Please open the C# class you want to test in the editor."
 
-Reference: https://learn.microsoft.com/en-us/dotnet/core/testing/unit-testing-best-practices
-
-Please use context7 to query the knowledge from the official documentation.
+#fetch Reference: https://learn.microsoft.com/en-us/dotnet/core/testing/unit-testing-best-practices
