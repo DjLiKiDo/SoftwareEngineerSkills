@@ -313,7 +313,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 If you need help with this template, please:
 
 - Open an issue on GitHub
-- Check existing documentation in the `Docs/` folder
+- Check existing documentation in the `Docs/` folder [Docs/](Docs/)
 - Review the [CHANGELOG.md](CHANGELOG.md) for recent updates
 - Contact the maintainers at [example@example.com](mailto:example@example.com)
 - Join our community on [Discord](https://discord.gg/example)
@@ -324,7 +324,7 @@ If you need help with this template, please:
 
 ## Documentation
 
-This project maintains extensive documentation in the `Docs/` folder:
+This project maintains extensive documentation in the  folder:
 
 - [Clean Architecture](Docs/Clean%20Architecture.md): Detailed explanation of architectural implementation
 - [Entity Auditing](Docs/Entity%20Auditing.md): Overview of the entity auditing system
