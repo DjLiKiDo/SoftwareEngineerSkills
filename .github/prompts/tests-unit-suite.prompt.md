@@ -4,7 +4,7 @@ I need assistance generating a comprehensive suite of unit tests for all relevan
 
 Please adhere to all guidelines, coding standards, and architectural patterns detailed in the project's Copilot unit testing instructions:
 `@workspace /Users/marquez/Downloads/Pablo/Repos/SoftwareEngineerSkills/.github/prompts/unit-test-instructions.md`
-[Unit Test Instructions](.github/instructions/unit-test-instructions.md)
+[Unit Test Instructions](../instructions/unit-test-instructions.md)
 
 And the general project guidelines:
 `@workspace /Users/marquez/Downloads/Pablo/Repos/SoftwareEngineerSkills/.github/copilot-instructions.md`

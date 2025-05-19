@@ -469,13 +469,19 @@ public class CreateCustomerCommandHandlerTests
 - **Context:** Consider architecture constraints and patterns
 
 ## Links to Documentation
+- [README.md] (../README.md)
+- [CHANGELOG.md](../CHANGELOG.md)
 - [.NET Documentation](https://docs.microsoft.com/en-us/dotnet/)
 - [ASP.NET Core Documentation](https://docs.microsoft.com/en-us/aspnet/core/)
 - [Entity Framework Core](https://docs.microsoft.com/en-us/ef/core/)
 - [Clean Architecture](https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html)
 - [Domain-Driven Design Reference](https://www.domainlanguage.com/ddd/reference/)
+- [GitHub Actions Documentation](https://docs.github.com/en/actions)
+- [Serilog Documentation](https://serilog.net/)
+- [OpenTelemetry Documentation](https://opentelemetry.io/docs/)
+- [FluentValidation Documentation](https://docs.fluentvalidation.net/en/latest/)
 
 
-- use context 7 to retrieve official documentation if needed
-- Maintain changelog.md file with version history
-- Review and update README.md file for project overview if needed
+- use context7 to retrieve the latest documentation
+- ALWWAYS Maintain changelog.md file with version history
+- ALLWAYS Review and update README.md file for project overview if needed
