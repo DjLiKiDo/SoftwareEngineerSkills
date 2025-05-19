@@ -469,8 +469,8 @@ public class CreateCustomerCommandHandlerTests
 - **Context:** Consider architecture constraints and patterns
 
 ## Links to Documentation
-- [README.md] (../README.md)
-- [CHANGELOG.md](../CHANGELOG.md)
+- [README.md] (../README.md) `@workspace /Users/marquez/Downloads/Pablo/Repos/SoftwareEngineerSkills/README.md`
+- [CHANGELOG.md](../CHANGELOG.md) `@workspace /Users/marquez/Downloads/Pablo/Repos/SoftwareEngineerSkills/CHANGELOG.md`
 - [.NET Documentation](https://docs.microsoft.com/en-us/dotnet/)
 - [ASP.NET Core Documentation](https://docs.microsoft.com/en-us/aspnet/core/)
 - [Entity Framework Core](https://docs.microsoft.com/en-us/ef/core/)
