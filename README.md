@@ -24,24 +24,29 @@ A production-ready .NET 9 Web API template implementing enterprise-level best pr
 - [Contributing](#contributing)
 - [License](#license)
 - [Support](#support)
+- [Documentation](#documentation)
 
 ## Architecture Overview
 
 This template implements **Clean Architecture** with a focus on **Domain-Driven Design** principles and **Screaming Architecture**. The solution is organized into multiple layers with clear separation of concerns:
 
 ```
+SoftwareEngineerSkills/
 ├── src
-│   ├── Core
-│   │   ├── Domain              # Entities, Value Objects, Domain Events
-│   │   └── Application         # Business Logic, Commands, Queries
-│   ├── Infrastructure          # Data Access, External Services
-│   └── Presentation
-│       └── WebApi              # Controllers, Middleware, Configuration
+│   ├── SoftwareEngineerSkills.Domain         # Entities, Value Objects, Domain Events
+│   ├── SoftwareEngineerSkills.Application    # Business Logic, Commands, Queries
+│   ├── SoftwareEngineerSkills.Common         # Shared utilities and helpers
+│   ├── SoftwareEngineerSkills.Infrastructure # Data Access, External Services
+│   └── SoftwareEngineerSkills.API            # Controllers, Middleware, Configuration
 └── tests
-    ├── UnitTests
-    ├── IntegrationTests
-    └── FunctionalTests
+    ├── SoftwareEngineerSkills.Domain.UnitTests
+    ├── SoftwareEngineerSkills.Application.UnitTests
+    ├── SoftwareEngineerSkills.Infrastructure.UnitTests
+    ├── SoftwareEngineerSkills.API.UnitTests
+    └── SoftwareEngineerSkills.IntegrationTests
 ```
+
+Additional documentation is maintained in the `Docs/` folder, covering architectural decisions, patterns, and implementation details.
 
 ## Key Features
 
@@ -119,7 +124,7 @@ dotnet build
 
 3. Run the API:
 ```bash
-cd src/Presentation/WebApi
+cd SoftwareEngineerSkills/src/SoftwareEngineerSkills.API
 dotnet run
 ```
 
@@ -139,20 +144,21 @@ The template uses the IOptions pattern for configuration management:
 
 The solution follows Clean Architecture principles with these main projects:
 
-### Core Layer
-- **Domain Project**: Contains entities, value objects, enums, exceptions, interfaces, and domain events
-- **Application Project**: Contains business logic, commands/queries (CQRS), validators, and application services
+### Core Layers
+- **SoftwareEngineerSkills.Domain**: Contains entities, value objects, enums, exceptions, interfaces, and domain events
+- **SoftwareEngineerSkills.Application**: Contains business logic, commands/queries (CQRS), validators, and application services
+- **SoftwareEngineerSkills.Common**: Contains shared utilities and helpers used across layers
 
 ### Infrastructure Layer
-- **Persistence Project**: EF Core configurations, repositories, migrations, and data access
-- **Infrastructure Project**: External service implementations, logging, caching, messaging, etc.
+- **SoftwareEngineerSkills.Infrastructure**: External service implementations, logging, persistence, repositories, configuration, and other concerns
 
-### Presentation Layer
-- **WebApi Project**: Controllers, filters, middleware, API versioning, and Swagger configuration
+### API Layer
+- **SoftwareEngineerSkills.API**: Controllers, filters, middleware, API versioning, and Swagger configuration
 
 ### Tests
-- **UnitTests**: For testing individual components in isolation
-- **IntegrationTests**: For testing components with their dependencies
+- **Unit Tests**: For testing individual components in isolation (one project per layer)
+- **Integration Tests**: For testing components across different layers with their dependencies
+
 - **FunctionalTests**: For testing the API endpoints from client perspective
 
 ## Design Patterns & Principles
@@ -281,6 +287,11 @@ API documentation is automatically generated using Swagger/OpenAPI:
 - Environment configuration
 - Resource provisioning scripts
 
+### Version Control & Releases
+- Semantic Versioning for clear release management
+- [CHANGELOG.md](CHANGELOG.md) maintained following Keep a Changelog format
+- Defined release process with versioning strategy
+
 ## Contributing
 
 We welcome contributions! Please follow these steps:
@@ -302,9 +313,25 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 If you need help with this template, please:
 
 - Open an issue on GitHub
+- Check existing documentation in the `Docs/` folder
+- Review the [CHANGELOG.md](CHANGELOG.md) for recent updates
 - Contact the maintainers at [example@example.com](mailto:example@example.com)
 - Join our community on [Discord](https://discord.gg/example)
 
 ---
 
 ## 🌟 Star this repository if you find it useful! 🌟
+
+## Documentation
+
+This project maintains extensive documentation in the `Docs/` folder:
+
+- [Clean Architecture](Docs/Clean%20Architecture.md): Detailed explanation of architectural implementation
+- [Entity Auditing](Docs/Entity%20Auditing.md): Overview of the entity auditing system
+- [Infrastructure Layer](Docs/Infrastructure%20Layer.md): Details about infrastructure components
+- [IOptions pattern](Docs/IOptions%20pattern.md): Guide on implementing strongly-typed configuration
+- [Unit of Work](Docs/UnitOfWork.md): Explanation of the Unit of Work pattern implementation
+
+Additional resources include:
+- [Changelog](CHANGELOG.md): Record of all notable changes to the project
+- API Documentation: Generated via Swagger UI (available at runtime)
