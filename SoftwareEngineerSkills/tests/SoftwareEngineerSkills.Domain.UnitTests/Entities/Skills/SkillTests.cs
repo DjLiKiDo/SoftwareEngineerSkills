@@ -2,273 +2,250 @@ using FluentAssertions;
 using SoftwareEngineerSkills.Domain.Entities.Skills;
 using SoftwareEngineerSkills.Domain.Enums;
 using SoftwareEngineerSkills.Domain.Exceptions;
+using System;
+using System.Linq;
 using Xunit;
 
 namespace SoftwareEngineerSkills.Domain.UnitTests.Entities.Skills;
 
 public class SkillTests
 {
-    // Constants for test data
-    private const string ValidName = "C#";
-    private const string ValidDescription = "A versatile programming language.";
-    private const string EmptyName = "";
-    private const string WhitespaceName = "   ";
-    private const string LongName = "ThisIsAVeryLongSkillNameThatExceedsTheMaximumAllowedLengthOfOneHundredCharactersAndThereforeShouldFailValidation";
-    private const string EmptyDescription = "";
-    private const string WhitespaceDescription = "   ";
-    private const string LongDescription = "This is a very long skill description that exceeds the maximum allowed length of one thousand characters. This description is intentionally made excessively long to test the validation logic within the Skill entity. It should trigger a BusinessRuleException because the length constraint is violated. We need to ensure that our domain model correctly enforces these kinds of business rules to maintain data integrity and prevent unexpected issues in the application. This detailed description serves no other purpose than to be exceptionally long for this specific test case. Adding more text to make this description exceed one thousand characters. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Curabitur pretium tincidunt lacus. Nulla gravida orci a odio. Nullam varius, turpis et commodo pharetra, est eros bibendum elit, nec luctus magna felis sollicitudin mauris. Integer in mauris eu nibh euismod gravida. Duis ac tellus et risus vulputate vehicula. Donec lobortis risus a elit. Etiam tempor. Ut ullamcorper, ligula eu tempor congue, eros est euismod turpis, id tincidunt sapien risus a quam.";
-
-
+    private readonly string _validName = "C#";
+    private readonly string _validDescription = "Object-oriented programming language developed by Microsoft";
+    private readonly SkillCategory _validCategory = SkillCategory.ProgrammingLanguage;
+    private readonly SkillLevel _validLevel = SkillLevel.Advanced;
+    
     [Fact]
-    public void Constructor_WithValidParameters_ShouldCreateSkill()
+    public void Constructor_ValidParameters_ShouldCreateInstance()
     {
-        // Arrange
-        var name = ValidName;
-        var category = SkillCategory.ProgrammingLanguage;
-        var description = ValidDescription;
-        var difficultyLevel = SkillLevel.Intermediate;
-        var isInDemand = true;
-
-        // Act
-        var skill = new Skill(name, category, description, difficultyLevel, isInDemand);
+        // Arrange & Act
+        var skill = new Skill(_validName, _validCategory, _validDescription, _validLevel);
 
         // Assert
-        skill.Should().NotBeNull();
-        skill.Name.Should().Be(name);
-        skill.Category.Should().Be(category);
-        skill.Description.Should().Be(description);
-        skill.DifficultyLevel.Should().Be(difficultyLevel);
-        skill.IsInDemand.Should().Be(isInDemand);
-        skill.DomainEvents.Should().ContainSingle(e => e is SkillCreatedEvent);
-        var skillCreatedEvent = skill.DomainEvents.First(e => e is SkillCreatedEvent) as SkillCreatedEvent;
-        skillCreatedEvent.Should().NotBeNull();
-        skillCreatedEvent?.SkillId.Should().Be(skill.Id);
-        skillCreatedEvent?.SkillName.Should().Be(name);
-        skillCreatedEvent?.SkillCategory.Should().Be(category); // Corrected assertion
-    }
-
-    [Theory]
-    [InlineData(null)]
-    [InlineData(EmptyName)]
-    [InlineData(WhitespaceName)]
-    public void Constructor_WithInvalidName_ShouldThrowBusinessRuleException(string? invalidName) // Made string nullable
-    {
-        // Arrange
-        var category = SkillCategory.ProgrammingLanguage;
-        var description = ValidDescription;
-        var difficultyLevel = SkillLevel.Intermediate;
-
-        // Act
-        Action act = () => new Skill(invalidName, category, description, difficultyLevel);
-
-        // Assert
-        act.Should().Throw<BusinessRuleException>().WithMessage("Skill name cannot be empty");
-    }
-
-    [Fact]
-    public void Constructor_WithNameTooLong_ShouldThrowBusinessRuleException()
-    {
-        // Arrange
-        var name = LongName;
-        var category = SkillCategory.ProgrammingLanguage;
-        var description = ValidDescription;
-        var difficultyLevel = SkillLevel.Intermediate;
-
-        // Act
-        Action act = () => new Skill(name, category, description, difficultyLevel);
-
-        // Assert
-        act.Should().Throw<BusinessRuleException>().WithMessage("Skill name cannot exceed 100 characters");
-    }
-
-    [Theory]
-    [InlineData(null)]
-    [InlineData(EmptyDescription)]
-    [InlineData(WhitespaceDescription)]
-    public void Constructor_WithInvalidDescription_ShouldThrowBusinessRuleException(string? invalidDescription) // Made string nullable
-    {
-        // Arrange
-        var name = ValidName;
-        var category = SkillCategory.ProgrammingLanguage;
-        var difficultyLevel = SkillLevel.Intermediate;
-
-        // Act
-        Action act = () => new Skill(name, category, invalidDescription, difficultyLevel);
-
-        // Assert
-        act.Should().Throw<BusinessRuleException>().WithMessage("Skill description cannot be empty");
-    }
-
-    [Fact]
-    public void Constructor_WithDescriptionTooLong_ShouldThrowBusinessRuleException()
-    {
-        // Arrange
-        var name = ValidName;
-        var category = SkillCategory.ProgrammingLanguage;
-        var description = LongDescription;
-        var difficultyLevel = SkillLevel.Intermediate;
-
-        // Act
-        Action act = () => new Skill(name, category, description, difficultyLevel);
-
-        // Assert
-        act.Should().Throw<BusinessRuleException>().WithMessage("Skill description cannot exceed 1000 characters");
-    }
-
-    [Fact]
-    public void Update_WithValidParameters_ShouldUpdateSkillProperties()
-    {
-        // Arrange
-        var skill = new Skill(ValidName, SkillCategory.ProgrammingLanguage, ValidDescription, SkillLevel.Beginner, false);
-        var updatedName = "Updated Skill Name";
-        var updatedCategory = SkillCategory.Framework;
-        var updatedDescription = "Updated skill description.";
-        var updatedDifficultyLevel = SkillLevel.Advanced;
-        var updatedIsInDemand = true;
-        skill.ClearDomainEvents(); // Clear initial creation event
-
-        // Act
-        skill.Update(updatedName, updatedCategory, updatedDescription, updatedDifficultyLevel, updatedIsInDemand);
-
-        // Assert
-        skill.Name.Should().Be(updatedName);
-        skill.Category.Should().Be(updatedCategory);
-        skill.Description.Should().Be(updatedDescription);
-        skill.DifficultyLevel.Should().Be(updatedDifficultyLevel);
-        skill.IsInDemand.Should().Be(updatedIsInDemand);
-        skill.DomainEvents.Should().ContainSingle(e => e is SkillUpdatedEvent);
-        var skillUpdatedEvent = skill.DomainEvents.First(e => e is SkillUpdatedEvent) as SkillUpdatedEvent;
-        skillUpdatedEvent.Should().NotBeNull();
-        skillUpdatedEvent?.SkillId.Should().Be(skill.Id);
-        skillUpdatedEvent?.NewName.Should().Be(updatedName);
-    }
-
-    [Theory]
-    [InlineData(null)]
-    [InlineData(EmptyName)]
-    [InlineData(WhitespaceName)]
-    public void Update_WithInvalidName_ShouldThrowBusinessRuleException(string? invalidName) // Made string nullable
-    {
-        // Arrange
-        var skill = new Skill(ValidName, SkillCategory.ProgrammingLanguage, ValidDescription, SkillLevel.Beginner, false);
-
-        // Act
-        Action act = () => skill.Update(invalidName, SkillCategory.Tool, "New Desc", SkillLevel.Expert, true);
-
-        // Assert
-        act.Should().Throw<BusinessRuleException>().WithMessage("Skill name cannot be empty");
+        skill.Name.Should().Be(_validName);
+        skill.Category.Should().Be(_validCategory);
+        skill.Description.Should().Be(_validDescription);
+        skill.DifficultyLevel.Should().Be(_validLevel);
+        skill.IsInDemand.Should().BeFalse(); // Default value
     }
     
     [Fact]
-    public void Update_WithNameTooLong_ShouldThrowBusinessRuleException()
+    public void Constructor_ValidParametersWithInDemand_ShouldCreateInstance()
     {
-        // Arrange
-        var skill = new Skill(ValidName, SkillCategory.ProgrammingLanguage, ValidDescription, SkillLevel.Beginner, false);
-
-        // Act
-        Action act = () => skill.Update(LongName, SkillCategory.Tool, "New Desc", SkillLevel.Expert, true);
+        // Arrange & Act
+        var skill = new Skill(_validName, _validCategory, _validDescription, _validLevel, true);
 
         // Assert
-        act.Should().Throw<BusinessRuleException>().WithMessage("Skill name cannot exceed 100 characters");
+        skill.Name.Should().Be(_validName);
+        skill.Category.Should().Be(_validCategory);
+        skill.Description.Should().Be(_validDescription);
+        skill.DifficultyLevel.Should().Be(_validLevel);
+        skill.IsInDemand.Should().BeTrue();
     }
-
+    
     [Theory]
     [InlineData(null)]
-    [InlineData(EmptyDescription)]
-    [InlineData(WhitespaceDescription)]
-    public void Update_WithInvalidDescription_ShouldThrowBusinessRuleException(string? invalidDescription) // Made string nullable
+    [InlineData("")]
+    [InlineData("   ")]
+    public void Constructor_InvalidName_ShouldThrowBusinessRuleException(string invalidName)
     {
-        // Arrange
-        var skill = new Skill(ValidName, SkillCategory.ProgrammingLanguage, ValidDescription, SkillLevel.Beginner, false);
-
-        // Act
-        Action act = () => skill.Update("New Name", SkillCategory.Tool, invalidDescription, SkillLevel.Expert, true);
+        // Arrange & Act
+        Action action = () => new Skill(invalidName, _validCategory, _validDescription, _validLevel);
 
         // Assert
-        act.Should().Throw<BusinessRuleException>().WithMessage("Skill description cannot be empty");
+        action.Should().Throw<BusinessRuleException>()
+            .WithMessage("Skill name cannot be empty");
     }
-
+    
     [Fact]
-    public void Update_WithDescriptionTooLong_ShouldThrowBusinessRuleException()
+    public void Constructor_NameTooLong_ShouldThrowBusinessRuleException()
     {
         // Arrange
-        var skill = new Skill(ValidName, SkillCategory.ProgrammingLanguage, ValidDescription, SkillLevel.Beginner, false);
-
+        string nameTooLong = new string('x', 101); // 101 characters
+        
         // Act
-        Action act = () => skill.Update("New Name", SkillCategory.Tool, LongDescription, SkillLevel.Expert, true);
+        Action action = () => new Skill(nameTooLong, _validCategory, _validDescription, _validLevel);
 
         // Assert
-        act.Should().Throw<BusinessRuleException>().WithMessage("Skill description cannot exceed 1000 characters");
+        action.Should().Throw<BusinessRuleException>()
+            .WithMessage("Skill name cannot exceed 100 characters");
     }
+    
+    [Theory]
+    [InlineData(null)]
+    [InlineData("")]
+    [InlineData("   ")]
+    public void Constructor_InvalidDescription_ShouldThrowBusinessRuleException(string invalidDescription)
+    {
+        // Arrange & Act
+        Action action = () => new Skill(_validName, _validCategory, invalidDescription, _validLevel);
 
+        // Assert
+        action.Should().Throw<BusinessRuleException>()
+            .WithMessage("Skill description cannot be empty");
+    }
+    
     [Fact]
-    public void SetDemandStatus_WhenStatusChanges_ShouldUpdateIsInDemandAndAddDomainEvent()
+    public void Constructor_DescriptionTooLong_ShouldThrowBusinessRuleException()
     {
         // Arrange
-        var skill = new Skill(ValidName, SkillCategory.ProgrammingLanguage, ValidDescription, SkillLevel.Beginner, false);
-        skill.ClearDomainEvents(); // Clear initial creation event
+        string descriptionTooLong = new string('x', 1001); // 1001 characters
+        
+        // Act
+        Action action = () => new Skill(_validName, _validCategory, descriptionTooLong, _validLevel);
 
+        // Assert
+        action.Should().Throw<BusinessRuleException>()
+            .WithMessage("Skill description cannot exceed 1000 characters");
+    }
+    
+    [Fact]
+    public void Constructor_ShouldAddSkillCreatedDomainEvent()
+    {
+        // Arrange & Act
+        var skill = new Skill(_validName, _validCategory, _validDescription, _validLevel);
+        
+        // Assert
+        skill.DomainEvents.Should().NotBeEmpty();
+        var domainEvent = skill.DomainEvents.First();
+        domainEvent.Should().BeOfType<SkillCreatedEvent>();
+        
+        var skillCreatedEvent = (SkillCreatedEvent)domainEvent;
+        skillCreatedEvent.SkillId.Should().Be(skill.Id);
+        skillCreatedEvent.SkillName.Should().Be(_validName);
+        skillCreatedEvent.SkillCategory.Should().Be(_validCategory);
+        skillCreatedEvent.Category.Should().Be(_validCategory.ToString());
+    }
+    
+    [Fact]
+    public void Update_ValidParameters_ShouldUpdateSkillProperties()
+    {
+        // Arrange
+        var skill = new Skill(_validName, _validCategory, _validDescription, _validLevel);
+        var newName = "JavaScript";
+        var newCategory = SkillCategory.ProgrammingLanguage;
+        var newDescription = "High-level programming language for web development";
+        var newLevel = SkillLevel.Intermediate;
+        var newIsInDemand = true;
+        
+        // Clear domain events from construction
+        skill.ClearDomainEvents();
+        
+        // Act
+        skill.Update(newName, newCategory, newDescription, newLevel, newIsInDemand);
+        
+        // Assert
+        skill.Name.Should().Be(newName);
+        skill.Category.Should().Be(newCategory);
+        skill.Description.Should().Be(newDescription);
+        skill.DifficultyLevel.Should().Be(newLevel);
+        skill.IsInDemand.Should().Be(newIsInDemand);
+    }
+    
+    [Fact]
+    public void Update_ShouldAddSkillUpdatedDomainEvent()
+    {
+        // Arrange
+        var skill = new Skill(_validName, _validCategory, _validDescription, _validLevel);
+        var newName = "JavaScript";
+        
+        // Clear domain events from construction
+        skill.ClearDomainEvents();
+        
+        // Act
+        skill.Update(newName, _validCategory, _validDescription, _validLevel, false);
+        
+        // Assert
+        skill.DomainEvents.Should().NotBeEmpty();
+        var domainEvent = skill.DomainEvents.First();
+        domainEvent.Should().BeOfType<SkillUpdatedEvent>();
+        
+        var skillUpdatedEvent = (SkillUpdatedEvent)domainEvent;
+        skillUpdatedEvent.SkillId.Should().Be(skill.Id);
+        skillUpdatedEvent.SkillName.Should().Be(_validName); // Original name
+        skillUpdatedEvent.NewName.Should().Be(newName);
+    }
+    
+    [Fact]
+    public void SetDemandStatus_ChangedStatus_ShouldUpdateAndAddDomainEvent()
+    {
+        // Arrange
+        var skill = new Skill(_validName, _validCategory, _validDescription, _validLevel, false);
+        
+        // Clear domain events from construction
+        skill.ClearDomainEvents();
+        
         // Act
         skill.SetDemandStatus(true);
-
+        
         // Assert
         skill.IsInDemand.Should().BeTrue();
-        skill.DomainEvents.Should().ContainSingle(e => e is SkillDemandChangedEvent);
-        var demandChangedEvent = skill.DomainEvents.First(e => e is SkillDemandChangedEvent) as SkillDemandChangedEvent;
-        demandChangedEvent.Should().NotBeNull();
-        demandChangedEvent?.SkillId.Should().Be(skill.Id);
-        demandChangedEvent?.SkillName.Should().Be(skill.Name);
-        demandChangedEvent?.IsInDemand.Should().BeTrue();
+        skill.DomainEvents.Should().NotBeEmpty();
+        var domainEvent = skill.DomainEvents.First();
+        domainEvent.Should().BeOfType<SkillDemandChangedEvent>();
+        
+        var skillDemandChangedEvent = (SkillDemandChangedEvent)domainEvent;
+        skillDemandChangedEvent.SkillId.Should().Be(skill.Id);
+        skillDemandChangedEvent.SkillName.Should().Be(_validName);
+        skillDemandChangedEvent.IsInDemand.Should().BeTrue();
     }
-
+    
     [Fact]
-    public void SetDemandStatus_WhenStatusIsSame_ShouldNotChangeIsInDemandAndNotAddDomainEvent()
+    public void SetDemandStatus_SameStatus_ShouldNotAddDomainEvent()
     {
         // Arrange
-        var skill = new Skill(ValidName, SkillCategory.ProgrammingLanguage, ValidDescription, SkillLevel.Beginner, true);
-        skill.ClearDomainEvents(); // Clear initial creation event
-
+        var skill = new Skill(_validName, _validCategory, _validDescription, _validLevel, true);
+        
+        // Clear domain events from construction
+        skill.ClearDomainEvents();
+        
         // Act
         skill.SetDemandStatus(true);
-
+        
         // Assert
         skill.IsInDemand.Should().BeTrue();
         skill.DomainEvents.Should().BeEmpty();
     }
     
     [Fact]
-    public void UpdateDifficultyLevel_WhenLevelChanges_ShouldUpdateDifficultyLevelAndAddDomainEvent()
+    public void UpdateDifficultyLevel_ChangedLevel_ShouldUpdateAndAddDomainEvent()
     {
         // Arrange
-        var skill = new Skill(ValidName, SkillCategory.ProgrammingLanguage, ValidDescription, SkillLevel.Beginner, false);
-        var newLevel = SkillLevel.Advanced;
-        skill.ClearDomainEvents(); // Clear initial creation event
-
+        var skill = new Skill(_validName, _validCategory, _validDescription, _validLevel);
+        var newLevel = SkillLevel.Beginner;
+        
+        // Clear domain events from construction
+        skill.ClearDomainEvents();
+        
         // Act
         skill.UpdateDifficultyLevel(newLevel);
-
+        
         // Assert
         skill.DifficultyLevel.Should().Be(newLevel);
-        skill.DomainEvents.Should().ContainSingle(e => e is SkillUpdatedEvent); // Assuming SkillUpdatedEvent is generic enough
-        var skillUpdatedEvent = skill.DomainEvents.First(e => e is SkillUpdatedEvent) as SkillUpdatedEvent;
-        skillUpdatedEvent.Should().NotBeNull();
-        skillUpdatedEvent?.SkillId.Should().Be(skill.Id);
-        skillUpdatedEvent?.NewName.Should().Be(skill.Name); // Or a more specific event if available
+        skill.DomainEvents.Should().NotBeEmpty();
+        var domainEvent = skill.DomainEvents.First();
+        domainEvent.Should().BeOfType<SkillUpdatedEvent>();
+        
+        var skillUpdatedEvent = (SkillUpdatedEvent)domainEvent;
+        skillUpdatedEvent.SkillId.Should().Be(skill.Id);
+        skillUpdatedEvent.SkillName.Should().Be(_validName);
+        skillUpdatedEvent.NewName.Should().Be(_validName);
     }
-
+    
     [Fact]
-    public void UpdateDifficultyLevel_WhenLevelIsSame_ShouldNotChangeDifficultyLevelAndNotAddDomainEvent()
+    public void UpdateDifficultyLevel_SameLevel_ShouldNotAddDomainEvent()
     {
         // Arrange
-        var initialLevel = SkillLevel.Intermediate;
-        var skill = new Skill(ValidName, SkillCategory.ProgrammingLanguage, ValidDescription, initialLevel, false);
-        skill.ClearDomainEvents(); // Clear initial creation event
-
+        var skill = new Skill(_validName, _validCategory, _validDescription, _validLevel);
+        
+        // Clear domain events from construction
+        skill.ClearDomainEvents();
+        
         // Act
-        skill.UpdateDifficultyLevel(initialLevel);
-
+        skill.UpdateDifficultyLevel(_validLevel);
+        
         // Assert
-        skill.DifficultyLevel.Should().Be(initialLevel);
+        skill.DifficultyLevel.Should().Be(_validLevel);
         skill.DomainEvents.Should().BeEmpty();
     }
 }

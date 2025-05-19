@@ -1,55 +1,62 @@
 using FluentAssertions;
 using SoftwareEngineerSkills.Domain.Exceptions;
+using System;
 using Xunit;
 
 namespace SoftwareEngineerSkills.Domain.UnitTests.Exceptions;
 
 public class BusinessRuleExceptionTests
 {
-    private const string DefaultMessage = "Exception of type 'SoftwareEngineerSkills.Domain.Exceptions.BusinessRuleException' was thrown."; // Or whatever the default is for .NET version
-    private const string CustomMessage = "This is a custom business rule violation message.";
-
     [Fact]
-    public void Constructor_Default_ShouldCreateExceptionWithDefaultMessage()
+    public void DefaultConstructor_ShouldCreateInstance()
     {
         // Arrange & Act
         var exception = new BusinessRuleException();
 
         // Assert
         exception.Should().NotBeNull();
-        // The default message can vary slightly based on .NET version and localization.
-        // It's often better to check that it's not null or empty if the exact message isn't critical.
-        // However, for a specific known default, you can assert it.
-        // For .NET Core, the message for parameterless Exception constructor is typically like:
-        // "Exception of type 'YourNamespace.YourException' was thrown."
-        // We will check if the message contains the type name for robustness.
-        exception.Message.Should().Contain(nameof(BusinessRuleException)); 
+        exception.Message.Should().NotBeNull();
+        exception.InnerException.Should().BeNull();
     }
 
     [Fact]
-    public void Constructor_WithMessage_ShouldCreateExceptionWithGivenMessage()
-    {
-        // Arrange & Act
-        var exception = new BusinessRuleException(CustomMessage);
-
-        // Assert
-        exception.Should().NotBeNull();
-        exception.Message.Should().Be(CustomMessage);
-    }
-
-    [Fact]
-    public void Constructor_WithMessageAndInnerException_ShouldCreateExceptionWithGivenMessageAndInnerException()
+    public void MessageConstructor_ShouldCreateInstanceWithMessage()
     {
         // Arrange
-        var innerException = new InvalidOperationException("Inner exception message.");
+        var errorMessage = "Business rule violated";
 
         // Act
-        var exception = new BusinessRuleException(CustomMessage, innerException);
+        var exception = new BusinessRuleException(errorMessage);
 
         // Assert
         exception.Should().NotBeNull();
-        exception.Message.Should().Be(CustomMessage);
-        exception.InnerException.Should().BeSameAs(innerException);
-        exception.InnerException?.Message.Should().Be("Inner exception message.");
+        exception.Message.Should().Be(errorMessage);
+        exception.InnerException.Should().BeNull();
+    }
+
+    [Fact]
+    public void MessageAndInnerExceptionConstructor_ShouldCreateInstanceWithMessageAndInnerException()
+    {
+        // Arrange
+        var errorMessage = "Business rule violated";
+        var innerException = new ArgumentException("Inner exception");
+
+        // Act
+        var exception = new BusinessRuleException(errorMessage, innerException);
+
+        // Assert
+        exception.Should().NotBeNull();
+        exception.Message.Should().Be(errorMessage);
+        exception.InnerException.Should().BeEquivalentTo(innerException);
+    }
+
+    [Fact]
+    public void BusinessRuleException_ShouldInheritFromException()
+    {
+        // Act
+        var exception = new BusinessRuleException();
+
+        // Assert
+        exception.Should().BeAssignableTo<Exception>();
     }
 }

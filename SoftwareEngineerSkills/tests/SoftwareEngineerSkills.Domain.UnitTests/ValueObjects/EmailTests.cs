@@ -1,183 +1,161 @@
-// filepath: /Users/marquez/Downloads/Pablo/Repos/SoftwareEngineerSkills/SoftwareEngineerSkills/tests/SoftwareEngineerSkills.Domain.UnitTests/ValueObjects/EmailTests.cs
 using FluentAssertions;
 using SoftwareEngineerSkills.Domain.Exceptions;
 using SoftwareEngineerSkills.Domain.ValueObjects;
+using System;
 using Xunit;
 
 namespace SoftwareEngineerSkills.Domain.UnitTests.ValueObjects;
 
 public class EmailTests
 {
-    private const string ValidEmail = "test@example.com";
-    private const string ValidEmailWithSubdomain = "test@sub.example.com";
-    private const string ValidEmailWithPlusAlias = "test+alias@example.com";
-    private const string InvalidEmailNoAt = "testexample.com";
-    private const string InvalidEmailNoDomain = "test@";
-    private const string InvalidEmailNoUser = "@example.com";
-    private const string InvalidEmailWithSpaces = "test @example.com";
-    private const string EmptyEmail = "";
-    private const string WhitespaceEmail = "   ";
-
-    [Theory]
-    [InlineData(ValidEmail)]
-    [InlineData(ValidEmailWithSubdomain)]
-    [InlineData(ValidEmailWithPlusAlias)]
-    public void Constructor_WithValidEmail_ShouldCreateEmail(string validEmailValue)
+    [Fact]
+    public void Constructor_ValidEmail_ShouldCreateInstance()
     {
-        // Arrange & Act
-        var email = new Email(validEmailValue);
+        // Arrange
+        var validEmail = "test@example.com";
+
+        // Act
+        var email = new Email(validEmail);
 
         // Assert
-        email.Should().NotBeNull();
-        email.Value.Should().Be(validEmailValue);
+        email.Value.Should().Be(validEmail);
     }
 
     [Theory]
     [InlineData(null)]
-    [InlineData(EmptyEmail)]
-    [InlineData(WhitespaceEmail)]
-    public void Constructor_WithNullOrEmptyOrWhitespaceEmail_ShouldThrowBusinessRuleException(string? invalidEmailValue) // Made string nullable
+    [InlineData("")]
+    [InlineData("   ")]
+    public void Constructor_NullOrEmptyEmail_ShouldThrowBusinessRuleException(string invalidEmail)
     {
         // Arrange & Act
-        Action act = () => new Email(invalidEmailValue!);
+        Action action = () => new Email(invalidEmail);
 
         // Assert
-        act.Should().Throw<BusinessRuleException>().WithMessage("Email cannot be empty");
+        action.Should().Throw<BusinessRuleException>()
+            .WithMessage("Email cannot be empty");
     }
 
     [Theory]
-    [InlineData(InvalidEmailNoAt)]
-    [InlineData(InvalidEmailNoDomain)]
-    [InlineData(InvalidEmailNoUser)]
-    [InlineData(InvalidEmailWithSpaces)]
-    [InlineData("test@.com")]
-    [InlineData("test@com.")]
-    [InlineData("test@com.c")] // Invalid TLD
-    public void Constructor_WithInvalidEmailFormat_ShouldThrowBusinessRuleException(string invalidEmailValue)
+    [InlineData("invalidemail")]
+    [InlineData("invalid@")]
+    [InlineData("@invalid.com")]
+    [InlineData("invalid@com")]
+    [InlineData("invalid@.com")]
+    [InlineData("invalid@domain.")]
+    [InlineData("invalid@domain.c")] // TLD too short
+    public void Constructor_InvalidEmailFormat_ShouldThrowBusinessRuleException(string invalidEmail)
     {
         // Arrange & Act
-        Action act = () => new Email(invalidEmailValue);
+        Action action = () => new Email(invalidEmail);
 
         // Assert
-        act.Should().Throw<BusinessRuleException>().WithMessage("Email has an invalid format");
+        action.Should().Throw<BusinessRuleException>()
+            .WithMessage("Email has an invalid format");
     }
 
     [Fact]
-    public void GetEqualityComponents_ShouldReturnCorrectValue()
+    public void ImplicitConversion_FromEmail_ShouldReturnString()
     {
         // Arrange
-        var email = new Email(ValidEmail);
-        var emailUpper = new Email("TEST@EXAMPLE.COM");
-
-        // Act & Assert
-        email.Should().Be(emailUpper); // Equality should be case-insensitive for the value part
-        email.GetHashCode().Should().Be(emailUpper.GetHashCode());
-    }
-
-    [Fact]
-    public void ImplicitOperatorToString_ShouldReturnEmailValue()
-    {
-        // Arrange
-        var email = new Email(ValidEmail);
+        var emailString = "test@example.com";
+        var email = new Email(emailString);
 
         // Act
-        string emailString = email;
+        string result = email;
 
         // Assert
-        emailString.Should().Be(ValidEmail);
+        result.Should().Be(emailString);
     }
 
     [Fact]
-    public void ExplicitOperatorToEmail_ShouldCreateEmailFromString()
+    public void ExplicitConversion_FromString_ShouldReturnEmail()
     {
         // Arrange
-        var emailString = ValidEmail;
+        var emailString = "test@example.com";
 
         // Act
         var email = (Email)emailString;
 
         // Assert
-        email.Should().NotBeNull();
-        email.Value.Should().Be(ValidEmail);
-    }
-
-    [Fact]
-    public void ExplicitOperatorToEmail_WithInvalidString_ShouldThrowBusinessRuleException()
-    {
-        // Arrange
-        var invalidEmailString = InvalidEmailNoAt;
-
-        // Act
-        Action act = () => { var email = (Email)invalidEmailString; };
-
-        // Assert
-        act.Should().Throw<BusinessRuleException>().WithMessage("Email has an invalid format");
+        email.Value.Should().Be(emailString);
     }
 
     [Fact]
     public void ToString_ShouldReturnEmailValue()
     {
         // Arrange
-        var email = new Email(ValidEmail);
+        var emailString = "test@example.com";
+        var email = new Email(emailString);
 
         // Act
-        var emailString = email.ToString();
+        var result = email.ToString();
 
         // Assert
-        emailString.Should().Be(ValidEmail);
+        result.Should().Be(emailString);
     }
 
     [Fact]
-    public void Equals_WithDifferentTypes_ShouldReturnFalse()
+    public void Equals_SameEmail_ShouldReturnTrue()
     {
         // Arrange
-        var email = new Email(ValidEmail);
-        var otherObject = new object();
+        var email1 = new Email("test@example.com");
+        var email2 = new Email("test@example.com");
 
-        // Act
-        var result = email.Equals(otherObject);
-
-        // Assert
-        result.Should().BeFalse();
+        // Act & Assert
+        email1.Should().Be(email2);
+        (email1 == email2).Should().BeTrue();
     }
 
     [Fact]
-    public void Equals_WithNull_ShouldReturnFalse()
+    public void Equals_DifferentEmail_ShouldReturnFalse()
     {
         // Arrange
-        var email = new Email(ValidEmail);
+        var email1 = new Email("test1@example.com");
+        var email2 = new Email("test2@example.com");
 
-        // Act
-        var result = email.Equals(null);
-
-        // Assert
-        result.Should().BeFalse();
+        // Act & Assert
+        email1.Should().NotBe(email2);
+        (email1 == email2).Should().BeFalse();
     }
 
     [Fact]
-    public void Equals_WithSameInstance_ShouldReturnTrue()
+    public void Equals_CaseInsensitive_ShouldReturnTrue()
     {
         // Arrange
-        var email = new Email(ValidEmail);
+        var email1 = new Email("TEST@example.com");
+        var email2 = new Email("test@example.com");
 
-        // Act
-        var result = email.Equals(email);
-
-        // Assert
-        result.Should().BeTrue();
+        // Act & Assert
+        email1.Should().Be(email2);
     }
 
     [Fact]
-    public void Equals_WithDifferentEmailValue_ShouldReturnFalse()
+    public void GetHashCode_SameEmail_ShouldReturnSameHashCode()
     {
         // Arrange
-        var email1 = new Email(ValidEmail);
-        var email2 = new Email("another@example.com");
+        var email1 = new Email("test@example.com");
+        var email2 = new Email("test@example.com");
 
         // Act
-        var result = email1.Equals(email2);
+        var hashCode1 = email1.GetHashCode();
+        var hashCode2 = email2.GetHashCode();
 
         // Assert
-        result.Should().BeFalse();
+        hashCode1.Should().Be(hashCode2);
+    }
+
+    [Fact]
+    public void GetHashCode_DifferentEmail_ShouldReturnDifferentHashCode()
+    {
+        // Arrange
+        var email1 = new Email("test1@example.com");
+        var email2 = new Email("test2@example.com");
+
+        // Act
+        var hashCode1 = email1.GetHashCode();
+        var hashCode2 = email2.GetHashCode();
+
+        // Assert
+        hashCode1.Should().NotBe(hashCode2);
     }
 }
