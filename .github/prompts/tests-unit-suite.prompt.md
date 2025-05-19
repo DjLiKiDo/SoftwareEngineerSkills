@@ -54,4 +54,5 @@ And the general project guidelines:
 
 Refer to the official .NET 9, xUnit, Moq, and FluentAssertions documentation via `context7` if specific new API details or advanced testing scenarios are needed.
 
-Let's start by identifying all candidate C# files for unit testing across the solution, grouped by their respective projects.
+Let's start by running the tests to know the coverage we have and then proceed to generate the unit tests for the files in the solution. 
+Please provide the test results and any relevant coverage reports.
