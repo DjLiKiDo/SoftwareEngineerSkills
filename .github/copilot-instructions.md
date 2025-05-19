@@ -27,6 +27,7 @@ This document provides instructions for GitHub Copilot to optimize AI assistance
 - **Mediator Pattern:** For handling commands and queries
 - **Options Pattern:** For configuration management
 - **Screaming Architecture:** Structure reveals intent
+- **Entity Auditing System:** Sophisticated tracking and soft delete capabilities through interfaces
 
 ### Coding Conventions and Standards
 - **Naming:**
@@ -346,8 +347,8 @@ public class ErrorHandlingMiddleware
 
 #### Testing
 - **Unit Tests:** Test individual components in isolation with mock dependencies
-- **Integration Tests:** Test components with real dependencies
-- **Functional Tests:** Test the entire API stack
+- **Integration Tests:** Test components with real dependencies using Testcontainers for real database dependencies
+- **Functional Tests:** Test the entire API stack with WebApplicationFactory
 
 ```csharp
 // Unit Test Example
