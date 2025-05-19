@@ -4,6 +4,7 @@ I need assistance generating a comprehensive suite of unit tests for all relevan
 
 Please adhere to all guidelines, coding standards, and architectural patterns detailed in the project's Copilot unit testing instructions:
 `@workspace /Users/marquez/Downloads/Pablo/Repos/SoftwareEngineerSkills/.github/prompts/unit-test-instructions.md`
+[Unit Test Instructions](.github/instructions/unit-test-instructions.md)
 
 And the general project guidelines:
 `@workspace /Users/marquez/Downloads/Pablo/Repos/SoftwareEngineerSkills/.github/copilot-instructions.md`
@@ -48,6 +49,8 @@ And the general project guidelines:
 *   Please process the solution systematically, one project layer at a time if that helps manage complexity (e.g., start with Domain, then Application, etc.).
 *   For each file, provide the generated test code.
 *   If a file is deemed not to require unit tests (e.g., a simple DTO), please state that and briefly explain why.
+*   When coverage is completed, provide a summary of the test coverage achieved, including any areas that may require additional attention or consideration for integration tests.
+*   Ensure all tests are runnable and pass successfully.
 
 Refer to the official .NET 9, xUnit, Moq, and FluentAssertions documentation via `context7` if specific new API details or advanced testing scenarios are needed.
 

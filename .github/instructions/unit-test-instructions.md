@@ -1,3 +1,7 @@
+---
+applyTo: '"**/*.cs"'
+---
+
 # GitHub Copilot - Unit Test Generation Instructions for SoftwareEngineerSkills Project (.NET 9, xUnit, Moq, FluentAssertions)
 
 This document provides detailed instructions for GitHub Copilot to generate high-quality unit tests for the SoftwareEngineerSkills project. These tests should adhere to .NET 9 best practices, utilizing xUnit as the testing framework, Moq for mocking dependencies, and FluentAssertions for expressive assertions.
