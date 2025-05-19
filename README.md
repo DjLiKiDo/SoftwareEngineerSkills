@@ -60,8 +60,11 @@ Additional documentation is maintained in the `Docs/` folder, covering architect
 - **CQRS with MediatR** for separating read and write operations
 - **Repository Pattern with Unit of Work** for data access abstraction
 - **IOptions Pattern** for strongly-typed configuration management
-- **Result Pattern** for exception-free error handling
+- **Result Pattern** for exception-free error handling 
+- **Invariant Validation System** for domain entity consistency
+- **Domain Events** with thread-safe handling and version tracking
 - **Entity Auditing System** with sophisticated tracking and soft delete capabilities
+- **Rich Domain Model** with base entity classes, value objects, and aggregates
 
 ### API Documentation & Versioning
 - **OpenAPI/Swagger** using Swashbuckle for API documentation
@@ -168,9 +171,18 @@ The solution is structured around the dependency rule where dependencies flow in
 
 ### Domain-Driven Design
 - **Entities**: Domain objects with identity and lifecycle
+  - `BaseEntity`: Base class with ID, versioning, and invariant validation
+  - `SoftDeleteEntity`: Extended base class with soft deletion capabilities
 - **Value Objects**: Immutable domain objects without identity
+  - `ValueObject`: Abstract base class with equality comparison
 - **Domain Events**: For side-effect processing
+  - Thread-safe implementation with version tracking
 - **Aggregates**: Cluster of domain objects treated as a single unit
+  - `AggregateRoot`: Base class with domain event handling and boundary enforcement
+  - `IAggregateRoot`: Interface defining aggregate responsibilities
+- **Invariant Validation**: System to enforce business rules
+  - `DomainValidationException`: Exception for invariant violations
+  - Supports both synchronous and asynchronous validation
 
 ### CQRS (Command Query Responsibility Segregation)
 - **Commands**: For write operations that change state
@@ -181,6 +193,14 @@ The solution is structured around the dependency rule where dependencies flow in
 - Abstracts data access
 - Provides collection-like interface for domain entities
 - Coupled with Unit of Work for transaction management
+- Specialized repositories for soft-deletable entities
+- EF Core extensions for working with soft-deleted entities
+
+### Entity Auditing System
+- `IAuditableEntity`: Interface for tracking entity changes
+- Captures creation/modification timestamps and user information
+- Soft delete functionality via `ISoftDelete` interface
+- Automatic audit property management through DbContext
 
 ### Result Pattern
 - Eliminates exceptions for expected error paths
@@ -314,6 +334,8 @@ If you need help with this template, please:
 
 - Open an issue on GitHub
 - Check existing documentation in the `Docs/` folder [Docs/](Docs/)
+  - [Domain-Driven Design Core Components](Docs/Domain/DDD-Core-Components.md)
+  - [Entity Auditing System](Docs/Architecture/Entity%20Auditing.md)
 - Review the [CHANGELOG.md](CHANGELOG.md) for recent updates
 - Contact the maintainers at [example@example.com](mailto:example@example.com)
 - Join our community on [Discord](https://discord.gg/example)
