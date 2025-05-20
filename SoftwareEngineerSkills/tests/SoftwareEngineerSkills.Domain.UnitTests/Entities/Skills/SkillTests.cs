@@ -162,7 +162,7 @@ public class SkillTests
         
         var skillUpdatedEvent = (SkillUpdatedEvent)domainEvent;
         skillUpdatedEvent.SkillId.Should().Be(skill.Id);
-        skillUpdatedEvent.SkillName.Should().Be(_validName); // Original name
+        skillUpdatedEvent.OldName.Should().Be(_validName); // Original name
         skillUpdatedEvent.NewName.Should().Be(newName);
     }
     
@@ -228,7 +228,7 @@ public class SkillTests
         
         var skillUpdatedEvent = (SkillUpdatedEvent)domainEvent;
         skillUpdatedEvent.SkillId.Should().Be(skill.Id);
-        skillUpdatedEvent.SkillName.Should().Be(_validName);
+        skillUpdatedEvent.OldName.Should().Be(_validName);
         skillUpdatedEvent.NewName.Should().Be(_validName);
     }
     

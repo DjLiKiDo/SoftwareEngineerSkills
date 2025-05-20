@@ -45,7 +45,7 @@ public class SkillEventsTests
 
         // Assert
         skillUpdatedEvent.SkillId.Should().Be(skillId);
-        skillUpdatedEvent.SkillName.Should().Be(originalName);
+        skillUpdatedEvent.OldName.Should().Be(originalName);
         skillUpdatedEvent.NewName.Should().Be(newName);
         skillUpdatedEvent.Should().BeAssignableTo<IDomainEvent>();
         skillUpdatedEvent.Should().BeAssignableTo<DomainEvent>();

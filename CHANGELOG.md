@@ -33,6 +33,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Code Organization**:
   - Refactored user service code to its own folder under Infrastructure/Services/User for better organization
   - Separated `Customer` entity and its events into distinct files (`Customer.cs` and `CustomerEvents.cs`)
+- **Domain Events**:
+  - Improved domain event class readability with more descriptive property names and documentation
+  - Standardized inheritance patterns across all domain event classes
+  - Renamed properties in `SkillUpdatedEvent` for consistency with other update events (`SkillName` → `OldName`)
+  - Enhanced XML documentation for event properties to better explain their purpose and context
 - **Entity Framework Implementation**:
   - Updated `BaseEntity` to implement `IAuditableEntity` interface
   - Modified `ApplicationDbContext` to handle soft deletes and fetch current user information

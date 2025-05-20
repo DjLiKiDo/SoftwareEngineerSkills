@@ -6,27 +6,27 @@ namespace SoftwareEngineerSkills.Domain.Entities.Skills;
 /// <summary>
 /// Event raised when a new skill is created
 /// </summary>
-public class SkillCreatedEvent : DomainEvent, IDomainEvent
+public class SkillCreatedEvent : DomainEvent
 {
     /// <summary>
-    /// The ID of the skill that was created
+    /// The ID of the newly created skill
     /// </summary>
     public Guid SkillId { get; }
     
     /// <summary>
-    /// The name of the skill that was created
+    /// The name of the newly created skill
     /// </summary>
     public string SkillName { get; }
     
     /// <summary>
-    /// The category of the skill that was created
+    /// The string representation of the skill's category
     /// </summary>
     public string Category { get; }
 
     /// <summary>
-    /// The skill category of the skill that was created
+    /// The enumeration value of the skill's category
     /// </summary>
-    public SkillCategory SkillCategory { get; } 
+    public SkillCategory SkillCategory { get; }
 
     /// <summary>
     /// Creates a new instance of the SkillCreatedEvent class
@@ -47,7 +47,7 @@ public class SkillCreatedEvent : DomainEvent, IDomainEvent
 /// <summary>
 /// Event raised when a skill is updated
 /// </summary>
-public class SkillUpdatedEvent : DomainEvent, IDomainEvent
+public class SkillUpdatedEvent : DomainEvent
 {
     /// <summary>
     /// The ID of the skill that was updated
@@ -55,25 +55,25 @@ public class SkillUpdatedEvent : DomainEvent, IDomainEvent
     public Guid SkillId { get; }
     
     /// <summary>
-    /// The name of the skill that was updated
+    /// The original name of the skill before the update
     /// </summary>
-    public string SkillName { get; }
+    public string OldName { get; }
 
     /// <summary>
-    /// The new name of the skill
+    /// The new name of the skill after the update
     /// </summary>
-    public string NewName { get; } 
+    public string NewName { get; }
 
     /// <summary>
     /// Creates a new instance of the SkillUpdatedEvent class
     /// </summary>
     /// <param name="skillId">The ID of the skill</param>
-    /// <param name="skillName">The original name of the skill</param>
+    /// <param name="oldName">The original name of the skill</param>
     /// <param name="newName">The new name of the skill</param>
-    public SkillUpdatedEvent(Guid skillId, string skillName, string newName)
+    public SkillUpdatedEvent(Guid skillId, string oldName, string newName)
     {
         SkillId = skillId;
-        SkillName = skillName; // This is the original name before update for context
+        OldName = oldName;
         NewName = newName;
     }
 }
@@ -81,20 +81,20 @@ public class SkillUpdatedEvent : DomainEvent, IDomainEvent
 /// <summary>
 /// Event raised when a skill's demand status changes
 /// </summary>
-public class SkillDemandChangedEvent : DomainEvent, IDomainEvent
+public class SkillDemandChangedEvent : DomainEvent
 {
     /// <summary>
-    /// The ID of the skill
+    /// The ID of the skill whose demand status changed
     /// </summary>
     public Guid SkillId { get; }
     
     /// <summary>
-    /// The name of the skill
+    /// The name of the skill whose demand status changed
     /// </summary>
     public string SkillName { get; }
     
     /// <summary>
-    /// The new demand status
+    /// The new demand status value
     /// </summary>
     public bool IsInDemand { get; }
     

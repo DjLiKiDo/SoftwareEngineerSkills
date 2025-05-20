@@ -8,17 +8,17 @@ namespace SoftwareEngineerSkills.Domain.Entities.Customer;
 public class CustomerCreatedEvent : DomainEvent
 {
     /// <summary>
-    /// The customer's ID
+    /// The ID of the newly created customer
     /// </summary>
     public Guid CustomerId { get; }
     
     /// <summary>
-    /// The customer's name
+    /// The name of the newly created customer
     /// </summary>
     public string Name { get; }
     
     /// <summary>
-    /// The customer's email address
+    /// The email address of the newly created customer
     /// </summary>
     public string Email { get; }
     
@@ -47,12 +47,12 @@ public class CustomerNameUpdatedEvent : DomainEvent
     public Guid CustomerId { get; }
     
     /// <summary>
-    /// The customer's old name
+    /// The original name of the customer before the update
     /// </summary>
     public string OldName { get; }
     
     /// <summary>
-    /// The customer's new name
+    /// The new name of the customer
     /// </summary>
     public string NewName { get; }
     
@@ -81,12 +81,12 @@ public class CustomerEmailUpdatedEvent : DomainEvent
     public Guid CustomerId { get; }
     
     /// <summary>
-    /// The customer's old email address
+    /// The original email address of the customer before the update
     /// </summary>
     public string OldEmail { get; }
     
     /// <summary>
-    /// The customer's new email address
+    /// The new email address of the customer
     /// </summary>
     public string NewEmail { get; }
     
@@ -115,12 +115,12 @@ public class CustomerPhoneUpdatedEvent : DomainEvent
     public Guid CustomerId { get; }
     
     /// <summary>
-    /// The customer's old phone number
+    /// The original phone number of the customer before the update
     /// </summary>
     public string? OldPhoneNumber { get; }
     
     /// <summary>
-    /// The customer's new phone number
+    /// The new phone number of the customer
     /// </summary>
     public string? NewPhoneNumber { get; }
     
