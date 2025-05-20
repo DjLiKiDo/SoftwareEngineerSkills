@@ -37,8 +37,7 @@ public class Customer : AggregateRoot
         Name = name ?? throw new ArgumentNullException(nameof(name));
         Email = email ?? throw new ArgumentNullException(nameof(email));
         
-        AddDomainEvent(new CustomerCreatedEvent(Id, name, email.Value));
-        EnforceInvariants();
+        AddAndApplyEvent(new CustomerCreatedEvent(Id, name, email.Value));
     }
     
     /// <summary>
@@ -53,8 +52,7 @@ public class Customer : AggregateRoot
         var oldName = Name;
         Name = name;
         
-        AddDomainEvent(new CustomerNameUpdatedEvent(Id, oldName, name));
-        EnforceInvariants();
+        AddAndApplyEvent(new CustomerNameUpdatedEvent(Id, oldName, name));
     }
     
     /// <summary>
@@ -66,8 +64,7 @@ public class Customer : AggregateRoot
         var oldEmail = Email;
         Email = email ?? throw new ArgumentNullException(nameof(email));
         
-        AddDomainEvent(new CustomerEmailUpdatedEvent(Id, oldEmail.Value, email.Value));
-        EnforceInvariants();
+        AddAndApplyEvent(new CustomerEmailUpdatedEvent(Id, oldEmail.Value, email.Value));
     }
     
     /// <summary>
@@ -79,8 +76,7 @@ public class Customer : AggregateRoot
         var oldPhoneNumber = PhoneNumber;
         PhoneNumber = phoneNumber;
         
-        AddDomainEvent(new CustomerPhoneUpdatedEvent(Id, oldPhoneNumber, phoneNumber));
-        EnforceInvariants();
+        AddAndApplyEvent(new CustomerPhoneUpdatedEvent(Id, oldPhoneNumber, phoneNumber));
     }
     
     /// <summary>
