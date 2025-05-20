@@ -51,6 +51,11 @@ public class Skill : AggregateRoot
     /// <param name="isInDemand">Whether the skill is in demand</param>
     public Skill(string name, SkillCategory category, string description, SkillLevel difficultyLevel, bool isInDemand = false)
     {
+        if (name == null)
+            throw new ArgumentNullException(nameof(name));
+        if (description == null)
+            throw new ArgumentNullException(nameof(description));
+            
         Name = name;
         Category = category;
         Description = description;
@@ -168,22 +173,30 @@ public class Skill : AggregateRoot
     /// <returns>A collection of error messages if any invariants are violated</returns>
     protected override IEnumerable<string> CheckInvariants()
     {
-        if (string.IsNullOrWhiteSpace(Name))
+        // Name validation
+        if (Name == null)
+        {
+            yield return "Skill name cannot be null";
+        }
+        else if (string.IsNullOrWhiteSpace(Name))
         {
             yield return "Skill name cannot be empty";
         }
-        
-        if (Name.Length > 100)
+        else if (Name.Length > 100)
         {
             yield return "Skill name cannot exceed 100 characters";
         }
         
-        if (string.IsNullOrWhiteSpace(Description))
+        // Description validation
+        if (Description == null)
+        {
+            yield return "Skill description cannot be null";
+        }
+        else if (string.IsNullOrWhiteSpace(Description))
         {
             yield return "Skill description cannot be empty";
         }
-        
-        if (Description.Length > 1000)
+        else if (Description.Length > 1000)
         {
             yield return "Skill description cannot exceed 1000 characters";
         }

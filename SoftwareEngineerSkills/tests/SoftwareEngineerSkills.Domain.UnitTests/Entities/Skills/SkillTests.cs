@@ -44,7 +44,6 @@ public class SkillTests
     }
     
     [Theory]
-    [InlineData(null)]
     [InlineData("")]
     [InlineData("   ")]
     public void Constructor_InvalidName_ShouldThrowBusinessRuleException(string invalidName)
@@ -53,12 +52,24 @@ public class SkillTests
         Action action = () => new Skill(invalidName, _validCategory, _validDescription, _validLevel);
 
         // Assert
-        action.Should().Throw<BusinessRuleException>()
-            .WithMessage("Skill name cannot be empty");
+        action.Should().Throw<DomainValidationException>()
+            .WithMessage("One or more domain validation errors occurred.")
+            .Which.Errors.Should().Contain("Skill name cannot be empty");
     }
     
     [Fact]
-    public void Constructor_NameTooLong_ShouldThrowBusinessRuleException()
+    public void Constructor_NullName_ShouldThrowArgumentNullException()
+    {
+        // Arrange & Act
+        Action action = () => new Skill(null!, _validCategory, _validDescription, _validLevel);
+
+        // Assert
+        action.Should().Throw<ArgumentNullException>()
+            .And.ParamName.Should().Be("name");
+    }
+    
+    [Fact]
+    public void Constructor_NameTooLong_ShouldThrowDomainValidationException()
     {
         // Arrange
         string nameTooLong = new string('x', 101); // 101 characters
@@ -67,12 +78,12 @@ public class SkillTests
         Action action = () => new Skill(nameTooLong, _validCategory, _validDescription, _validLevel);
 
         // Assert
-        action.Should().Throw<BusinessRuleException>()
-            .WithMessage("Skill name cannot exceed 100 characters");
+        action.Should().Throw<DomainValidationException>()
+            .WithMessage("One or more domain validation errors occurred.")
+            .Which.Errors.Should().Contain("Skill name cannot exceed 100 characters");
     }
     
     [Theory]
-    [InlineData(null)]
     [InlineData("")]
     [InlineData("   ")]
     public void Constructor_InvalidDescription_ShouldThrowBusinessRuleException(string invalidDescription)
@@ -81,12 +92,24 @@ public class SkillTests
         Action action = () => new Skill(_validName, _validCategory, invalidDescription, _validLevel);
 
         // Assert
-        action.Should().Throw<BusinessRuleException>()
-            .WithMessage("Skill description cannot be empty");
+        action.Should().Throw<DomainValidationException>()
+            .WithMessage("One or more domain validation errors occurred.")
+            .Which.Errors.Should().Contain("Skill description cannot be empty");
     }
     
     [Fact]
-    public void Constructor_DescriptionTooLong_ShouldThrowBusinessRuleException()
+    public void Constructor_NullDescription_ShouldThrowArgumentNullException()
+    {
+        // Arrange & Act
+        Action action = () => new Skill(_validName, _validCategory, null!, _validLevel);
+
+        // Assert
+        action.Should().Throw<ArgumentNullException>()
+            .And.ParamName.Should().Be("description");
+    }
+    
+    [Fact]
+    public void Constructor_DescriptionTooLong_ShouldThrowDomainValidationException()
     {
         // Arrange
         string descriptionTooLong = new string('x', 1001); // 1001 characters
@@ -95,8 +118,9 @@ public class SkillTests
         Action action = () => new Skill(_validName, _validCategory, descriptionTooLong, _validLevel);
 
         // Assert
-        action.Should().Throw<BusinessRuleException>()
-            .WithMessage("Skill description cannot exceed 1000 characters");
+        action.Should().Throw<DomainValidationException>()
+            .WithMessage("One or more domain validation errors occurred.")
+            .Which.Errors.Should().Contain("Skill description cannot exceed 1000 characters");
     }
     
     [Fact]
@@ -224,12 +248,13 @@ public class SkillTests
         skill.DifficultyLevel.Should().Be(newLevel);
         skill.DomainEvents.Should().NotBeEmpty();
         var domainEvent = skill.DomainEvents.First();
-        domainEvent.Should().BeOfType<SkillUpdatedEvent>();
+        domainEvent.Should().BeOfType<SkillDifficultyChangedEvent>();
         
-        var skillUpdatedEvent = (SkillUpdatedEvent)domainEvent;
-        skillUpdatedEvent.SkillId.Should().Be(skill.Id);
-        skillUpdatedEvent.OldName.Should().Be(_validName);
-        skillUpdatedEvent.NewName.Should().Be(_validName);
+        var difficultyChangedEvent = (SkillDifficultyChangedEvent)domainEvent;
+        difficultyChangedEvent.SkillId.Should().Be(skill.Id);
+        difficultyChangedEvent.SkillName.Should().Be(_validName);
+        difficultyChangedEvent.OldLevel.Should().Be(_validLevel);
+        difficultyChangedEvent.NewLevel.Should().Be(newLevel);
     }
     
     [Fact]
