@@ -9,15 +9,16 @@
 [V] Refinar la base de dtos y revisar que este bien
 [V] Revisar validacion de settings, decidir si con data anotations o fluentvalidation o pipeline o que
 [V] Mover databasesettings a la carpeta persistence
+[V] Domain: Revisar la estructura de carpetas. Analizar donde deben de ir las Interfaces de los servicios
+[ ] 
+[ ] Revisar eventos de las entidades buscando posibles mejoras de legibilidad
+[ ] Simplificar eventos?
 [ ] IOptionsMonitor
 [ ] DateTimeService y utilizar de manera consistente en todo el proyecto
-[V] Domain: Revisar la estructura de carpetas. Analizar donde deben de ir las Interfaces de los servicios
 [ ] Estudiar despliegue en containers
 [ ] Pipeline de github actions
 [ ] Despliegue en Azure?
 [ ] Accesibility de ApplicationDbContext
-[ ] 
-[ ] 
 [ ] 
 [ ] 
 [ ] 

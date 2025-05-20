@@ -32,6 +32,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - **Code Organization**:
   - Refactored user service code to its own folder under Infrastructure/Services/User for better organization
+  - Separated `Customer` entity and its events into distinct files (`Customer.cs` and `CustomerEvents.cs`)
 - **Entity Framework Implementation**:
   - Updated `BaseEntity` to implement `IAuditableEntity` interface
   - Modified `ApplicationDbContext` to handle soft deletes and fetch current user information
