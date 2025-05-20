@@ -1,12 +1,18 @@
 using SoftwareEngineerSkills.Domain.Common.Events;
 
-namespace SoftwareEngineerSkills.Domain.Common.Base;
+namespace SoftwareEngineerSkills.Domain.Common.Interfaces;
 
 /// <summary>
 /// Interface to identify aggregate roots in the domain model.
 /// Aggregate roots are the primary entities that external objects reference.
 /// They are responsible for enforcing invariants and consistency rules for
 /// the aggregate as a whole, and they coordinate the lifecycle of child entities.
+/// 
+/// Implementation guidelines:
+/// - Use AggregateRoot as the base class for entities that are true aggregate roots
+/// - Use this interface to identify and enforce aggregate root behavior
+/// - Aggregate roots should encapsulate all state changes with domain events
+/// - Apply the changes through events to maintain a consistent state
 /// </summary>
 public interface IAggregateRoot
 {

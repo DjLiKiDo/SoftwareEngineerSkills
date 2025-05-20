@@ -1,4 +1,5 @@
 using SoftwareEngineerSkills.Domain.Common.Events;
+using SoftwareEngineerSkills.Domain.ValueObjects;
 
 namespace SoftwareEngineerSkills.Domain.Entities.Customer;
 
@@ -135,5 +136,39 @@ public class CustomerPhoneUpdatedEvent : DomainEvent
         CustomerId = customerId;
         OldPhoneNumber = oldPhoneNumber;
         NewPhoneNumber = newPhoneNumber;
+    }
+}
+
+/// <summary>
+/// Event raised when a customer's address is updated
+/// </summary>
+public class CustomerAddressUpdatedEvent : DomainEvent
+{
+    /// <summary>
+    /// The customer's ID
+    /// </summary>
+    public Guid CustomerId { get; }
+    
+    /// <summary>
+    /// The original address of the customer before the update
+    /// </summary>
+    public Address? OldAddress { get; }
+    
+    /// <summary>
+    /// The new address of the customer
+    /// </summary>
+    public Address? NewAddress { get; }
+    
+    /// <summary>
+    /// Creates a new CustomerAddressUpdatedEvent
+    /// </summary>
+    /// <param name="customerId">The customer's ID</param>
+    /// <param name="oldAddress">The customer's old address</param>
+    /// <param name="newAddress">The customer's new address</param>
+    public CustomerAddressUpdatedEvent(Guid customerId, Address? oldAddress, Address? newAddress)
+    {
+        CustomerId = customerId;
+        OldAddress = oldAddress;
+        NewAddress = newAddress;
     }
 }

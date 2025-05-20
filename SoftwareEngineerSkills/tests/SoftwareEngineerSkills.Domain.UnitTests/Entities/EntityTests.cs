@@ -1,7 +1,6 @@
 using FluentAssertions;
 using SoftwareEngineerSkills.Domain.Common.Base;
 using SoftwareEngineerSkills.Domain.Common.Events;
-using SoftwareEngineerSkills.Domain.Entities;
 using System;
 using System.Linq;
 using Xunit;

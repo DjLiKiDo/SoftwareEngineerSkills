@@ -15,6 +15,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Added `DomainValidationException` for domain invariant violations
   - Implemented thread-safe domain event handling
   - Created comprehensive documentation of DDD core components
+  - Added new `SoftDeleteAggregateRoot` class combining soft delete capability with aggregate root behavior
+  - Created domain events for soft deletion operations
+  - Added `Address` value object for customer shipping information
 - **Entity Auditing System**:
   - Enhanced architecture with interfaces for separation of concerns
   - `IAuditableEntity` interface for tracking entity changes (creation/modification timestamps and users)
@@ -33,11 +36,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Code Organization**:
   - Refactored user service code to its own folder under Infrastructure/Services/User for better organization
   - Separated `Customer` entity and its events into distinct files (`Customer.cs` and `CustomerEvents.cs`)
+  - Moved `Entity` class from Entities namespace to Common/Base for better architectural consistency
+  - Moved `IAggregateRoot` interface from Common/Base to Common/Interfaces for consistent placement of interfaces
 - **Domain Events**:
   - Improved domain event class readability with more descriptive property names and documentation
   - Standardized inheritance patterns across all domain event classes
   - Renamed properties in `SkillUpdatedEvent` for consistency with other update events (`SkillName` → `OldName`)
   - Enhanced XML documentation for event properties to better explain their purpose and context
+  - Introduced more specific domain events for tracking state changes (`SkillDifficultyChangedEvent`, `SkillCategoryChangedEvent`)
+- **Domain Layer Architecture**:
+  - Clarified relationship between `Entity` and `AggregateRoot` classes
+  - Standardized method for implementing domain event handling across all aggregates
+  - Added implementation of `Apply` pattern for consistent event handling
+  - Improved implementation of `CheckInvariants` across domain entities
 - **Entity Framework Implementation**:
   - Updated `BaseEntity` to implement `IAuditableEntity` interface
   - Modified `ApplicationDbContext` to handle soft deletes and fetch current user information

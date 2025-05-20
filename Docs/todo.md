@@ -11,6 +11,8 @@
 [V] Mover databasesettings a la carpeta persistence
 [V] Domain: Revisar la estructura de carpetas. Analizar donde deben de ir las Interfaces de los servicios
 [ ] 
+[-] Completar tests capa de dominio
+[-] Analiza la capa de dominio y busca mejoras de legibilidad, consistencia y organizacion. Reestructuración basada en patrones DDD específicos?
 [ ] Revisar eventos de las entidades buscando posibles mejoras de legibilidad
 [ ] Simplificar eventos?
 [ ] IOptionsMonitor

@@ -1,12 +1,15 @@
+using SoftwareEngineerSkills.Domain.Common.Base;
+using SoftwareEngineerSkills.Domain.Common.Events;
 using SoftwareEngineerSkills.Domain.Enums;
 using SoftwareEngineerSkills.Domain.Exceptions;
 
 namespace SoftwareEngineerSkills.Domain.Entities.Skills;
 
 /// <summary>
-/// Represents a software engineering skill or technology
+/// Represents a software engineering skill or technology.
+/// Implemented as an aggregate root to manage its lifecycle and enforce invariants.
 /// </summary>
-public class Skill : Entity
+public class Skill : AggregateRoot
 {
     /// <summary>
     /// The name of the skill
@@ -46,19 +49,15 @@ public class Skill : Entity
     /// <param name="description">A description of the skill</param>
     /// <param name="difficultyLevel">The difficulty level of the skill</param>
     /// <param name="isInDemand">Whether the skill is in demand</param>
-    /// <exception cref="BusinessRuleException">Thrown when business rules are violated</exception>
     public Skill(string name, SkillCategory category, string description, SkillLevel difficultyLevel, bool isInDemand = false)
     {
-        ValidateName(name);
-        ValidateDescription(description);
-        
         Name = name;
         Category = category;
         Description = description;
         DifficultyLevel = difficultyLevel;
         IsInDemand = isInDemand;
         
-        AddDomainEvent(new SkillCreatedEvent(Id, name, category, category.ToString())); // Updated to use the correct constructor
+        AddAndApplyEvent(new SkillCreatedEvent(Id, name, category, category.ToString()));
     }
     
     /// <summary>
@@ -69,7 +68,6 @@ public class Skill : Entity
     /// <param name="description">The new description</param>
     /// <param name="difficultyLevel">The new difficulty level</param>
     /// <param name="isInDemand">The new in-demand status</param>
-    /// <exception cref="BusinessRuleException">Thrown when business rules are violated</exception>
     public void Update(
         string name, 
         SkillCategory category, 
@@ -77,17 +75,28 @@ public class Skill : Entity
         SkillLevel difficultyLevel, 
         bool isInDemand)
     {
-        ValidateName(name);
-        ValidateDescription(description);
-        
         var originalName = Name; // Store original name before updating
+        var originalCategory = Category;
+        var wasInDemand = IsInDemand;
+        
         Name = name;
         Category = category;
         Description = description;
         DifficultyLevel = difficultyLevel;
         IsInDemand = isInDemand;
         
-        AddDomainEvent(new SkillUpdatedEvent(Id, originalName, name)); // Pass original and new name
+        AddAndApplyEvent(new SkillUpdatedEvent(Id, originalName, name));
+        
+        // Add additional domain events for significant changes
+        if (originalCategory != category)
+        {
+            AddDomainEvent(new SkillCategoryChangedEvent(Id, Name, originalCategory, category));
+        }
+        
+        if (wasInDemand != isInDemand)
+        {
+            AddDomainEvent(new SkillDemandChangedEvent(Id, Name, isInDemand));
+        }
     }
     
     /// <summary>
@@ -99,7 +108,7 @@ public class Skill : Entity
         if (IsInDemand != isInDemand)
         {
             IsInDemand = isInDemand;
-            AddDomainEvent(new SkillDemandChangedEvent(Id, Name, isInDemand));
+            AddAndApplyEvent(new SkillDemandChangedEvent(Id, Name, isInDemand));
         }
     }
     
@@ -111,9 +120,9 @@ public class Skill : Entity
     {
         if (DifficultyLevel != level)
         {
-            var originalName = Name; // Store original name
+            var oldLevel = DifficultyLevel;
             DifficultyLevel = level;
-            AddDomainEvent(new SkillUpdatedEvent(Id, originalName, Name)); // Pass original and current name (which is the new name in this context)
+            AddAndApplyEvent(new SkillDifficultyChangedEvent(Id, Name, oldLevel, level));
         }
     }
     
@@ -150,6 +159,63 @@ public class Skill : Entity
         if (description.Length > 1000)
         {
             throw new BusinessRuleException("Skill description cannot exceed 1000 characters");
+        }
+    }
+    
+    /// <summary>
+    /// Validates that the Skill entity satisfies all invariants
+    /// </summary>
+    /// <returns>A collection of error messages if any invariants are violated</returns>
+    protected override IEnumerable<string> CheckInvariants()
+    {
+        if (string.IsNullOrWhiteSpace(Name))
+        {
+            yield return "Skill name cannot be empty";
+        }
+        
+        if (Name.Length > 100)
+        {
+            yield return "Skill name cannot exceed 100 characters";
+        }
+        
+        if (string.IsNullOrWhiteSpace(Description))
+        {
+            yield return "Skill description cannot be empty";
+        }
+        
+        if (Description.Length > 1000)
+        {
+            yield return "Skill description cannot exceed 1000 characters";
+        }
+    }
+
+    /// <summary>
+    /// Updates the state of this aggregate root with a domain event
+    /// </summary>
+    /// <param name="domainEvent">The domain event that modifies the aggregate state</param>
+    protected override void Apply(IDomainEvent domainEvent)
+    {
+        switch (domainEvent)
+        {
+            case SkillCreatedEvent created:
+                // Constructor already sets these properties
+                break;
+                
+            case SkillUpdatedEvent updated:
+                // The Update method already sets these properties 
+                break;
+                
+            case SkillDemandChangedEvent demandChanged:
+                // The SetDemandStatus method already sets this property
+                break;
+                
+            case SkillCategoryChangedEvent categoryChanged:
+                // The Update method already sets this property
+                break;
+                
+            case SkillDifficultyChangedEvent difficultyChanged:
+                // The UpdateDifficultyLevel method already sets this property
+                break;
         }
     }
 }

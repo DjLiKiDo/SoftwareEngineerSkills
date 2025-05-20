@@ -24,6 +24,11 @@ public class Customer : AggregateRoot
     /// </summary>
     public string? PhoneNumber { get; private set; }
     
+    /// <summary>
+    /// The customer's shipping address
+    /// </summary>
+    public Address? ShippingAddress { get; private set; }
+    
     // Private constructor for EF Core
     private Customer() { }
     
@@ -77,6 +82,61 @@ public class Customer : AggregateRoot
         PhoneNumber = phoneNumber;
         
         AddAndApplyEvent(new CustomerPhoneUpdatedEvent(Id, oldPhoneNumber, phoneNumber));
+    }
+    
+    /// <summary>
+    /// Updates the customer's shipping address
+    /// </summary>
+    /// <param name="address">The new shipping address</param>
+    public void UpdateShippingAddress(Address address)
+    {
+        var oldAddress = ShippingAddress;
+        ShippingAddress = address ?? throw new ArgumentNullException(nameof(address));
+        
+        AddAndApplyEvent(new CustomerAddressUpdatedEvent(Id, oldAddress, address));
+    }
+    
+    /// <summary>
+    /// Clears the customer's shipping address
+    /// </summary>
+    public void ClearShippingAddress()
+    {
+        var oldAddress = ShippingAddress;
+        if (oldAddress != null)
+        {
+            ShippingAddress = null;
+            AddAndApplyEvent(new CustomerAddressUpdatedEvent(Id, oldAddress, null));
+        }
+    }
+    
+    /// <summary>
+    /// Updates the state of this aggregate root with a domain event
+    /// </summary>
+    /// <param name="domainEvent">The domain event that modifies the aggregate state</param>
+    protected override void Apply(IDomainEvent domainEvent)
+    {
+        switch (domainEvent)
+        {
+            case CustomerCreatedEvent created:
+                // Constructor already sets these properties
+                break;
+                
+            case CustomerNameUpdatedEvent nameUpdated:
+                // The UpdateName method already sets the properties 
+                break;
+                
+            case CustomerEmailUpdatedEvent emailUpdated:
+                // The UpdateEmail method already sets the properties
+                break;
+                
+            case CustomerPhoneUpdatedEvent phoneUpdated:
+                // The UpdatePhoneNumber method already sets the properties
+                break;
+                
+            case CustomerAddressUpdatedEvent addressUpdated:
+                // The UpdateShippingAddress method already sets the properties
+                break;
+        }
     }
     
     /// <summary>

@@ -111,3 +111,85 @@ public class SkillDemandChangedEvent : DomainEvent
         IsInDemand = isInDemand;
     }
 }
+
+/// <summary>
+/// Event raised when a skill's category changes
+/// </summary>
+public class SkillCategoryChangedEvent : DomainEvent
+{
+    /// <summary>
+    /// The ID of the skill whose category changed
+    /// </summary>
+    public Guid SkillId { get; }
+    
+    /// <summary>
+    /// The name of the skill whose category changed
+    /// </summary>
+    public string SkillName { get; }
+    
+    /// <summary>
+    /// The original category before the change
+    /// </summary>
+    public SkillCategory OldCategory { get; }
+    
+    /// <summary>
+    /// The new category after the change
+    /// </summary>
+    public SkillCategory NewCategory { get; }
+    
+    /// <summary>
+    /// Creates a new instance of the SkillCategoryChangedEvent class
+    /// </summary>
+    /// <param name="skillId">The ID of the skill</param>
+    /// <param name="skillName">The name of the skill</param>
+    /// <param name="oldCategory">The original category</param>
+    /// <param name="newCategory">The new category</param>
+    public SkillCategoryChangedEvent(Guid skillId, string skillName, SkillCategory oldCategory, SkillCategory newCategory)
+    {
+        SkillId = skillId;
+        SkillName = skillName;
+        OldCategory = oldCategory;
+        NewCategory = newCategory;
+    }
+}
+
+/// <summary>
+/// Event raised when a skill's difficulty level changes
+/// </summary>
+public class SkillDifficultyChangedEvent : DomainEvent
+{
+    /// <summary>
+    /// The ID of the skill whose difficulty level changed
+    /// </summary>
+    public Guid SkillId { get; }
+    
+    /// <summary>
+    /// The name of the skill whose difficulty level changed
+    /// </summary>
+    public string SkillName { get; }
+    
+    /// <summary>
+    /// The original difficulty level before the change
+    /// </summary>
+    public SkillLevel OldLevel { get; }
+    
+    /// <summary>
+    /// The new difficulty level after the change
+    /// </summary>
+    public SkillLevel NewLevel { get; }
+    
+    /// <summary>
+    /// Creates a new instance of the SkillDifficultyChangedEvent class
+    /// </summary>
+    /// <param name="skillId">The ID of the skill</param>
+    /// <param name="skillName">The name of the skill</param>
+    /// <param name="oldLevel">The original difficulty level</param>
+    /// <param name="newLevel">The new difficulty level</param>
+    public SkillDifficultyChangedEvent(Guid skillId, string skillName, SkillLevel oldLevel, SkillLevel newLevel)
+    {
+        SkillId = skillId;
+        SkillName = skillName;
+        OldLevel = oldLevel;
+        NewLevel = newLevel;
+    }
+}

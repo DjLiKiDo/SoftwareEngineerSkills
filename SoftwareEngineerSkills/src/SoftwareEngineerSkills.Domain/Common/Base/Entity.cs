@@ -1,11 +1,13 @@
 using SoftwareEngineerSkills.Domain.Common.Base;
 
-namespace SoftwareEngineerSkills.Domain.Entities;
+namespace SoftwareEngineerSkills.Domain.Common.Base;
 
 /// <summary>
-/// Abstract base class for domain entities that are also aggregate roots
+/// Abstract base class for domain entities that serve as standard entities with identity.
+/// This class provides equality comparison based on identity rather than structure.
+/// Note: For entities that need to be aggregate roots, use AggregateRoot instead.
 /// </summary>
-public abstract class Entity : BaseEntity, IAggregateRoot
+public abstract class Entity : BaseEntity
 {
     /// <summary>
     /// Determines whether this entity is equal to another entity.

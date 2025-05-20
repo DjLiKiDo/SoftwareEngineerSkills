@@ -1,5 +1,6 @@
 using System.Collections.Concurrent;
 using SoftwareEngineerSkills.Domain.Common.Events;
+using SoftwareEngineerSkills.Domain.Common.Interfaces;
 using SoftwareEngineerSkills.Domain.Exceptions;
 
 namespace SoftwareEngineerSkills.Domain.Common.Base;
