@@ -80,6 +80,11 @@ public class Skill : AggregateRoot
         SkillLevel difficultyLevel, 
         bool isInDemand)
     {
+        if (name == null)
+            throw new ArgumentNullException(nameof(name));
+        if (description == null)
+            throw new ArgumentNullException(nameof(description));
+            
         var originalName = Name; // Store original name before updating
         var originalCategory = Category;
         var wasInDemand = IsInDemand;
