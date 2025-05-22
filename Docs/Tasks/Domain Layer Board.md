@@ -34,6 +34,7 @@ Tasks are categorized into three priority levels:
   - [ ] Implement `ISoftDelete` interface for soft deletion functionality  
   - [ ] Create `SoftDeleteEntity` base class implementing the interface
   - [ ] Create `ICurrentUserService` and implementation for capturing the current user
+  - [ ] Define `IDateTimeService` interface in the Domain layer to provide consistent UTC timestamps for auditing
 - **Expected Outcome**: Complete auditing system with creation, modification, and deletion tracking
 - **Dependencies**: Depends on Core Domain Layer Components
 
