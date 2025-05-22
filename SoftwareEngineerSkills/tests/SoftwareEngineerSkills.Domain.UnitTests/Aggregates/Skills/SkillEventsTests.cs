@@ -1,11 +1,11 @@
 using FluentAssertions;
 using SoftwareEngineerSkills.Domain.Common.Events;
-using SoftwareEngineerSkills.Domain.Entities.Skills;
+using SoftwareEngineerSkills.Domain.Aggregates.Skills;
 using SoftwareEngineerSkills.Domain.Enums;
 using System;
 using Xunit;
 
-namespace SoftwareEngineerSkills.Domain.UnitTests.Entities.Skills;
+namespace SoftwareEngineerSkills.Domain.UnitTests.Aggregates.Skills;
 
 public class SkillEventsTests
 {

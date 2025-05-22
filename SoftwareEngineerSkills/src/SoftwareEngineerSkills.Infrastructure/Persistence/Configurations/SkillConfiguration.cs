@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using SoftwareEngineerSkills.Domain.Entities.Skills;
+using SoftwareEngineerSkills.Domain.Aggregates.Skills;
 
 namespace SoftwareEngineerSkills.Infrastructure.Persistence.Configurations;
 

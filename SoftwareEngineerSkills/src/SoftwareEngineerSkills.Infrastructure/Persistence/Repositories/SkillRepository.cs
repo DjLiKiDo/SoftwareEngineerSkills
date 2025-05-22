@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using SoftwareEngineerSkills.Domain.Abstractions.Persistence;
-using SoftwareEngineerSkills.Domain.Entities.Skills;
+using SoftwareEngineerSkills.Domain.Aggregates.Skills;
 using SoftwareEngineerSkills.Domain.Enums;
 
 namespace SoftwareEngineerSkills.Infrastructure.Persistence.Repositories;

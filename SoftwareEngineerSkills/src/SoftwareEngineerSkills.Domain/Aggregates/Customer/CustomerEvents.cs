@@ -1,7 +1,7 @@
 using SoftwareEngineerSkills.Domain.Common.Events;
 using SoftwareEngineerSkills.Domain.ValueObjects;
 
-namespace SoftwareEngineerSkills.Domain.Entities.Customer;
+namespace SoftwareEngineerSkills.Domain.Aggregates.Customer;
 
 /// <summary>
 /// Event raised when a customer is created

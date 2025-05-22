@@ -34,6 +34,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - **Code Organization**:
+  - Restructured domain layer for better DDD alignment (renamed "Entities" folder to "Aggregates")
+  - Created new folder structure (DomainServices, Rules, Shared) with appropriate subdirectories
+  - Updated namespaces from `SoftwareEngineerSkills.Domain.Entities` to `SoftwareEngineerSkills.Domain.Aggregates`
   - Refactored user service code to its own folder under Infrastructure/Services/User for better organization
   - Separated `Customer` entity and its events into distinct files (`Customer.cs` and `CustomerEvents.cs`)
   - Moved `Entity` class from Entities namespace to Common/Base for better architectural consistency

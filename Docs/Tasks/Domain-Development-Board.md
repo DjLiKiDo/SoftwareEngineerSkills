@@ -39,11 +39,11 @@ All domain layer development should follow these principles:
 #### 1. Domain Layer Reorganization
 - **Description**: Restructure domain layer for better DDD alignment
 - **Subtasks**:
-  - [ ] Rename "Entities" folder to "Aggregates" for better DDD alignment
-  - [ ] Create new folder structure (DomainServices, Rules, Shared)
-  - [ ] Move files to appropriate locations
-  - [ ] Update namespaces to reflect new structure
-  - [ ] Fix project references affected by moves
+  - [x] Rename "Entities" folder to "Aggregates" for better DDD alignment
+  - [x] Create new folder structure (DomainServices, Rules, Shared)
+  - [x] Move files to appropriate locations
+  - [x] Update namespaces to reflect new structure
+  - [x] Fix project references affected by moves
 - **Expected Outcome**: Clear folder structure reflecting DDD concepts
 - **Technical Details**: See [Domain-Structure-Improvements.md](../Domain/Domain-Structure-Improvements.md)
 - **ID**: DOM-001
@@ -379,7 +379,7 @@ public class Address : ValueObject
 
 | Task ID | Description | Status | Assignee | Target Date |
 |---------|------------|--------|----------|------------|
-| DOM-001 | Domain Layer Reorganization | Not Started | | Jun 5, 2025 |
+| DOM-001 | Domain Layer Reorganization | Completed | GitHub Copilot | May 22, 2025 |
 | DOM-002 | Domain Exception Hierarchy | Not Started | | Jun 5, 2025 |
 | DOM-003 | Standardize Base Classes | In Progress | | Jun 5, 2025 |
 | DOM-004 | Entity Auditing System | Not Started | | Jun 12, 2025 |

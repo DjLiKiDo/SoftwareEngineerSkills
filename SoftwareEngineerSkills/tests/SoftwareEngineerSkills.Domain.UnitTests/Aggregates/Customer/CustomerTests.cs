@@ -1,13 +1,13 @@
-using CustomerEntity = SoftwareEngineerSkills.Domain.Entities.Customer.Customer;
-using CustomerCreatedEvent = SoftwareEngineerSkills.Domain.Entities.Customer.CustomerCreatedEvent;
-using CustomerNameUpdatedEvent = SoftwareEngineerSkills.Domain.Entities.Customer.CustomerNameUpdatedEvent;
-using CustomerEmailUpdatedEvent = SoftwareEngineerSkills.Domain.Entities.Customer.CustomerEmailUpdatedEvent;
-using CustomerPhoneUpdatedEvent = SoftwareEngineerSkills.Domain.Entities.Customer.CustomerPhoneUpdatedEvent;
+using CustomerEntity = SoftwareEngineerSkills.Domain.Aggregates.Customer.Customer;
+using CustomerCreatedEvent = SoftwareEngineerSkills.Domain.Aggregates.Customer.CustomerCreatedEvent;
+using CustomerNameUpdatedEvent = SoftwareEngineerSkills.Domain.Aggregates.Customer.CustomerNameUpdatedEvent;
+using CustomerEmailUpdatedEvent = SoftwareEngineerSkills.Domain.Aggregates.Customer.CustomerEmailUpdatedEvent;
+using CustomerPhoneUpdatedEvent = SoftwareEngineerSkills.Domain.Aggregates.Customer.CustomerPhoneUpdatedEvent;
 using SoftwareEngineerSkills.Domain.Exceptions;
 using SoftwareEngineerSkills.Domain.ValueObjects;
 using Xunit;
 
-namespace SoftwareEngineerSkills.Domain.UnitTests.Entities.Customer;
+namespace SoftwareEngineerSkills.Domain.UnitTests.Aggregates.Customer;
 
 public class CustomerTests
 {

@@ -2,7 +2,7 @@ using SoftwareEngineerSkills.Domain.Common.Base;
 using SoftwareEngineerSkills.Domain.Common.Events;
 using SoftwareEngineerSkills.Domain.ValueObjects;
 
-namespace SoftwareEngineerSkills.Domain.Entities.Customer;
+namespace SoftwareEngineerSkills.Domain.Aggregates.Customer;
 
 /// <summary>
 /// Customer aggregate root entity

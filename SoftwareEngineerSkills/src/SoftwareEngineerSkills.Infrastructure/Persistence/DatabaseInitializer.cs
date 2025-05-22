@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using SoftwareEngineerSkills.Domain.Entities.Skills;
+using SoftwareEngineerSkills.Domain.Aggregates.Skills;
 using SoftwareEngineerSkills.Domain.Enums;
 
 namespace SoftwareEngineerSkills.Infrastructure.Persistence;

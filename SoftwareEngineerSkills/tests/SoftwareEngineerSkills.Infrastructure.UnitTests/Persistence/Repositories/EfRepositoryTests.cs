@@ -1,7 +1,7 @@
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using Moq;
-using SoftwareEngineerSkills.Domain.Entities.Skills;
+using SoftwareEngineerSkills.Domain.Aggregates.Skills;
 using SoftwareEngineerSkills.Domain.Enums;
 using SoftwareEngineerSkills.Infrastructure.Persistence;
 using SoftwareEngineerSkills.Infrastructure.Persistence.Repositories;

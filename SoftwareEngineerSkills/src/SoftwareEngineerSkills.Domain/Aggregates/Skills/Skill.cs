@@ -3,7 +3,7 @@ using SoftwareEngineerSkills.Domain.Common.Events;
 using SoftwareEngineerSkills.Domain.Enums;
 using SoftwareEngineerSkills.Domain.Exceptions;
 
-namespace SoftwareEngineerSkills.Domain.Entities.Skills;
+namespace SoftwareEngineerSkills.Domain.Aggregates.Skills;
 
 /// <summary>
 /// Represents a software engineering skill or technology.
