@@ -5,13 +5,20 @@ using Xunit;
 
 namespace SoftwareEngineerSkills.Domain.UnitTests.Exceptions;
 
-public class BusinessRuleExceptionTests
+public class DomainExceptionTests
 {
+    private class ConcreteDomainException : DomainException
+    {
+        public ConcreteDomainException() : base() { }
+        public ConcreteDomainException(string message) : base(message) { }
+        public ConcreteDomainException(string message, Exception innerException) : base(message, innerException) { }
+    }
+
     [Fact]
     public void DefaultConstructor_ShouldCreateInstance()
     {
         // Arrange & Act
-        var exception = new BusinessRuleException();
+        var exception = new ConcreteDomainException();
 
         // Assert
         exception.Should().NotBeNull();
@@ -23,10 +30,10 @@ public class BusinessRuleExceptionTests
     public void MessageConstructor_ShouldCreateInstanceWithMessage()
     {
         // Arrange
-        var errorMessage = "Business rule violated";
+        var errorMessage = "Domain rule violated";
 
         // Act
-        var exception = new BusinessRuleException(errorMessage);
+        var exception = new ConcreteDomainException(errorMessage);
 
         // Assert
         exception.Should().NotBeNull();
@@ -38,11 +45,11 @@ public class BusinessRuleExceptionTests
     public void MessageAndInnerExceptionConstructor_ShouldCreateInstanceWithMessageAndInnerException()
     {
         // Arrange
-        var errorMessage = "Business rule violated";
+        var errorMessage = "Domain rule violated";
         var innerException = new ArgumentException("Inner exception");
 
         // Act
-        var exception = new BusinessRuleException(errorMessage, innerException);
+        var exception = new ConcreteDomainException(errorMessage, innerException);
 
         // Assert
         exception.Should().NotBeNull();
@@ -51,12 +58,12 @@ public class BusinessRuleExceptionTests
     }
 
     [Fact]
-    public void BusinessRuleException_ShouldInheritFromDomainException()
+    public void DomainException_ShouldInheritFromException()
     {
         // Act
-        var exception = new BusinessRuleException();
+        var exception = new ConcreteDomainException();
 
         // Assert
-        exception.Should().BeAssignableTo<DomainException>();
+        exception.Should().BeAssignableTo<Exception>();
     }
 }

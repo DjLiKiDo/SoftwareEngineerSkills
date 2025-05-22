@@ -1,9 +1,10 @@
 namespace SoftwareEngineerSkills.Domain.Exceptions;
 
 /// <summary>
-/// Exception thrown when a business rule is violated
+/// Exception thrown when a business rule is violated during a domain operation.
+/// Used when an operation cannot be completed due to a violation of domain rules.
 /// </summary>
-public class BusinessRuleException : Exception
+public class BusinessRuleException : DomainException
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="BusinessRuleException"/> class

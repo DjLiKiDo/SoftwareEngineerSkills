@@ -37,6 +37,19 @@ internal class EfRepository<TEntity> : IRepository<TEntity> where TEntity : clas
     }
 
     /// <inheritdoc />
+    public virtual async Task<TEntity> GetByIdOrThrowAsync(Guid id, CancellationToken cancellationToken = default)
+    {
+        var entity = await GetByIdAsync(id, cancellationToken);
+        
+        if (entity == null)
+        {
+            throw new Domain.Exceptions.EntityNotFoundException(id, typeof(TEntity));
+        }
+        
+        return entity;
+    }
+
+    /// <inheritdoc />
     public virtual async Task<IEnumerable<TEntity>> GetAllAsync(CancellationToken cancellationToken = default)
     {
         return await _dbSet.ToListAsync(cancellationToken);

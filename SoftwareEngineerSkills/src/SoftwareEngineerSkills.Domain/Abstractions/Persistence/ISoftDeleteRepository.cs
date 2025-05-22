@@ -44,4 +44,14 @@ public interface ISoftDeleteRepository<TEntity> : IRepository<TEntity>
     /// <param name="cancellationToken">A token for cancelling the operation</param>
     /// <returns>The entity if found, otherwise null</returns>
     Task<TEntity?> GetByIdAsync(Guid id, bool includeSoftDeleted, CancellationToken cancellationToken = default);
+    
+    /// <summary>
+    /// Gets an entity by its ID, optionally including soft deleted items, or throws an EntityNotFoundException if not found
+    /// </summary>
+    /// <param name="id">The ID of the entity to retrieve</param>
+    /// <param name="includeSoftDeleted">Whether to include soft deleted entities in the search</param>
+    /// <param name="cancellationToken">A token for cancelling the operation</param>
+    /// <returns>The entity if found</returns>
+    /// <exception cref="Exceptions.EntityNotFoundException">Thrown when the entity with the specified ID does not exist</exception>
+    Task<TEntity> GetByIdOrThrowAsync(Guid id, bool includeSoftDeleted, CancellationToken cancellationToken = default);
 }

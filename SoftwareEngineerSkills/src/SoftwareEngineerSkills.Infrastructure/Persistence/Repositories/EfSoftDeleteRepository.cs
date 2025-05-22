@@ -54,6 +54,33 @@ internal class EfSoftDeleteRepository<TEntity> : EfRepository<TEntity>, ISoftDel
     }
     
     /// <inheritdoc />
+    public override async Task<TEntity> GetByIdOrThrowAsync(Guid id, CancellationToken cancellationToken = default)
+    {
+        // By default, only include non-soft-deleted entities
+        var entity = await GetByIdAsync(id, false, cancellationToken);
+        
+        if (entity == null)
+        {
+            throw new Domain.Exceptions.EntityNotFoundException(id, typeof(TEntity));
+        }
+        
+        return entity;
+    }
+    
+    /// <inheritdoc />
+    public async Task<TEntity> GetByIdOrThrowAsync(Guid id, bool includeSoftDeleted, CancellationToken cancellationToken = default)
+    {
+        var entity = await GetByIdAsync(id, includeSoftDeleted, cancellationToken);
+        
+        if (entity == null)
+        {
+            throw new Domain.Exceptions.EntityNotFoundException(id, typeof(TEntity));
+        }
+        
+        return entity;
+    }
+    
+    /// <inheritdoc />
     public override void Remove(TEntity entity)
     {
         // Override the Remove method to use soft delete instead

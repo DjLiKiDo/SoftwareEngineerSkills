@@ -1,7 +1,8 @@
 namespace SoftwareEngineerSkills.Domain.Exceptions;
 
 /// <summary>
-/// Exception thrown when a domain entity's invariants are violated
+/// Exception thrown when a domain entity's invariants are violated.
+/// Used specifically for enforcing entity state validation rules and constraints.
 /// </summary>
 public class DomainValidationException : BusinessRuleException
 {

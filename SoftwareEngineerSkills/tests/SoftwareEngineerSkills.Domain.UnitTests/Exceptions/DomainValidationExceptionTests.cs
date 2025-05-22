@@ -88,6 +88,7 @@ public class DomainValidationExceptionTests
 
         // Assert
         exception.Should().BeAssignableTo<BusinessRuleException>();
+        exception.Should().BeAssignableTo<DomainException>();
     }
 
     [Fact] 

@@ -17,6 +17,15 @@ public interface IReadRepository<TEntity> where TEntity : class
     Task<TEntity?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default);
     
     /// <summary>
+    /// Retrieves an entity by its ID or throws an EntityNotFoundException if not found
+    /// </summary>
+    /// <param name="id">The ID of the entity to retrieve</param>
+    /// <param name="cancellationToken">A token for cancelling the operation</param>
+    /// <returns>The entity if found</returns>
+    /// <exception cref="Exceptions.EntityNotFoundException">Thrown when the entity with the specified ID does not exist</exception>
+    Task<TEntity> GetByIdOrThrowAsync(Guid id, CancellationToken cancellationToken = default);
+    
+    /// <summary>
     /// Retrieves all entities
     /// </summary>
     /// <param name="cancellationToken">A token for cancelling the operation</param>
