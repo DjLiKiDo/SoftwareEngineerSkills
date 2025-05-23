@@ -1,18 +1,10 @@
-using FluentAssertions;
-using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Moq;
 using SoftwareEngineerSkills.API.Middleware;
-using System;
 using System.ComponentModel.DataAnnotations;
-using System.IO;
 using System.Text;
 using System.Text.Json;
-using System.Threading;
-using System.Threading.Tasks;
-using Xunit;
 
 namespace SoftwareEngineerSkills.API.UnitTests.Middleware;
 

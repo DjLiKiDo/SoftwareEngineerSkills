@@ -1,11 +1,5 @@
-using FluentAssertions;
 using SoftwareEngineerSkills.Domain.Common.Base;
 using SoftwareEngineerSkills.Domain.Common.Events;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Xunit;
 
 namespace SoftwareEngineerSkills.Domain.UnitTests.Common.Base;
 

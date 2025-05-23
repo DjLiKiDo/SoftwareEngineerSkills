@@ -1,6 +1,4 @@
-using FluentAssertions;
 using SoftwareEngineerSkills.Domain.Common.Events;
-using Xunit;
 
 namespace SoftwareEngineerSkills.Domain.UnitTests.Common.Events;
 

@@ -1,6 +1,6 @@
 using System.Net.Mail;
 
-namespace SoftwareEngineerSkills.Domain.Abstractions.Services;
+namespace SoftwareEngineerSkills.Domain.DomainServices.Interfaces;
 
 /// <summary>
 /// Service for sending emails as part of domain processes

@@ -1,14 +1,7 @@
-using FluentAssertions;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Moq;
 using SoftwareEngineerSkills.Infrastructure.Services.Email;
-using System;
-using System.Net;
 using System.Net.Mail;
-using System.Threading;
-using System.Threading.Tasks;
-using Xunit;
 
 namespace SoftwareEngineerSkills.Infrastructure.UnitTests.Services.Email;
 

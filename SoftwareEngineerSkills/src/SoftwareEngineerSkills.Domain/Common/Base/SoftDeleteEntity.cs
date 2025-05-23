@@ -1,4 +1,3 @@
-using SoftwareEngineerSkills.Domain.Common.Events;
 using SoftwareEngineerSkills.Domain.Common.Interfaces;
 
 namespace SoftwareEngineerSkills.Domain.Common.Base;

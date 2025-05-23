@@ -1,9 +1,5 @@
-using FluentAssertions;
 using SoftwareEngineerSkills.Domain.Common.Base;
 using SoftwareEngineerSkills.Domain.Common.Events;
-using System;
-using System.Linq;
-using Xunit;
 
 namespace SoftwareEngineerSkills.Domain.UnitTests.Common.Events;
 

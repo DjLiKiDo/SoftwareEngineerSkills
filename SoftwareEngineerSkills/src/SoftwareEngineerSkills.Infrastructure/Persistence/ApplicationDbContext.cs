@@ -2,8 +2,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using SoftwareEngineerSkills.Domain.Common.Base;
 using SoftwareEngineerSkills.Domain.Common.Interfaces;
-using SoftwareEngineerSkills.Domain.Aggregates.Skills;
-using SoftwareEngineerSkills.Domain.Abstractions.Services;
+using SoftwareEngineerSkills.Domain.Entities.Skills;
+using SoftwareEngineerSkills.Domain.DomainServices.Interfaces;
 using System.Linq.Expressions;
 using System.Reflection;
 

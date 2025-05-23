@@ -1,8 +1,5 @@
-using FluentAssertions;
 using SoftwareEngineerSkills.Infrastructure.Configuration;
 using System.ComponentModel.DataAnnotations;
-using System.Collections.Generic;
-using Xunit;
 
 namespace SoftwareEngineerSkills.Infrastructure.UnitTests.Configuration;
 

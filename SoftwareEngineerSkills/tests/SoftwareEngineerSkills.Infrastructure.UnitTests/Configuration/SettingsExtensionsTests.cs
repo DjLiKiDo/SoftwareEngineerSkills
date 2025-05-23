@@ -1,12 +1,8 @@
-using FluentAssertions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using SoftwareEngineerSkills.Infrastructure.Configuration;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using Xunit;
 
 namespace SoftwareEngineerSkills.Infrastructure.UnitTests.Configuration;
 
@@ -57,7 +53,7 @@ public class SettingsExtensionsTests
         
         // Assert
         // Validation happens when accessing the options, so we expect an exception
-        Action action = () => serviceProvider.GetService<IOptionsMonitor<TestSettings>>().CurrentValue;
+        Action action = () => { var _ = serviceProvider.GetService<IOptionsMonitor<TestSettings>>()!.CurrentValue; };
         
         action.Should().Throw<OptionsValidationException>()
             .Which.Message.Should().Contain("DataAnnotation validation failed");
@@ -114,8 +110,7 @@ public class SettingsExtensionsTests
         var serviceProvider = services.BuildServiceProvider();
         
         // Assert
-        Action action = () => serviceProvider.GetService<IOptionsMonitor<TestSettings>>().CurrentValue;
-        
+        Action action = () => { var _ = serviceProvider.GetService<IOptionsMonitor<TestSettings>>()!.CurrentValue; };
         action.Should().Throw<OptionsValidationException>()
             .Which.Message.Should().Contain("IntProperty must be positive");
     }

@@ -1,7 +1,7 @@
 using SoftwareEngineerSkills.Domain.Common.Events;
 using SoftwareEngineerSkills.Domain.Enums;
 
-namespace SoftwareEngineerSkills.Domain.Aggregates.Skills;
+namespace SoftwareEngineerSkills.Domain.Entities.Skills;
 
 /// <summary>
 /// Event raised when a new skill is created

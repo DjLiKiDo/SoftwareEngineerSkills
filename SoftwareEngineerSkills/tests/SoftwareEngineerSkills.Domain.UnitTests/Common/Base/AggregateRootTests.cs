@@ -1,7 +1,6 @@
 using SoftwareEngineerSkills.Domain.Common.Base;
 using SoftwareEngineerSkills.Domain.Common.Events;
 using SoftwareEngineerSkills.Domain.Exceptions;
-using Xunit;
 
 namespace SoftwareEngineerSkills.Domain.UnitTests.Common.Base;
 

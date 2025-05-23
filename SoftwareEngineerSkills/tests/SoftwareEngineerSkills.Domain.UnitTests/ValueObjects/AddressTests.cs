@@ -1,8 +1,5 @@
-using FluentAssertions;
 using SoftwareEngineerSkills.Domain.Exceptions;
 using SoftwareEngineerSkills.Domain.ValueObjects;
-using System;
-using Xunit;
 
 namespace SoftwareEngineerSkills.Domain.UnitTests.ValueObjects
 {

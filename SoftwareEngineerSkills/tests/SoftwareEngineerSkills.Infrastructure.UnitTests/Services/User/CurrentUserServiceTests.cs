@@ -1,10 +1,6 @@
-using FluentAssertions;
 using Microsoft.Extensions.Logging;
-using Moq;
-using SoftwareEngineerSkills.Domain.Abstractions.Services;
 using SoftwareEngineerSkills.Infrastructure.Services.User;
 using System.Security.Claims;
-using Xunit;
 
 namespace SoftwareEngineerSkills.Infrastructure.UnitTests.Services.User;
 

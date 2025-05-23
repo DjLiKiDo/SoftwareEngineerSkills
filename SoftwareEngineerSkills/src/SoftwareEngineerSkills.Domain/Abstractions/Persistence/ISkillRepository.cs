@@ -1,4 +1,4 @@
-using SoftwareEngineerSkills.Domain.Aggregates.Skills;
+using SoftwareEngineerSkills.Domain.Entities.Skills;
 
 namespace SoftwareEngineerSkills.Domain.Abstractions.Persistence;
 

@@ -1,7 +1,4 @@
-using FluentAssertions;
 using SoftwareEngineerSkills.Domain.Common.Base;
-using System.Collections.Generic;
-using Xunit;
 
 namespace SoftwareEngineerSkills.Domain.UnitTests.Common.Base;
 

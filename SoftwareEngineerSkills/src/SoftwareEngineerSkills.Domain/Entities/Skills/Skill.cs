@@ -1,15 +1,14 @@
 using SoftwareEngineerSkills.Domain.Common.Base;
-using SoftwareEngineerSkills.Domain.Common.Events;
 using SoftwareEngineerSkills.Domain.Enums;
 using SoftwareEngineerSkills.Domain.Exceptions;
 
-namespace SoftwareEngineerSkills.Domain.Aggregates.Skills;
+namespace SoftwareEngineerSkills.Domain.Entities.Skills;
 
 /// <summary>
 /// Represents a software engineering skill or technology.
-/// Implemented as an aggregate root to manage its lifecycle and enforce invariants.
+/// Implemented as a base entity rather than an aggregate root for simpler domain modeling.
 /// </summary>
-public class Skill : AggregateRoot
+public class Skill : BaseEntity
 {
     /// <summary>
     /// The name of the skill
@@ -62,7 +61,8 @@ public class Skill : AggregateRoot
         DifficultyLevel = difficultyLevel;
         IsInDemand = isInDemand;
         
-        AddAndApplyEvent(new SkillCreatedEvent(Id, name, category, category.ToString()));
+        AddDomainEvent(new SkillCreatedEvent(Id, name, category, category.ToString()));
+        EnforceInvariants();
     }
     
     /// <summary>
@@ -95,7 +95,8 @@ public class Skill : AggregateRoot
         DifficultyLevel = difficultyLevel;
         IsInDemand = isInDemand;
         
-        AddAndApplyEvent(new SkillUpdatedEvent(Id, originalName, name));
+        AddDomainEvent(new SkillUpdatedEvent(Id, originalName, name));
+        EnforceInvariants();
         
         // Add additional domain events for significant changes
         if (originalCategory != category)
@@ -118,7 +119,8 @@ public class Skill : AggregateRoot
         if (IsInDemand != isInDemand)
         {
             IsInDemand = isInDemand;
-            AddAndApplyEvent(new SkillDemandChangedEvent(Id, Name, isInDemand));
+            AddDomainEvent(new SkillDemandChangedEvent(Id, Name, isInDemand));
+            EnforceInvariants();
         }
     }
     
@@ -132,7 +134,8 @@ public class Skill : AggregateRoot
         {
             var oldLevel = DifficultyLevel;
             DifficultyLevel = level;
-            AddAndApplyEvent(new SkillDifficultyChangedEvent(Id, Name, oldLevel, level));
+            AddDomainEvent(new SkillDifficultyChangedEvent(Id, Name, oldLevel, level));
+            EnforceInvariants();
         }
     }
     
@@ -207,33 +210,6 @@ public class Skill : AggregateRoot
         }
     }
 
-    /// <summary>
-    /// Updates the state of this aggregate root with a domain event
-    /// </summary>
-    /// <param name="domainEvent">The domain event that modifies the aggregate state</param>
-    protected override void Apply(IDomainEvent domainEvent)
-    {
-        switch (domainEvent)
-        {
-            case SkillCreatedEvent created:
-                // Constructor already sets these properties
-                break;
-                
-            case SkillUpdatedEvent updated:
-                // The Update method already sets these properties 
-                break;
-                
-            case SkillDemandChangedEvent demandChanged:
-                // The SetDemandStatus method already sets this property
-                break;
-                
-            case SkillCategoryChangedEvent categoryChanged:
-                // The Update method already sets this property
-                break;
-                
-            case SkillDifficultyChangedEvent difficultyChanged:
-                // The UpdateDifficultyLevel method already sets this property
-                break;
-        }
-    }
+    // Apply method removed as BaseEntity doesn't implement this pattern
+    // Domain state changes are now managed directly in each method
 }

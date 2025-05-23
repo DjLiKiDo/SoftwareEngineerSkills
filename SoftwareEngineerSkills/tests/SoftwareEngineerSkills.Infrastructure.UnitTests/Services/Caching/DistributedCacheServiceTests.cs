@@ -1,14 +1,8 @@
-using FluentAssertions;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Moq;
 using SoftwareEngineerSkills.Infrastructure.Services.Caching;
-using System;
 using System.Text.Json;
-using System.Threading;
-using System.Threading.Tasks;
-using Xunit;
 
 namespace SoftwareEngineerSkills.Infrastructure.UnitTests.Services.Caching;
 

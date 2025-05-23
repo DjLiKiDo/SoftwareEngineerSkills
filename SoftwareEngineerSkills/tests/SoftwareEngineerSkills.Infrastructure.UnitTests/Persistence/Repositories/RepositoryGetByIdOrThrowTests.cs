@@ -1,14 +1,9 @@
-using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
-using Moq;
+using SoftwareEngineerSkills.Domain.DomainServices.Interfaces;
 using SoftwareEngineerSkills.Domain.Exceptions;
 using SoftwareEngineerSkills.Infrastructure.Persistence;
 using SoftwareEngineerSkills.Infrastructure.Persistence.Repositories;
 using SoftwareEngineerSkills.Infrastructure.UnitTests.TestHelpers;
-using System;
-using System.Threading;
-using System.Threading.Tasks;
-using Xunit;
 
 namespace SoftwareEngineerSkills.Infrastructure.UnitTests.Persistence.Repositories;
 
@@ -22,15 +17,16 @@ public class RepositoryGetByIdOrThrowTests
             .UseInMemoryDatabase(databaseName: $"TestDb_{Guid.NewGuid()}")
             .Options;
         
-        var entity = new TestEntity { Id = Guid.NewGuid(), Name = "Test Entity" };
+        var entityId = Guid.NewGuid();
+        var entity = new TestEntity(entityId) { Name = "Test Entity" };
         
-        using (var context = new ApplicationDbContext(options, Mock.Of<ICurrentUserAccessor>()))
+        using (var context = new ApplicationDbContext(options, Mock.Of<ICurrentUserService>()))
         {
             await context.Set<TestEntity>().AddAsync(entity);
             await context.SaveChangesAsync();
         }
         
-        using (var context = new ApplicationDbContext(options, Mock.Of<ICurrentUserAccessor>()))
+        using (var context = new ApplicationDbContext(options, Mock.Of<ICurrentUserService>()))
         {
             var repository = new EfRepository<TestEntity>(context);
             
@@ -54,7 +50,7 @@ public class RepositoryGetByIdOrThrowTests
             
         var nonExistingId = Guid.NewGuid();
         
-        using (var context = new ApplicationDbContext(options, Mock.Of<ICurrentUserAccessor>()))
+        using (var context = new ApplicationDbContext(options, Mock.Of<ICurrentUserService>()))
         {
             var repository = new EfRepository<TestEntity>(context);
             
@@ -72,15 +68,16 @@ public class RepositoryGetByIdOrThrowTests
             .UseInMemoryDatabase(databaseName: $"TestDb_{Guid.NewGuid()}")
             .Options;
         
-        var entity = new SoftDeleteTestEntity { Id = Guid.NewGuid(), Name = "Test Entity", IsDeleted = false };
+        var entityId = Guid.NewGuid();
+        var entity = new SoftDeleteTestEntity(entityId) { Name = "Test Entity", IsDeleted = false };
         
-        using (var context = new ApplicationDbContext(options, Mock.Of<ICurrentUserAccessor>()))
+        using (var context = new ApplicationDbContext(options, Mock.Of<ICurrentUserService>()))
         {
             await context.Set<SoftDeleteTestEntity>().AddAsync(entity);
             await context.SaveChangesAsync();
         }
         
-        using (var context = new ApplicationDbContext(options, Mock.Of<ICurrentUserAccessor>()))
+        using (var context = new ApplicationDbContext(options, Mock.Of<ICurrentUserService>()))
         {
             var repository = new EfSoftDeleteRepository<SoftDeleteTestEntity>(context);
             
@@ -102,15 +99,15 @@ public class RepositoryGetByIdOrThrowTests
             .UseInMemoryDatabase(databaseName: $"TestDb_{Guid.NewGuid()}")
             .Options;
         
-        var entity = new SoftDeleteTestEntity { Id = Guid.NewGuid(), Name = "Test Entity", IsDeleted = true };
+        var entity = new SoftDeleteTestEntity { Name = "Test Entity", IsDeleted = true };
         
-        using (var context = new ApplicationDbContext(options, Mock.Of<ICurrentUserAccessor>()))
+        using (var context = new ApplicationDbContext(options, Mock.Of<ICurrentUserService>()))
         {
             await context.Set<SoftDeleteTestEntity>().AddAsync(entity);
             await context.SaveChangesAsync();
         }
         
-        using (var context = new ApplicationDbContext(options, Mock.Of<ICurrentUserAccessor>()))
+        using (var context = new ApplicationDbContext(options, Mock.Of<ICurrentUserService>()))
         {
             var repository = new EfSoftDeleteRepository<SoftDeleteTestEntity>(context);
             
@@ -128,15 +125,15 @@ public class RepositoryGetByIdOrThrowTests
             .UseInMemoryDatabase(databaseName: $"TestDb_{Guid.NewGuid()}")
             .Options;
         
-        var entity = new SoftDeleteTestEntity { Id = Guid.NewGuid(), Name = "Test Entity", IsDeleted = true };
+        var entity = new SoftDeleteTestEntity(Guid.NewGuid()) { Name = "Test Entity", IsDeleted = true };
         
-        using (var context = new ApplicationDbContext(options, Mock.Of<ICurrentUserAccessor>()))
+        using (var context = new ApplicationDbContext(options, Mock.Of<ICurrentUserService>()))
         {
             await context.Set<SoftDeleteTestEntity>().AddAsync(entity);
             await context.SaveChangesAsync();
         }
         
-        using (var context = new ApplicationDbContext(options, Mock.Of<ICurrentUserAccessor>()))
+        using (var context = new ApplicationDbContext(options, Mock.Of<ICurrentUserService>()))
         {
             var repository = new EfSoftDeleteRepository<SoftDeleteTestEntity>(context);
             
@@ -160,7 +157,7 @@ public class RepositoryGetByIdOrThrowTests
             
         var nonExistingId = Guid.NewGuid();
         
-        using (var context = new ApplicationDbContext(options, Mock.Of<ICurrentUserAccessor>()))
+        using (var context = new ApplicationDbContext(options, Mock.Of<ICurrentUserService>()))
         {
             var repository = new EfSoftDeleteRepository<SoftDeleteTestEntity>(context);
             

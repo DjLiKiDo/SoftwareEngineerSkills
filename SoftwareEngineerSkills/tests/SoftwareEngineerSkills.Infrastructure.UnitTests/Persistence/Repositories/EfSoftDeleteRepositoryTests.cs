@@ -1,17 +1,9 @@
-using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
-using Moq;
-using SoftwareEngineerSkills.Domain.Abstractions.Services;
+using SoftwareEngineerSkills.Domain.DomainServices.Interfaces;
 using SoftwareEngineerSkills.Domain.Common.Base;
 using SoftwareEngineerSkills.Domain.Common.Interfaces;
 using SoftwareEngineerSkills.Infrastructure.Persistence;
 using SoftwareEngineerSkills.Infrastructure.Persistence.Repositories;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using Xunit;
 
 namespace SoftwareEngineerSkills.Infrastructure.UnitTests.Persistence.Repositories;
 
@@ -26,9 +18,9 @@ public class EfSoftDeleteRepositoryTests
     {
         _entities = new List<TestSoftDeleteEntity>
         {
-            new TestSoftDeleteEntity { Id = Guid.NewGuid(), Name = "Entity 1", IsDeleted = false },
-            new TestSoftDeleteEntity { Id = Guid.NewGuid(), Name = "Entity 2", IsDeleted = false },
-            new TestSoftDeleteEntity { Id = Guid.NewGuid(), Name = "Entity 3 (Deleted)", IsDeleted = true, DeletedAt = DateTime.UtcNow.AddDays(-1) }
+            new TestSoftDeleteEntity { Name = "Entity 1", IsDeleted = false },
+            new TestSoftDeleteEntity { Name = "Entity 2", IsDeleted = false },
+            new TestSoftDeleteEntity { Name = "Entity 3 (Deleted)", IsDeleted = true, DeletedAt = DateTime.UtcNow.AddDays(-1) }
         };
 
         _dbSetMock = MockDbSet(_entities);

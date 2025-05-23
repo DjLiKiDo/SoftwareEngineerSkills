@@ -1,5 +1,3 @@
-using SoftwareEngineerSkills.Domain.Common.Events;
-
 namespace SoftwareEngineerSkills.Domain.Common.Events;
 
 /// <summary>

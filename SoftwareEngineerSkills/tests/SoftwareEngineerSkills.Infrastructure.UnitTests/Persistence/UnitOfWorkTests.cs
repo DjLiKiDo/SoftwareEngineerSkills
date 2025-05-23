@@ -1,14 +1,7 @@
-using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
-using Moq;
 using SoftwareEngineerSkills.Domain.Abstractions.Persistence;
-using SoftwareEngineerSkills.Domain.Abstractions.Services;
+using SoftwareEngineerSkills.Domain.DomainServices.Interfaces;
 using SoftwareEngineerSkills.Infrastructure.Persistence;
-using SoftwareEngineerSkills.Infrastructure.Persistence.Repositories;
-using System;
-using System.Threading;
-using System.Threading.Tasks;
-using Xunit;
 
 namespace SoftwareEngineerSkills.Infrastructure.UnitTests.Persistence;
 

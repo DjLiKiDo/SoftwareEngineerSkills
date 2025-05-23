@@ -1,18 +1,8 @@
-using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
-using Moq;
-using SoftwareEngineerSkills.Domain.Aggregates.Skills;
-using SoftwareEngineerSkills.Domain.Enums;
 using SoftwareEngineerSkills.Infrastructure.Persistence;
 using SoftwareEngineerSkills.Infrastructure.Persistence.Repositories;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Threading;
-using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore.Query;
-using Xunit;
 
 namespace SoftwareEngineerSkills.Infrastructure.UnitTests.Persistence.Repositories;
 
@@ -332,7 +322,7 @@ public class EfRepositoryTests
             return new TestAsyncEnumerator<T>(this.AsEnumerable().GetEnumerator());
         }
 
-        IQueryProvider IQueryable.Provider => new TestAsyncQueryProvider<T>(this.Provider);
+        IQueryProvider IQueryable.Provider => new TestAsyncQueryProvider<T>(this);
     }
 
     private class TestAsyncEnumerator<T> : IAsyncEnumerator<T>

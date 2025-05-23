@@ -1,13 +1,8 @@
-using FluentAssertions;
 using SoftwareEngineerSkills.Domain.Common.Base;
-using SoftwareEngineerSkills.Domain.Common.Events;
-using System;
-using System.Linq;
-using Xunit;
 
-namespace SoftwareEngineerSkills.Domain.UnitTests.Entities;
+namespace SoftwareEngineerSkills.Domain.UnitTests.Common.Base;
 
-public class EntityTests
+public class BaseEntityEqualityTests
 {
     [Fact]
     public void Equals_SameReference_ShouldReturnTrue()
@@ -188,7 +183,7 @@ public class EntityTests
 
     #region Helper Classes
     
-    private class TestEntity : Entity
+    private class TestEntity : BaseEntity
     {
         public TestEntity() : base() { }
         
@@ -198,7 +193,7 @@ public class EntityTests
         }
     }
     
-    private class DifferentTestEntity : Entity
+    private class DifferentTestEntity : BaseEntity
     {
         public DifferentTestEntity() : base() { }
         

@@ -1,8 +1,4 @@
-using FluentAssertions;
 using SoftwareEngineerSkills.Infrastructure.Services.Email;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using Xunit;
 
 namespace SoftwareEngineerSkills.Infrastructure.UnitTests.Services.Email;
 

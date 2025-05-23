@@ -1,4 +1,4 @@
-namespace SoftwareEngineerSkills.Domain.Abstractions.Services;
+namespace SoftwareEngineerSkills.Domain.DomainServices.Interfaces;
 
 /// <summary>
 /// Service for providing the current user information for auditing

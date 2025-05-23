@@ -1,7 +1,4 @@
-using FluentAssertions;
 using SoftwareEngineerSkills.Domain.Exceptions;
-using System;
-using Xunit;
 
 namespace SoftwareEngineerSkills.Domain.UnitTests.Exceptions;
 
