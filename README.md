@@ -333,9 +333,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 If you need help with this template, please:
 
 - Open an issue on GitHub
-- Check existing documentation in the `Docs/` folder [Docs/](Docs/)
-  - [Domain-Driven Design Core Components](Docs/Domain/DDD-Core-Components.md)
-  - [Entity Auditing System](Docs/Architecture/Entity%20Auditing.md)
+- Check the layer-specific documentation in each project's README file
 - Review the [CHANGELOG.md](CHANGELOG.md) for recent updates
 - Contact the maintainers at [example@example.com](mailto:example@example.com)
 - Join our community on [Discord](https://discord.gg/example)
@@ -346,14 +344,24 @@ If you need help with this template, please:
 
 ## Documentation
 
-This project maintains extensive documentation in the  folder:
+Each layer of the Clean Architecture has its own detailed documentation:
 
-- [Clean Architecture](Docs/Clean%20Architecture.md): Detailed explanation of architectural implementation
-- [Entity Auditing](Docs/Entity%20Auditing.md): Overview of the entity auditing system
-- [Infrastructure Layer](Docs/Infrastructure%20Layer.md): Details about infrastructure components
-- [IOptions pattern](Docs/IOptions%20pattern.md): Guide on implementing strongly-typed configuration
-- [Unit of Work](Docs/UnitOfWork.md): Explanation of the Unit of Work pattern implementation
+### Layer-Specific Documentation
+- **[Domain Layer](src/SoftwareEngineerSkills.Domain/README.md)**: Comprehensive guide to Domain-Driven Design implementation, entities, value objects, domain events, and invariant validation
+- **[Application Layer](src/SoftwareEngineerSkills.Application/README.md)**: CQRS implementation, commands, queries, handlers, and application services
+- **[Infrastructure Layer](src/SoftwareEngineerSkills.Infrastructure/README.md)**: Repository patterns, Entity Framework configuration, external service integrations, and data access
+- **[API Layer](src/SoftwareEngineerSkills.API/README.md)**: Controllers, middleware, authentication, API versioning, and Swagger configuration
+- **[Common Layer](src/SoftwareEngineerSkills.Common/README.md)**: Shared utilities, extensions, and cross-cutting concerns
 
-Additional resources include:
-- [Changelog](CHANGELOG.md): Record of all notable changes to the project
-- API Documentation: Generated via Swagger UI (available at runtime)
+### Additional Resources
+- **[CHANGELOG.md](CHANGELOG.md)**: Complete record of all notable changes and version history
+- **API Documentation**: Interactive Swagger UI available at `/swagger` endpoint when running the application
+- **Architecture Decision Records**: Documented within each layer's README for context-specific decisions
+
+### Quick Navigation
+For specific topics, refer to the appropriate layer documentation:
+- **Domain modeling and business rules** → [Domain Layer README](src/SoftwareEngineerSkills.Domain/README.md)
+- **CQRS patterns and handlers** → [Application Layer README](src/SoftwareEngineerSkills.Application/README.md)
+- **Data access and repositories** → [Infrastructure Layer README](src/SoftwareEngineerSkills.Infrastructure/README.md)
+- **API endpoints and configuration** → [API Layer README](src/SoftwareEngineerSkills.API/README.md)
+- **Shared utilities and helpers** → [Common Layer README](src/SoftwareEngineerSkills.Common/README.md)

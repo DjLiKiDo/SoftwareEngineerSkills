@@ -493,6 +493,7 @@ public class CreateCustomerCommandHandlerTests
 ## Links to Documentation
 - [README.md] (../README.md) `@workspace /Users/marquez/Downloads/Pablo/Repos/SoftwareEngineerSkills/README.md`
 - [CHANGELOG.md](../CHANGELOG.md) `@workspace /Users/marquez/Downloads/Pablo/Repos/SoftwareEngineerSkills/CHANGELOG.md`
+- [Domain README.md](../SoftwareEngineerSkills/src/SoftwareEngineerSkills.Domain/README.md) `@workspace /Users/marquez/Downloads/Pablo/Repos/SoftwareEngineerSkills/src/SoftwareEngineerSkills.Domain/README.md`
 - [.NET Documentation](https://docs.microsoft.com/en-us/dotnet/)
 - [ASP.NET Core Documentation](https://docs.microsoft.com/en-us/aspnet/core/)
 - [Entity Framework Core](https://docs.microsoft.com/en-us/ef/core/)
@@ -505,5 +506,5 @@ public class CreateCustomerCommandHandlerTests
 
 
 - use context7 to retrieve the latest documentation
-- ALWWAYS Maintain changelog.md file with version history
-- ALLWAYS Review and update README.md file for project overview if needed
+- ALWWAYS Maintain changelog.md file with version history if changes are worth mentioning
+- ALLWAYS Review and update README.md file for project overview and document optimization if worth and follows the best practices

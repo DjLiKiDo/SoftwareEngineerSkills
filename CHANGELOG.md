@@ -8,68 +8,53 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased] - yyyy-mm-dd
 
 ### Added
-- **Domain-Driven Design Core Components**:
-  - Enhanced `BaseEntity` with invariant validation system
-  - Improved `AggregateRoot` class for domain event handling and invariant enforcement
-  - Extended `IAggregateRoot` interface with versioning and boundary enforcement methods
-  - Added `DomainValidationException` for domain invariant violations
-  - Implemented thread-safe domain event handling
-  - Created comprehensive documentation of DDD core components
-  - Added new `SoftDeleteAggregateRoot` class combining soft delete capability with aggregate root behavior
-  - Created domain events for soft deletion operations
-  - Added `Address` value object for customer shipping information
+- **Enhanced Domain-Driven Design (DDD) Implementation**:
+  - Comprehensive domain base classes (`BaseEntity`, `AggregateRoot`, `ValueObject`) with invariant validation
+  - Domain exception hierarchy for better error handling
+  - Thread-safe domain event handling system
+  - Soft delete capabilities with `SoftDeleteEntity` and `SoftDeleteAggregateRoot`
 - **Entity Auditing System**:
-  - Enhanced architecture with interfaces for separation of concerns
-  - `IAuditableEntity` interface for tracking entity changes (creation/modification timestamps and users)
-  - `ISoftDelete` interface for entities that support soft deletion
-  - `SoftDeleteEntity` base class implementing soft-delete functionality
-  - `ICurrentUserService` and implementation to capture the current user for auditing
-- **Repository Enhancements**:
-  - Specialized repositories for soft-delete entities (`ISoftDeleteRepository<T>`)
-  - EF Core extensions for working with soft-deleted entities
-  - Global query filters to automatically exclude soft-deleted entities
-- **Documentation**:
-  - Comprehensive documentation on the entity auditing approach and implementation
-  - Added new documentation for DDD core components and invariant validation system
+  - Automatic tracking of creation/modification timestamps and users
+  - Interfaces for auditable entities (`IAuditableEntity`, `ISoftDelete`)
+  - Current user service integration for proper audit trails
+- **Repository Pattern Enhancements**:
+  - Specialized soft-delete repositories with automatic filtering
+  - `GetByIdOrThrowAsync` methods for entity existence validation
+  - EF Core extensions for soft-deleted entities
+- **Domain Value Objects**:
+  - `Address` value object for customer shipping information
+- **Documentation Improvements**:
+  - Comprehensive Domain Layer Reference Guide aligned with actual implementation
+  - Updated project structure documentation to reflect current codebase organization
+  - Corrected audit property naming conventions in documentation
 
 ### Changed
-- **Code Organization**:
-  - Restructured domain layer for better DDD alignment (renamed "Entities" folder to "Aggregates")
-  - Created new folder structure (DomainServices, Rules, Shared) with appropriate subdirectories
-  - Updated namespaces from `SoftwareEngineerSkills.Domain.Entities` to `SoftwareEngineerSkills.Domain.Aggregates`
-  - Refactored user service code to its own folder under Infrastructure/Services/User for better organization
-  - Separated `Customer` entity and its events into distinct files (`Customer.cs` and `CustomerEvents.cs`)
-  - Moved `Entity` class from Entities namespace to Common/Base for better architectural consistency
-  - Moved `IAggregateRoot` interface from Common/Base to Common/Interfaces for consistent placement of interfaces
+- **Project Structure**:
+  - Reorganized domain layer: "Entities" → "Aggregates" for better DDD alignment
+  - Simplified inheritance hierarchy by removing redundant `Entity` class
+  - Moved interfaces to consistent locations (`Common/Interfaces`)
+  - Standardized domain event handling across all aggregates
 - **Domain Events**:
-  - Improved domain event class readability with more descriptive property names and documentation
-  - Standardized inheritance patterns across all domain event classes
-  - Renamed properties in `SkillUpdatedEvent` for consistency with other update events (`SkillName` → `OldName`)
-  - Enhanced XML documentation for event properties to better explain their purpose and context
-  - Introduced more specific domain events for tracking state changes (`SkillDifficultyChangedEvent`, `SkillCategoryChangedEvent`)
-- **Domain Layer Architecture**:
-  - Clarified relationship between `Entity` and `AggregateRoot` classes
-  - Standardized method for implementing domain event handling across all aggregates
-  - Added implementation of `Apply` pattern for consistent event handling
-  - Improved implementation of `CheckInvariants` across domain entities
-- **Entity Framework Implementation**:
-  - Updated `BaseEntity` to implement `IAuditableEntity` interface
-  - Modified `ApplicationDbContext` to handle soft deletes and fetch current user information
-  - Refactored audit property settings to use the current user service
+  - Improved event naming and documentation consistency
+  - Added specific events for state changes (e.g., `SkillDifficultyChangedEvent`)
+- **Entity Framework Integration**:
+  - Global query filters for soft-deleted entities
+  - Automatic audit property handling in `ApplicationDbContext`
 
 ### Fixed
-- **Security & Data Integrity**:
-  - Fixed hardcoded "system" user in auditing data by implementing proper user context resolution
+- Replaced hardcoded "system" user with proper user context resolution in auditing
+- **Documentation Consistency**: Fixed discrepancies between documented and actual:
+  - Audit property naming conventions
+  - Project folder structure (Entities vs Aggregates)
+  - Domain event handling location (BaseEntity vs AggregateRoot only)
 
 ## [0.1.0] - 2025-05-01
 
 ### Added
-- Initial project setup with Clean Architecture structure
-- Domain layer with base entities and common interfaces
-- Infrastructure layer with repositories and DbContext
-- Application layer with basic CQRS setup
-- API layer with basic configuration
-- Unit tests structure for each layer
+- Initial Clean Architecture setup with Domain, Application, Infrastructure, and API layers
+- Basic CQRS implementation with MediatR
+- Entity Framework Core integration
+- Unit test structure for all layers
 
 [Unreleased]: https://github.com/yourusername/SoftwareEngineerSkills/compare/v0.1.0...HEAD
 [0.1.0]: https://github.com/yourusername/SoftwareEngineerSkills/releases/tag/v0.1.0

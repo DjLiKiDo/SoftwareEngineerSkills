@@ -13,6 +13,7 @@
 [ ] 
 [-] Completar tests capa de dominio
 [-] Analiza la capa de dominio y busca mejoras de legibilidad, consistencia y organizacion. Reestructuración basada en patrones DDD específicos?
+[-] Realmente necesito Entity? o con aggregateroot y baseentity cubro todos los casos
 [ ] Revisar eventos de las entidades buscando posibles mejoras de legibilidad
 [ ] Simplificar eventos?
 [ ] IOptionsMonitor

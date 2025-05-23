@@ -52,10 +52,10 @@ All domain layer development should follow these principles:
 #### 2. Domain Exception Hierarchy
 - **Description**: Create comprehensive domain exception system
 - **Subtasks**:
-  - [ ] Create base `DomainException` class
-  - [ ] Implement specialized exceptions (`BusinessRuleException`, `DomainValidationException`, `EntityNotFoundException`)
-  - [ ] Update existing code to use the new exception types
-  - [ ] Add tests for exception handling
+  - [x] Create base `DomainException` class
+  - [x] Implement specialized exceptions (`BusinessRuleException`, `DomainValidationException`, `EntityNotFoundException`)
+  - [x] Update existing code to use the new exception types
+  - [x] Add tests for exception handling
 - **Expected Outcome**: Consistent error handling across the domain
 - **Technical Details**: See [Domain-Implementation-Recommendations.md](../Domain/Domain-Implementation-Recommendations.md)
 - **ID**: DOM-002
@@ -380,7 +380,7 @@ public class Address : ValueObject
 | Task ID | Description | Status | Assignee | Target Date |
 |---------|------------|--------|----------|------------|
 | DOM-001 | Domain Layer Reorganization | Completed | GitHub Copilot | May 22, 2025 |
-| DOM-002 | Domain Exception Hierarchy | Not Started | | Jun 5, 2025 |
+| DOM-002 | Domain Exception Hierarchy | Completed | GitHub Copilot | May 22, 2025 |
 | DOM-003 | Standardize Base Classes | In Progress | | Jun 5, 2025 |
 | DOM-004 | Entity Auditing System | Not Started | | Jun 12, 2025 |
 | DOM-005 | Repository Pattern | Not Started | | Jun 12, 2025 |
