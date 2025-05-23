@@ -12,7 +12,7 @@ public class CustomerEventsTests
     #region CustomerCreatedEvent Tests
 
     [Fact]
-    public void Given_ValidParameters_When_CustomerCreatedEventCreated_Then_ShouldInitializeCorrectly()
+    public void CustomerCreatedEvent_CreatedWithValidParameters_ShouldInitializeCorrectly()
     {
         // Arrange
         var customerId = Guid.NewGuid();
@@ -31,7 +31,7 @@ public class CustomerEventsTests
     }
 
     [Fact]
-    public void Given_CustomerCreatedEvent_When_TypeChecked_Then_ShouldInheritFromDomainEvent()
+    public void CustomerCreatedEvent_TypeChecked_ShouldInheritFromDomainEvent()
     {
         // Arrange
         var domainEvent = new CustomerCreatedEvent(Guid.NewGuid(), "John Doe", "john@example.com");
@@ -42,12 +42,12 @@ public class CustomerEventsTests
     }
 
     [Fact]
-    public void Given_TwoCustomerCreatedEventsWithSameData_When_Compared_Then_ShouldNotBeEqual()
+    public void CustomerCreatedEvent_TwoEventsWithSameData_ShouldNotBeEqual()
     {
         // Arrange
         var customerId = Guid.NewGuid();
         const string name = "John Doe";
-        const string email = "john@example.com";
+        const string email = "john.doe@example.com";
 
         // Act
         var event1 = new CustomerCreatedEvent(customerId, name, email);
@@ -64,7 +64,7 @@ public class CustomerEventsTests
     #region CustomerNameUpdatedEvent Tests
 
     [Fact]
-    public void Given_ValidParameters_When_CustomerNameUpdatedEventCreated_Then_ShouldInitializeCorrectly()
+    public void CustomerNameUpdatedEvent_CreatedWithValidParameters_ShouldInitializeCorrectly()
     {
         // Arrange
         var customerId = Guid.NewGuid();
@@ -83,7 +83,7 @@ public class CustomerEventsTests
     }
 
     [Fact]
-    public void Given_CustomerNameUpdatedEvent_When_TypeChecked_Then_ShouldInheritFromDomainEvent()
+    public void CustomerNameUpdatedEvent_TypeChecked_ShouldInheritFromDomainEvent()
     {
         // Arrange
         var domainEvent = new CustomerNameUpdatedEvent(Guid.NewGuid(), "Old", "New");
@@ -98,7 +98,7 @@ public class CustomerEventsTests
     #region CustomerEmailUpdatedEvent Tests
 
     [Fact]
-    public void Given_ValidParameters_When_CustomerEmailUpdatedEventCreated_Then_ShouldInitializeCorrectly()
+    public void CustomerEmailUpdatedEvent_CreatedWithValidParameters_ShouldInitializeCorrectly()
     {
         // Arrange
         var customerId = Guid.NewGuid();
@@ -117,7 +117,7 @@ public class CustomerEventsTests
     }
 
     [Fact]
-    public void Given_CustomerEmailUpdatedEvent_When_TypeChecked_Then_ShouldInheritFromDomainEvent()
+    public void CustomerEmailUpdatedEvent_TypeChecked_ShouldInheritFromDomainEvent()
     {
         // Arrange
         var domainEvent = new CustomerEmailUpdatedEvent(Guid.NewGuid(), "old@example.com", "new@example.com");
@@ -132,7 +132,7 @@ public class CustomerEventsTests
     #region CustomerPhoneUpdatedEvent Tests
 
     [Fact]
-    public void Given_ValidParameters_When_CustomerPhoneUpdatedEventCreated_Then_ShouldInitializeCorrectly()
+    public void CustomerPhoneUpdatedEvent_CreatedWithValidParameters_ShouldInitializeCorrectly()
     {
         // Arrange
         var customerId = Guid.NewGuid();
@@ -151,7 +151,7 @@ public class CustomerEventsTests
     }
 
     [Fact]
-    public void Given_NullPhoneNumbers_When_CustomerPhoneUpdatedEventCreated_Then_ShouldHandleNulls()
+    public void CustomerPhoneUpdatedEvent_CreatedWithNullPhoneNumbers_ShouldHandleNulls()
     {
         // Arrange
         var customerId = Guid.NewGuid();
@@ -166,7 +166,7 @@ public class CustomerEventsTests
     }
 
     [Fact]
-    public void Given_CustomerPhoneUpdatedEvent_When_TypeChecked_Then_ShouldInheritFromDomainEvent()
+    public void CustomerPhoneUpdatedEvent_TypeChecked_ShouldInheritFromDomainEvent()
     {
         // Arrange
         var domainEvent = new CustomerPhoneUpdatedEvent(Guid.NewGuid(), "old", "new");
@@ -181,7 +181,7 @@ public class CustomerEventsTests
     #region CustomerAddressUpdatedEvent Tests
 
     [Fact]
-    public void Given_ValidParameters_When_CustomerAddressUpdatedEventCreated_Then_ShouldInitializeCorrectly()
+    public void CustomerAddressUpdatedEvent_CreatedWithValidParameters_ShouldInitializeCorrectly()
     {
         // Arrange
         var customerId = Guid.NewGuid();
@@ -200,7 +200,7 @@ public class CustomerEventsTests
     }
 
     [Fact]
-    public void Given_NullAddresses_When_CustomerAddressUpdatedEventCreated_Then_ShouldHandleNulls()
+    public void CustomerAddressUpdatedEvent_CreatedWithNullAddresses_ShouldHandleNulls()
     {
         // Arrange
         var customerId = Guid.NewGuid();
@@ -215,7 +215,7 @@ public class CustomerEventsTests
     }
 
     [Fact]
-    public void Given_CustomerAddressUpdatedEvent_When_TypeChecked_Then_ShouldInheritFromDomainEvent()
+    public void CustomerAddressUpdatedEvent_TypeChecked_ShouldInheritFromDomainEvent()
     {
         // Arrange
         var domainEvent = new CustomerAddressUpdatedEvent(Guid.NewGuid(), null, null);
@@ -230,7 +230,7 @@ public class CustomerEventsTests
     #region Event Timestamp Tests
 
     [Fact]
-    public void Given_MultipleEvents_When_CreatedInSequence_Then_TimestampsShouldBeInOrder()
+    public void DomainEvents_CreatedInSequence_TimestampsShouldBeInOrder()
     {
         // Arrange
         var customerId = Guid.NewGuid();
@@ -252,7 +252,7 @@ public class CustomerEventsTests
     #region Event Identity Tests
 
     [Fact]
-    public void Given_CustomerEvents_When_Created_Then_ShouldHaveUniqueEventIds()
+    public void DomainEvents_Created_ShouldHaveUniqueEventIds()
     {
         // Arrange
         var customerId = Guid.NewGuid();
@@ -278,7 +278,7 @@ public class CustomerEventsTests
     #region Integration with Customer Aggregate Tests
 
     [Fact]
-    public void Given_CustomerAggregate_When_ActionsPerformed_Then_ShouldGenerateCorrectEvents()
+    public void CustomerAggregate_ActionsPerformed_ShouldGenerateCorrectEvents()
     {
         // Arrange
         var customer = new Domain.Aggregates.Customer.Customer("John Doe", new Email("john@example.com"));

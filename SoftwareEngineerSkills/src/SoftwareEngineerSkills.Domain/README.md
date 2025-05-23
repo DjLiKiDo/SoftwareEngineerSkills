@@ -128,7 +128,7 @@ For entities requiring soft deletion capabilities:
 public abstract class SoftDeleteEntity : BaseEntity, ISoftDelete
 {
     public bool IsDeleted { get; private set; }
-    public DateTime? DeletedOnUtc { get; private set; }
+    public DateTime? DeletedAt { get; private set; }
     public string? DeletedBy { get; private set; }
     
     public virtual void SoftDelete(string deletedBy)
@@ -136,7 +136,7 @@ public abstract class SoftDeleteEntity : BaseEntity, ISoftDelete
         if (IsDeleted) return;
         
         IsDeleted = true;
-        DeletedOnUtc = DateTime.UtcNow;
+        DeletedAt = DateTime.UtcNow;
         DeletedBy = Guard.Against.NullOrWhiteSpace(deletedBy, nameof(deletedBy));
         
         AddDomainEvent(new EntitySoftDeletedEvent(Id, GetType().Name));
@@ -563,7 +563,7 @@ public interface IAuditableEntity
 public interface ISoftDelete
 {
     bool IsDeleted { get; }
-    DateTime? DeletedOnUtc { get; }
+    DateTime? DeletedAt { get; }
     string? DeletedBy { get; }
 }
 

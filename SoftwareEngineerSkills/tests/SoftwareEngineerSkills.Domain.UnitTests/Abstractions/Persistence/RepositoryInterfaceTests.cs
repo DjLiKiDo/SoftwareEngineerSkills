@@ -12,7 +12,7 @@ using Xunit;
 namespace SoftwareEngineerSkills.Domain.UnitTests.Abstractions.Persistence;
 
 // Simple mock entity for testing
-public class TestEntity
+public class TestRepositoryEntity
 {
     public Guid Id { get; set; } = Guid.NewGuid();
     public string Name { get; set; } = "";
@@ -71,11 +71,11 @@ public class RepositoryInterfaceTests
     }
     
     [Fact]
-    public async Task IReadRepository_Implementation_ShouldWork()
+    public async Task IReadRepository_MockImplementation_ReturnsExpectedResults()
     {
         // Arrange
-        var mockRepo = new Mock<IReadRepository<TestEntity>>();
-        var entity = new TestEntity { Id = Guid.NewGuid(), Name = "Test" };
+        var mockRepo = new Mock<IReadRepository<TestRepositoryEntity>>();
+        var entity = new TestRepositoryEntity { Id = Guid.NewGuid(), Name = "Test" };
         var entities = new[] { entity };
         
         mockRepo.Setup(r => r.GetByIdAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>()))
@@ -84,11 +84,11 @@ public class RepositoryInterfaceTests
             .ReturnsAsync(entity);
         mockRepo.Setup(r => r.GetAllAsync(It.IsAny<CancellationToken>()))
             .ReturnsAsync(entities);
-        mockRepo.Setup(r => r.FindAsync(It.IsAny<Expression<Func<TestEntity, bool>>>(), It.IsAny<CancellationToken>()))
+        mockRepo.Setup(r => r.FindAsync(It.IsAny<Expression<Func<TestRepositoryEntity, bool>>>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(entities);
-        mockRepo.Setup(r => r.AnyAsync(It.IsAny<Expression<Func<TestEntity, bool>>>(), It.IsAny<CancellationToken>()))
+        mockRepo.Setup(r => r.AnyAsync(It.IsAny<Expression<Func<TestRepositoryEntity, bool>>>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(true);
-        mockRepo.Setup(r => r.CountAsync(It.IsAny<Expression<Func<TestEntity, bool>>>(), It.IsAny<CancellationToken>()))
+        mockRepo.Setup(r => r.CountAsync(It.IsAny<Expression<Func<TestRepositoryEntity, bool>>>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(1);
         
         // Act & Assert
@@ -114,26 +114,26 @@ public class RepositoryInterfaceTests
         mockRepo.Verify(r => r.GetByIdAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>()), Times.Once());
         mockRepo.Verify(r => r.GetByIdOrThrowAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>()), Times.Once());
         mockRepo.Verify(r => r.GetAllAsync(It.IsAny<CancellationToken>()), Times.Once());
-        mockRepo.Verify(r => r.FindAsync(It.IsAny<Expression<Func<TestEntity, bool>>>(), It.IsAny<CancellationToken>()), Times.Once());
-        mockRepo.Verify(r => r.AnyAsync(It.IsAny<Expression<Func<TestEntity, bool>>>(), It.IsAny<CancellationToken>()), Times.Once());
-        mockRepo.Verify(r => r.CountAsync(It.IsAny<Expression<Func<TestEntity, bool>>>(), It.IsAny<CancellationToken>()), Times.Once());
+        mockRepo.Verify(r => r.FindAsync(It.IsAny<Expression<Func<TestRepositoryEntity, bool>>>(), It.IsAny<CancellationToken>()), Times.Once());
+        mockRepo.Verify(r => r.AnyAsync(It.IsAny<Expression<Func<TestRepositoryEntity, bool>>>(), It.IsAny<CancellationToken>()), Times.Once());
+        mockRepo.Verify(r => r.CountAsync(It.IsAny<Expression<Func<TestRepositoryEntity, bool>>>(), It.IsAny<CancellationToken>()), Times.Once());
     }
     
     [Fact]
-    public async Task IRepository_Implementation_ShouldWork()
+    public async Task IRepository_MockImplementation_ExecutesAllMethods()
     {
         // Arrange
-        var mockRepo = new Mock<IRepository<TestEntity>>();
-        var entity = new TestEntity { Id = Guid.NewGuid(), Name = "Test" };
+        var mockRepo = new Mock<IRepository<TestRepositoryEntity>>();
+        var entity = new TestRepositoryEntity { Id = Guid.NewGuid(), Name = "Test" };
         var entities = new[] { entity };
         
-        mockRepo.Setup(r => r.AddAsync(It.IsAny<TestEntity>(), It.IsAny<CancellationToken>()))
+        mockRepo.Setup(r => r.AddAsync(It.IsAny<TestRepositoryEntity>(), It.IsAny<CancellationToken>()))
             .Returns(Task.CompletedTask);
-        mockRepo.Setup(r => r.AddRangeAsync(It.IsAny<IEnumerable<TestEntity>>(), It.IsAny<CancellationToken>()))
+        mockRepo.Setup(r => r.AddRangeAsync(It.IsAny<IEnumerable<TestRepositoryEntity>>(), It.IsAny<CancellationToken>()))
             .Returns(Task.CompletedTask);
-        mockRepo.Setup(r => r.Update(It.IsAny<TestEntity>()));
-        mockRepo.Setup(r => r.Remove(It.IsAny<TestEntity>()));
-        mockRepo.Setup(r => r.RemoveRange(It.IsAny<IEnumerable<TestEntity>>()));
+        mockRepo.Setup(r => r.Update(It.IsAny<TestRepositoryEntity>()));
+        mockRepo.Setup(r => r.Remove(It.IsAny<TestRepositoryEntity>()));
+        mockRepo.Setup(r => r.RemoveRange(It.IsAny<IEnumerable<TestRepositoryEntity>>()));
         
         // Act
         await mockRepo.Object.AddAsync(entity);

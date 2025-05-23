@@ -188,8 +188,8 @@ public class SkillTests
         var skill = CreateValidSkill();
         skill.ClearDomainEvents(); // Clear creation events
         
-        const SkillCategory originalCategory = SkillCategory.Programming;
-        const SkillCategory newCategory = SkillCategory.WebDevelopment;
+        const SkillCategory originalCategory = SkillCategory.ProgrammingLanguage;
+        const SkillCategory newCategory = SkillCategory.Framework;
         
         // Act
         skill.Update(skill.Name, newCategory, skill.Description, skill.DifficultyLevel, skill.IsInDemand);
@@ -326,7 +326,7 @@ public class SkillTests
     
     private static Skill CreateValidSkill(
         string name = "C#",
-        SkillCategory category = SkillCategory.Programming, 
+        SkillCategory category = SkillCategory.ProgrammingLanguage, 
         string description = "Object-oriented programming language", 
         SkillLevel difficultyLevel = SkillLevel.Intermediate,
         bool isInDemand = false)

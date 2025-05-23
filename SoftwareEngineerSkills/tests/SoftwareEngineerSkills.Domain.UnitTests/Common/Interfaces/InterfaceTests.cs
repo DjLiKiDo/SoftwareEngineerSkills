@@ -12,7 +12,7 @@ namespace SoftwareEngineerSkills.Domain.UnitTests.Common.Interfaces;
 public class IAggregateRootTests
 {
     [Fact]
-    public void IAggregateRoot_ShouldHaveExpectedMembers()
+    public void GetMembers_IAggregateRoot_ShouldHaveRequiredProperties()
     {
         // Arrange
         var type = typeof(IAggregateRoot);
@@ -34,7 +34,7 @@ public class IAggregateRootTests
     }
     
     [Fact]
-    public void IAggregateRoot_Implementation_ShouldWork()
+    public void Implementation_IAggregateRoot_ShouldWorkAsExpected()
     {
         // Arrange
         var mockAggregateRoot = new Mock<IAggregateRoot>();
@@ -61,7 +61,7 @@ public class IAggregateRootTests
 public class IAuditableEntityTests
 {
     [Fact]
-    public void IAuditableEntity_ShouldHaveExpectedMembers()
+    public void GetMembers_IAuditableEntity_ShouldHaveRequiredProperties()
     {
         // Arrange
         var type = typeof(IAuditableEntity);
@@ -99,7 +99,7 @@ public class IAuditableEntityTests
     }
     
     [Fact]
-    public void IAuditableEntity_Implementation_ShouldWork()
+    public void Implementation_IAuditableEntity_ShouldSetAndGetProperties()
     {
         // Arrange
         var mockAuditableEntity = new Mock<IAuditableEntity>();
@@ -129,7 +129,7 @@ public class IAuditableEntityTests
 public class ISoftDeleteTests
 {
     [Fact]
-    public void ISoftDelete_ShouldHaveExpectedMembers()
+    public void GetMembers_ISoftDelete_ShouldHaveRequiredProperties()
     {
         // Arrange
         var type = typeof(ISoftDelete);
@@ -146,6 +146,10 @@ public class ISoftDeleteTests
         
         // Check DeletedAt property
         var deletedAtProperty = type.GetProperty("DeletedAt");
+        if (deletedAtProperty == null) // Try alternate name
+        {
+            deletedAtProperty = type.GetProperty("DeletedAt");
+        }
         deletedAtProperty.Should().NotBeNull();
         deletedAtProperty.PropertyType.Should().Be(typeof(DateTime?));
         deletedAtProperty.CanRead.Should().BeTrue();
@@ -160,7 +164,7 @@ public class ISoftDeleteTests
     }
     
     [Fact]
-    public void ISoftDelete_Implementation_ShouldWork()
+    public void Implementation_ISoftDelete_ShouldSetAndGetProperties()
     {
         // Arrange
         var mockSoftDelete = new Mock<ISoftDelete>();

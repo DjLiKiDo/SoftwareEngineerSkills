@@ -15,12 +15,12 @@ public class SkillEventsTests
     #region SkillCreatedEvent Tests
     
     [Fact]
-    public void Given_ValidParameters_When_SkillCreatedEventConstructed_Then_ShouldInitializeCorrectly()
+    public void SkillCreatedEvent_ConstructedWithValidParameters_ShouldInitializeCorrectly()
     {
         // Arrange
         var skillId = Guid.NewGuid();
         const string skillName = "C#";
-        const SkillCategory skillCategory = SkillCategory.Programming;
+        const SkillCategory skillCategory = SkillCategory.ProgrammingLanguage;
         var category = skillCategory.ToString();
         
         // Act
@@ -31,15 +31,15 @@ public class SkillEventsTests
         evt.SkillName.Should().Be(skillName);
         evt.SkillCategory.Should().Be(skillCategory);
         evt.Category.Should().Be(category);
-        evt.EventId.Should().NotBe(Guid.Empty);
+        evt.Id.Should().NotBe(Guid.Empty);
         evt.OccurredOn.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromSeconds(1));
     }
     
     [Fact]
-    public void Given_ValidParameters_When_SkillCreatedEventConstructed_Then_ShouldInheritFromDomainEvent()
+    public void SkillCreatedEvent_TypeChecked_ShouldInheritFromDomainEvent()
     {
         // Arrange & Act
-        var evt = new SkillCreatedEvent(Guid.NewGuid(), "C#", SkillCategory.Programming, "Programming");
+        var evt = new SkillCreatedEvent(Guid.NewGuid(), "C#", SkillCategory.ProgrammingLanguage, "ProgrammingLanguage");
         
         // Assert
         evt.Should().BeAssignableTo<DomainEvent>();
@@ -51,7 +51,7 @@ public class SkillEventsTests
     #region SkillUpdatedEvent Tests
     
     [Fact]
-    public void Given_ValidParameters_When_SkillUpdatedEventConstructed_Then_ShouldInitializeCorrectly()
+    public void SkillUpdatedEvent_ConstructedWithValidParameters_ShouldInitializeCorrectly()
     {
         // Arrange
         var skillId = Guid.NewGuid();
@@ -65,12 +65,12 @@ public class SkillEventsTests
         evt.SkillId.Should().Be(skillId);
         evt.OldName.Should().Be(oldName);
         evt.NewName.Should().Be(newName);
-        evt.EventId.Should().NotBe(Guid.Empty);
+        evt.Id.Should().NotBe(Guid.Empty);
         evt.OccurredOn.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromSeconds(1));
     }
     
     [Fact]
-    public void Given_ValidParameters_When_SkillUpdatedEventConstructed_Then_ShouldInheritFromDomainEvent()
+    public void SkillUpdatedEvent_TypeChecked_ShouldInheritFromDomainEvent()
     {
         // Arrange & Act
         var evt = new SkillUpdatedEvent(Guid.NewGuid(), "Old", "New");
@@ -85,7 +85,7 @@ public class SkillEventsTests
     #region SkillDemandChangedEvent Tests
     
     [Fact]
-    public void Given_ValidParameters_When_SkillDemandChangedEventConstructed_Then_ShouldInitializeCorrectly()
+    public void SkillDemandChangedEvent_ConstructedWithValidParameters_ShouldInitializeCorrectly()
     {
         // Arrange
         var skillId = Guid.NewGuid();
@@ -99,12 +99,12 @@ public class SkillEventsTests
         evt.SkillId.Should().Be(skillId);
         evt.SkillName.Should().Be(skillName);
         evt.IsInDemand.Should().Be(isInDemand);
-        evt.EventId.Should().NotBe(Guid.Empty);
+        evt.Id.Should().NotBe(Guid.Empty);
         evt.OccurredOn.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromSeconds(1));
     }
     
     [Fact]
-    public void Given_ValidParameters_When_SkillDemandChangedEventConstructed_Then_ShouldInheritFromDomainEvent()
+    public void SkillDemandChangedEvent_TypeChecked_ShouldInheritFromDomainEvent()
     {
         // Arrange & Act
         var evt = new SkillDemandChangedEvent(Guid.NewGuid(), "React", true);
@@ -119,13 +119,13 @@ public class SkillEventsTests
     #region SkillCategoryChangedEvent Tests
     
     [Fact]
-    public void Given_ValidParameters_When_SkillCategoryChangedEventConstructed_Then_ShouldInitializeCorrectly()
+    public void SkillCategoryChangedEvent_ConstructedWithValidParameters_ShouldInitializeCorrectly()
     {
         // Arrange
         var skillId = Guid.NewGuid();
         const string skillName = "Docker";
         const SkillCategory oldCategory = SkillCategory.DevOps;
-        const SkillCategory newCategory = SkillCategory.CloudComputing;
+        const SkillCategory newCategory = SkillCategory.Cloud;
         
         // Act
         var evt = new SkillCategoryChangedEvent(skillId, skillName, oldCategory, newCategory);
@@ -135,19 +135,19 @@ public class SkillEventsTests
         evt.SkillName.Should().Be(skillName);
         evt.OldCategory.Should().Be(oldCategory);
         evt.NewCategory.Should().Be(newCategory);
-        evt.EventId.Should().NotBe(Guid.Empty);
+        evt.Id.Should().NotBe(Guid.Empty);
         evt.OccurredOn.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromSeconds(1));
     }
     
     [Fact]
-    public void Given_ValidParameters_When_SkillCategoryChangedEventConstructed_Then_ShouldInheritFromDomainEvent()
+    public void SkillCategoryChangedEvent_TypeChecked_ShouldInheritFromDomainEvent()
     {
         // Arrange & Act
         var evt = new SkillCategoryChangedEvent(
             Guid.NewGuid(), 
             "Docker", 
             SkillCategory.DevOps, 
-            SkillCategory.CloudComputing);
+            SkillCategory.Cloud);
         
         // Assert
         evt.Should().BeAssignableTo<DomainEvent>();
@@ -159,7 +159,7 @@ public class SkillEventsTests
     #region SkillDifficultyChangedEvent Tests
     
     [Fact]
-    public void Given_ValidParameters_When_SkillDifficultyChangedEventConstructed_Then_ShouldInitializeCorrectly()
+    public void SkillDifficultyChangedEvent_ConstructedWithValidParameters_ShouldInitializeCorrectly()
     {
         // Arrange
         var skillId = Guid.NewGuid();
@@ -175,12 +175,12 @@ public class SkillEventsTests
         evt.SkillName.Should().Be(skillName);
         evt.OldLevel.Should().Be(oldLevel);
         evt.NewLevel.Should().Be(newLevel);
-        evt.EventId.Should().NotBe(Guid.Empty);
+        evt.Id.Should().NotBe(Guid.Empty);
         evt.OccurredOn.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromSeconds(1));
     }
     
     [Fact]
-    public void Given_ValidParameters_When_SkillDifficultyChangedEventConstructed_Then_ShouldInheritFromDomainEvent()
+    public void SkillDifficultyChangedEvent_TypeChecked_ShouldInheritFromDomainEvent()
     {
         // Arrange & Act
         var evt = new SkillDifficultyChangedEvent(

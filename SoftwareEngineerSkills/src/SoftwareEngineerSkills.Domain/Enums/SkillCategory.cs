@@ -11,6 +11,16 @@ public enum SkillCategory
     ProgrammingLanguage,
     
     /// <summary>
+    /// Programming skills and practices
+    /// </summary>
+    Programming,
+    
+    /// <summary>
+    /// Web development skills and technologies
+    /// </summary>
+    WebDevelopment,
+    
+    /// <summary>
     /// Frameworks and libraries (e.g., ASP.NET Core, React, Angular)
     /// </summary>
     Framework,
