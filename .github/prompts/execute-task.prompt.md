@@ -1,5 +1,7 @@
 Let's focus on creating comprehensive Domain Layer tests following these requirements:
 
+Refer to .github/instructions/unit-test-instructions.md for the detailed instructions.
+
 1. Implement unit tests for the Domain layer that:
    - Mirror the exact folder/file structure of the Domain project
    - Test all public interfaces, entities, value objects, and domain services
@@ -13,7 +15,7 @@ Let's focus on creating comprehensive Domain Layer tests following these require
 
 3. Test organization:
    - Group tests by domain concept/entity
-   - Use descriptive test names following "Given_When_Then" pattern
+   - Use descriptive test names following `MethodName_Scenario_ExpectedBehavior` pattern.
    - Create separate test classes for each domain object
    - Place tests in parallel folder structure matching source code
 
