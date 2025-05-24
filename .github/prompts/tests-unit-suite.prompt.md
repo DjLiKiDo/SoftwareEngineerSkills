@@ -1,6 +1,7 @@
 # Task: Create Complete Unit Test Suite for SoftwareEngineerSkills Solution
 
-I need assistance generating a comprehensive suite of unit tests for all relevant C# files within the SoftwareEngineerSkills solution. The goal is to achieve good test coverage for all layers: Domain, Application, Infrastructure, and API.
+I need assistance generating a comprehensive suite of unit tests for all relevant C# files within the SoftwareEngineerSkills solution. 
+The goal is to achieve good test coverage for all layers: Domain, Application, Infrastructure, and API.
 
 Please adhere to all guidelines, coding standards, and architectural patterns detailed in the project's Copilot unit testing instructions:
 `@workspace /Users/marquez/Downloads/Pablo/Repos/SoftwareEngineerSkills/.github/prompts/unit-test-instructions.md`

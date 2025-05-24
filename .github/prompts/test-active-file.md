@@ -1,4 +1,4 @@
-Let's focus on creating comprehensive Domain Layer tests following these requirements:
+Let's  work on the unit tests for the active class
 
 Refer to .github/instructions/unit-test-instructions.md for the detailed instructions.
 
