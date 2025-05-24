@@ -1,4 +1,4 @@
-# .NET 9 Enterprise Web API Template
+# .NET 9 Enterprise Web API Template - Development Team Task Board
 
 [![Build Status](https://github.com/yourusername/SoftwareEngineerSkills/actions/workflows/dotnet.yml/badge.svg)](https://github.com/yourusername/SoftwareEngineerSkills/actions/workflows/dotnet.yml)
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
@@ -6,9 +6,50 @@
 
 A production-ready .NET 9 Web API template implementing enterprise-level best practices for building scalable, maintainable, and secure APIs following Clean Architecture and Domain-Driven Design principles.
 
+## Project Overview
+
+This project serves as both a **comprehensive enterprise template** and a **practical example** of a development team task board implementation. It demonstrates real-world application of modern software engineering principles through a domain that developers can easily understand and relate to.
+
+### Dual Purpose
+
+**🏗️ Enterprise Template**
+- Production-ready .NET 9 Web API architecture
+- Clean Architecture with Domain-Driven Design
+- Complete testing strategy and CI/CD pipeline
+- Enterprise-grade security, observability, and performance optimization
+
+**📋 Development Team Task Board Example**
+- Task management with skill requirements
+- Developer profiles with skill capabilities
+- Intelligent task-to-developer assignment system
+- Hierarchical task structure with subtasks
+- Comprehensive workflow state tracking
+
+### Core Domain Features
+
+The system models real-world software development scenarios:
+
+- **Task Management**: Create, organize, and track development tasks with skill requirements
+- **Developer Profiles**: Manage team members with their skill sets and proficiency levels
+- **Smart Assignment**: Match tasks to developers based on required vs. available skills
+- **Workflow States**: Track progress through defined states (To-Do → In Progress → Ready For Release → Released)
+- **Hierarchical Tasks**: Support for parent tasks and subtasks with dependency management
+- **Skill Evolution**: Track how developer skills improve over time through task completion
+
+### Why This Domain?
+
+We chose a development team task board because:
+- **Familiar Context**: Every developer understands task management and team dynamics
+- **Complex Relationships**: Rich domain with entities, value objects, and business rules
+- **Real Business Value**: Actual useful functionality for development teams
+- **Scalable Complexity**: Can be extended with sprint planning, time tracking, reporting, etc.
+- **Educational Value**: Perfect for learning Clean Architecture and DDD patterns
+
 ## Table of Contents
+- [Project Overview](#project-overview)
 - [Architecture Overview](#architecture-overview)
 - [Key Features](#key-features)
+- [Domain Example: Task Board](#domain-example-task-board)
 - [Getting Started](#getting-started)
   - [Prerequisites](#prerequisites)
   - [Installation](#installation)
@@ -103,6 +144,91 @@ Additional documentation is maintained in the `Docs/` folder, covering architect
 - **Resilience patterns** using Polly
 - **Docker containerization**
 - **CI/CD pipeline** with GitHub Actions
+
+## Domain Example: Task Board
+
+This template demonstrates Clean Architecture and DDD principles through a practical **Development Team Task Board** domain. The implementation showcases how complex business scenarios can be modeled using enterprise-grade patterns.
+
+### Business Domain
+
+The task board system manages the relationship between development tasks and team members:
+
+```mermaid
+graph TD
+    A[Developer] -->|has many| B[Skills]
+    C[Task] -->|requires| B[Skills]
+    A -->|assigned to| C
+    C -->|contains| D[Subtasks]
+    C -->|follows| E[Workflow States]
+    
+    E --> F[To-Do]
+    E --> G[In Progress]
+    E --> H[Ready For Release]
+    E --> I[Released]
+```
+
+### Core Entities & Aggregates
+
+**🧑‍💻 Developer Aggregate**
+- **Identity**: Unique developer profile
+- **Skills**: Collection of technical capabilities with proficiency levels
+- **Assignments**: Current and historical task assignments
+- **Availability**: Workload and capacity management
+
+**📋 Task Aggregate**
+- **Identity**: Unique task identification
+- **Requirements**: Skills needed to complete the task
+- **Hierarchy**: Parent-child relationships for complex work items
+- **State Management**: Workflow progression through defined states
+- **Assignment Logic**: Rules for matching tasks to developers
+
+**🎯 Skill Value Object**
+- **Immutable**: Represents a specific technical capability
+- **Categorization**: Groups skills by technology, methodology, or domain
+- **Proficiency Levels**: Beginner, Intermediate, Advanced, Expert
+
+### Business Rules Examples
+
+The domain enforces real-world constraints:
+
+- **Skill Matching**: Tasks can only be assigned to developers with required skills
+- **Capacity Management**: Developers have maximum concurrent task limits
+- **Dependency Validation**: Subtasks cannot be completed before parent tasks
+- **State Transitions**: Tasks must follow defined workflow progressions
+- **Competency Growth**: Developer skills can improve through task completion
+
+### API Endpoints Preview
+
+```http
+# Developer Management
+GET    /api/v1/developers
+POST   /api/v1/developers
+GET    /api/v1/developers/{id}
+PUT    /api/v1/developers/{id}/skills
+
+# Task Management  
+GET    /api/v1/tasks
+POST   /api/v1/tasks
+GET    /api/v1/tasks/{id}
+PUT    /api/v1/tasks/{id}/assign/{developerId}
+PUT    /api/v1/tasks/{id}/state
+
+# Assignment & Analytics
+GET    /api/v1/assignments/optimal-match/{taskId}
+GET    /api/v1/analytics/skill-gaps
+GET    /api/v1/analytics/developer-workload
+```
+
+### Learning Outcomes
+
+This domain example teaches:
+
+- **Aggregate Design**: How to identify and model aggregate boundaries
+- **Value Objects**: When and how to use immutable domain concepts
+- **Domain Events**: Cross-aggregate communication patterns
+- **Business Rules**: Implementing and testing complex domain logic
+- **CQRS Patterns**: Separating command and query responsibilities
+- **Repository Design**: Data access abstraction and testing strategies
 
 ## Getting Started
 

@@ -10,6 +10,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Initial work on next features
 
+### Changed
+- **Enhanced README Documentation**:
+  - Updated project description to highlight dual purpose as enterprise template and practical example
+  - Added comprehensive "Domain Example: Task Board" section with business domain explanation
+  - Included Mermaid diagram showing entity relationships
+  - Added examples of core entities, business rules, and API endpoints
+  - Enhanced project overview to better explain the development team task board implementation
+  - Improved navigation with updated table of contents
+
 ## [1.0.0] - 2025-01-25
 
 ### Added
