@@ -15,19 +15,19 @@ public class ICurrentUserServiceTests
         var type = typeof(ICurrentUserService);
         
         // Act & Assert
-        type.Should().BeInterface();
-        
+        type.IsInterface.Should().BeTrue();
+
         // Check UserId property
         var userIdProperty = type.GetProperty("UserId");
         userIdProperty.Should().NotBeNull();
-        userIdProperty.PropertyType.Should().Be(typeof(string).MakeNullable());
+        userIdProperty.PropertyType.Should().Be(typeof(string));
         userIdProperty.CanRead.Should().BeTrue();
         userIdProperty.CanWrite.Should().BeFalse(); // Should only have a getter
         
         // Check UserName property
         var userNameProperty = type.GetProperty("UserName");
         userNameProperty.Should().NotBeNull();
-        userNameProperty.PropertyType.Should().Be(typeof(string).MakeNullable());
+        userNameProperty.PropertyType.Should().Be(typeof(string));
         userNameProperty.CanRead.Should().BeTrue();
         userNameProperty.CanWrite.Should().BeFalse(); // Should only have a getter
         
@@ -97,9 +97,9 @@ public class ICurrentUserServiceTests
         // Arrange
         var accessorType = typeof(ICurrentUserAccessor);
         var serviceType = typeof(ICurrentUserService);
-        
+
         // Act & Assert
-        accessorType.Should().BeInterface();
+        accessorType.IsInterface.Should().BeTrue();
         accessorType.Should().BeAssignableTo(serviceType);
         serviceType.IsAssignableFrom(accessorType).Should().BeTrue();
     }

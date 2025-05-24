@@ -21,7 +21,7 @@ public class ISkillRepositoryTests
         var type = typeof(ISkillRepository);
         
         // Act & Assert
-        type.Should().BeInterface();
+        type.IsInterface.Should().BeTrue();
         
         // Check that it extends IRepository<Skill>
         type.GetInterfaces().Should().Contain(t => 

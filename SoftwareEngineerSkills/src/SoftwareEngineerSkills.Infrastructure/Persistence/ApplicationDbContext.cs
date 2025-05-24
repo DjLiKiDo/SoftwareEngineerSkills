@@ -87,13 +87,16 @@ internal class ApplicationDbContext : DbContext
     /// Commits the current transaction asynchronously
     /// </summary>
     /// <param name="cancellationToken">A token to monitor for cancellation requests</param>
-    /// <returns>A task that represents the asynchronous operation</returns>
+    /// <returns>A task that represents the asynchronous operation</returns>    
     public async Task CommitTransactionAsync(CancellationToken cancellationToken = default)
     {
         try
         {
             await SaveChangesAsync(cancellationToken);
-            await _currentTransaction?.CommitAsync(cancellationToken)!;
+            if (_currentTransaction != null)
+            {
+                await _currentTransaction.CommitAsync(cancellationToken);
+            }
         }
         catch
         {
@@ -114,12 +117,15 @@ internal class ApplicationDbContext : DbContext
     /// Rolls back the current transaction asynchronously
     /// </summary>
     /// <param name="cancellationToken">A token to monitor for cancellation requests</param>
-    /// <returns>A task that represents the asynchronous operation</returns>
+    /// <returns>A task that represents the asynchronous operation</returns>    
     public async Task RollbackTransactionAsync(CancellationToken cancellationToken = default)
     {
         try
         {
-            await _currentTransaction?.RollbackAsync(cancellationToken)!;
+            if (_currentTransaction != null)
+            {
+                await _currentTransaction.RollbackAsync(cancellationToken);
+            }
         }
         finally
         {

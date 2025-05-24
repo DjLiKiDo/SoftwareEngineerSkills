@@ -13,7 +13,7 @@ public class IEmailServiceTests
         var type = typeof(IEmailService);
 
         // Act & Assert
-        type.Should().BeInterface();
+        type.IsInterface.Should().BeTrue();
         // Add further checks for expected methods as needed
     }
 

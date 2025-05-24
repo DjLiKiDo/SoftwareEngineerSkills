@@ -21,7 +21,7 @@ public class ISoftDeleteRepositoryTests
         var type = typeof(ISoftDeleteRepository<>);
         
         // Act & Assert
-        type.Should().BeGenericType();
+        type.IsGenericType.Should().BeTrue();
         type.IsInterface.Should().BeTrue();
         
         // Check that it extends IRepository

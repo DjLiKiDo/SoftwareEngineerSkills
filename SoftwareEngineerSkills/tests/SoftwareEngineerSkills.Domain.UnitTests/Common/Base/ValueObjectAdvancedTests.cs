@@ -83,6 +83,36 @@ public class ValueObjectAdvancedTests
         vo1.Should().NotBe(vo3); // Different inner value object
     }
     
+    [Fact]
+    public void ValueObjects_WithCaseInsensitiveComparison_ShouldCompareCorrectly()
+    {
+        // Arrange
+        var vo1 = new CaseInsensitiveValueObject("TEST");
+        var vo2 = new CaseInsensitiveValueObject("test");
+        var vo3 = new CaseInsensitiveValueObject("other");
+        
+        // Act & Assert
+        vo1.Should().Be(vo2); // Same value, different case
+        vo1.Should().NotBe(vo3); // Different value
+    }
+    
+    [Fact]
+    public void ValueObjects_WithBinaryData_ShouldCompareCorrectly()
+    {
+        // Arrange
+        var bytes1 = new byte[] { 0x01, 0x02, 0x03 };
+        var bytes2 = new byte[] { 0x01, 0x02, 0x03 }; // Same content
+        var bytes3 = new byte[] { 0x01, 0x02, 0x04 }; // Different content
+        
+        var vo1 = new BinaryValueObject(bytes1);
+        var vo2 = new BinaryValueObject(bytes2);
+        var vo3 = new BinaryValueObject(bytes3);
+        
+        // Act & Assert
+        vo1.Should().Be(vo2); // Same binary content
+        vo1.Should().NotBe(vo3); // Different binary content
+    }
+
     // Helper classes
     
     private class EmptyValueObject : ValueObject
@@ -161,6 +191,40 @@ public class ValueObjectAdvancedTests
         protected override IEnumerable<object> GetEqualityComponents()
         {
             yield return Inner;
+        }
+    }
+    
+    private class CaseInsensitiveValueObject : ValueObject
+    {
+        public string Value { get; }
+        
+        public CaseInsensitiveValueObject(string value)
+        {
+            Value = value;
+        }
+        
+        protected override IEnumerable<object> GetEqualityComponents()
+        {
+            yield return Value.ToLowerInvariant(); // Case-insensitive comparison
+        }
+    }
+    
+    private class BinaryValueObject : ValueObject
+    {
+        public byte[] Data { get; }
+        
+        public BinaryValueObject(byte[] data)
+        {
+            Data = data;
+        }
+        
+        protected override IEnumerable<object> GetEqualityComponents()
+        {
+            // For binary data, yield each byte to compare
+            foreach (var b in Data)
+            {
+                yield return b;
+            }
         }
     }
 }

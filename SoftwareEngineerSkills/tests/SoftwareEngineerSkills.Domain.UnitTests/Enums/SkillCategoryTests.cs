@@ -15,6 +15,8 @@ public class SkillCategoryTests
         
         // Assert
         values.Should().Contain(SkillCategory.ProgrammingLanguage);
+        values.Should().Contain(SkillCategory.Programming);
+        values.Should().Contain(SkillCategory.WebDevelopment);
         values.Should().Contain(SkillCategory.Framework);
         values.Should().Contain(SkillCategory.Database);
         values.Should().Contain(SkillCategory.Cloud);
@@ -24,8 +26,8 @@ public class SkillCategoryTests
         values.Should().Contain(SkillCategory.Tool);
         values.Should().Contain(SkillCategory.SoftSkill);
         values.Should().Contain(SkillCategory.Other);
-    }
-
+    }    
+    
     [Fact]
     public void SkillCategory_ShouldHaveExpectedCount()
     {
@@ -33,11 +35,13 @@ public class SkillCategoryTests
         var values = Enum.GetValues<SkillCategory>();
         
         // Assert
-        values.Should().HaveCount(10); // Update this count if enum values change
+        values.Should().HaveCount(12); // Updated to match the current enum implementation
     }
 
     [Theory]
     [InlineData("ProgrammingLanguage")]
+    [InlineData("Programming")]
+    [InlineData("WebDevelopment")]
     [InlineData("Framework")]
     [InlineData("Database")]
     [InlineData("Cloud")]
@@ -74,13 +78,15 @@ public class SkillCategoryTests
             // If it parsed successfully, make sure it's not a valid defined value
             Enum.IsDefined(typeof(SkillCategory), category).Should().BeFalse();
         }
-    }
-
+    }    
+    
     [Fact]
     public void SkillCategory_ToString_ShouldReturnExpectedString()
     {
         // Assert
         SkillCategory.ProgrammingLanguage.ToString().Should().Be("ProgrammingLanguage");
+        SkillCategory.Programming.ToString().Should().Be("Programming");
+        SkillCategory.WebDevelopment.ToString().Should().Be("WebDevelopment");
         SkillCategory.Framework.ToString().Should().Be("Framework");
         SkillCategory.Database.ToString().Should().Be("Database");
         SkillCategory.Cloud.ToString().Should().Be("Cloud");

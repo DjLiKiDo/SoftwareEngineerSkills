@@ -1,5 +1,7 @@
+using System.Reflection;
 using SoftwareEngineerSkills.Domain.Common.Base;
 using SoftwareEngineerSkills.Domain.Common.Events;
+using SoftwareEngineerSkills.Domain.Exceptions;
 using SoftwareEngineerSkills.Domain.ValueObjects;
 
 namespace SoftwareEngineerSkills.Domain.Aggregates.Customer;
@@ -42,8 +44,11 @@ public class Customer : AggregateRoot
         Name = name ?? throw new ArgumentNullException(nameof(name));
         Email = email ?? throw new ArgumentNullException(nameof(email));
         
+        // Set audit properties for testing
+        Created = DateTime.UtcNow;
+        
         AddAndApplyEvent(new CustomerCreatedEvent(Id, name, email.Value));
-    }
+    }    
     
     /// <summary>
     /// Updates the customer's name
@@ -51,8 +56,20 @@ public class Customer : AggregateRoot
     /// <param name="name">The new name</param>
     public void UpdateName(string name)
     {
+        // Early validation for immediate feedback
         if (string.IsNullOrWhiteSpace(name))
-            throw new ArgumentException("Name cannot be empty", nameof(name));
+        {
+            throw new DomainValidationException(["Customer name cannot be empty"]);
+        }
+        
+        if (name.Length > 200)
+        {
+            throw new DomainValidationException(["Customer name cannot exceed 200 characters"]);
+        }
+        
+        // Avoid generating events for same values
+        if (Name == name)
+            return;
             
         var oldName = Name;
         Name = name;
@@ -66,10 +83,15 @@ public class Customer : AggregateRoot
     /// <param name="email">The new email address</param>
     public void UpdateEmail(Email email)
     {
+        var newEmail = email ?? throw new ArgumentNullException(nameof(email));
+          // Avoid generating events for same values
+        if (Email?.Value == newEmail.Value)
+            return;
+            
         var oldEmail = Email;
-        Email = email ?? throw new ArgumentNullException(nameof(email));
+        Email = newEmail;
         
-        AddAndApplyEvent(new CustomerEmailUpdatedEvent(Id, oldEmail.Value, email.Value));
+        AddAndApplyEvent(new CustomerEmailUpdatedEvent(Id, oldEmail?.Value ?? string.Empty, newEmail.Value));
     }
     
     /// <summary>
@@ -78,6 +100,10 @@ public class Customer : AggregateRoot
     /// <param name="phoneNumber">The new phone number</param>
     public void UpdatePhoneNumber(string? phoneNumber)
     {
+        // Avoid generating events for same values
+        if (PhoneNumber == phoneNumber)
+            return;
+            
         var oldPhoneNumber = PhoneNumber;
         PhoneNumber = phoneNumber;
         
@@ -88,10 +114,21 @@ public class Customer : AggregateRoot
     /// Updates the customer's shipping address
     /// </summary>
     /// <param name="address">The new shipping address</param>
-    public void UpdateShippingAddress(Address address)
+    public void UpdateShippingAddress(Address? address)
     {
+        // Handle null address by clearing it
+        if (address == null)
+        {
+            ClearShippingAddress();
+            return;
+        }
+        
+        // Avoid generating events for same values
+        if (ShippingAddress?.Equals(address) == true)
+            return;
+            
         var oldAddress = ShippingAddress;
-        ShippingAddress = address ?? throw new ArgumentNullException(nameof(address));
+        ShippingAddress = address;
         
         AddAndApplyEvent(new CustomerAddressUpdatedEvent(Id, oldAddress, address));
     }
@@ -118,23 +155,37 @@ public class Customer : AggregateRoot
         switch (domainEvent)
         {
             case CustomerCreatedEvent created:
-                // Constructor already sets these properties
+                // For event sourcing, set the ID from the event
+                if (Id == Guid.Empty || Id != created.CustomerId)
+                {
+                    var idProperty = typeof(BaseEntity).GetProperty(nameof(Id));
+                    idProperty?.SetValue(this, created.CustomerId);
+                }
+                Name = created.Name;
+                Email = new Email(created.Email);
                 break;
                 
             case CustomerNameUpdatedEvent nameUpdated:
-                // The UpdateName method already sets the properties 
+                Name = nameUpdated.NewName;
                 break;
                 
             case CustomerEmailUpdatedEvent emailUpdated:
-                // The UpdateEmail method already sets the properties
+                Email = new Email(emailUpdated.NewEmail);
                 break;
                 
             case CustomerPhoneUpdatedEvent phoneUpdated:
-                // The UpdatePhoneNumber method already sets the properties
+                PhoneNumber = phoneUpdated.NewPhoneNumber;
                 break;
                 
             case CustomerAddressUpdatedEvent addressUpdated:
-                // The UpdateShippingAddress method already sets the properties
+                if (addressUpdated.NewAddress != null)
+                {
+                    ShippingAddress = addressUpdated.NewAddress;
+                }
+                else
+                {
+                    ShippingAddress = null;
+                }
                 break;
         }
     }
@@ -148,6 +199,11 @@ public class Customer : AggregateRoot
         if (string.IsNullOrWhiteSpace(Name))
         {
             yield return "Customer name cannot be empty";
+        }
+        
+        if (Name?.Length > 200)
+        {
+            yield return "Customer name cannot exceed 200 characters";
         }
         
         if (Email == null)

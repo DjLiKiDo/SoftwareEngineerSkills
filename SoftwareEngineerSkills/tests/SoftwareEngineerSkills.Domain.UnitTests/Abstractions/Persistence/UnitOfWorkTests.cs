@@ -18,7 +18,7 @@ public class UnitOfWorkTests
         var type = typeof(IUnitOfWork);
         
         // Act & Assert
-        type.Should().BeInterface();
+        type.IsInterface.Should().BeTrue();
         
         // Check Skills property
         var skillsProperty = type.GetProperty("Skills");
@@ -26,13 +26,12 @@ public class UnitOfWorkTests
         skillsProperty.PropertyType.Should().Be(typeof(ISkillRepository));
         skillsProperty.CanRead.Should().BeTrue();
         skillsProperty.CanWrite.Should().BeFalse(); // Should only have a getter
-        
-        // Check SaveChangesAsync method
-        var saveChangesMethod = type.GetMethod("SaveChangesAsync");
-        saveChangesMethod.Should().NotBeNull();
-        saveChangesMethod.ReturnType.Should().Be(typeof(Task<int>));
-        saveChangesMethod.GetParameters().Should().HaveCount(1);
-        saveChangesMethod.GetParameters()[0].ParameterType.Should().Be(typeof(CancellationToken));
+          // Check CommitAsync method
+        var commitMethod = type.GetMethod("CommitAsync");
+        commitMethod.Should().NotBeNull();
+        commitMethod.ReturnType.Should().Be(typeof(Task<int>));
+        commitMethod.GetParameters().Should().HaveCount(1);
+        commitMethod.GetParameters()[0].ParameterType.Should().Be(typeof(CancellationToken));
     }
 
     [Fact]

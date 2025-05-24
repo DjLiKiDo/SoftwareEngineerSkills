@@ -129,12 +129,10 @@ public class CustomerTests
     public void Given_InvalidName_When_NameUpdated_Then_ShouldThrowDomainValidationException(string? invalidName)
     {
         // Arrange
-        var customer = CreateValidCustomer();
-
-        // Act & Assert
+        var customer = CreateValidCustomer();        // Act & Assert
         customer.Invoking(c => c.UpdateName(invalidName!))
             .Should().Throw<DomainValidationException>()
-            .Which.Errors.Should().Contain(error => error.Contains("Name cannot be empty"));
+            .Which.Errors.Should().Contain(error => error.Contains("Customer name cannot be empty"));
     }
 
     [Fact]

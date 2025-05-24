@@ -219,17 +219,17 @@ Events signal important domain occurrences using past tense naming:
 public interface IDomainEvent
 {
     DateTime OccurredOn { get; }
-    Guid EventId { get; }
+    Guid Id { get; }
 }
 
 public abstract class DomainEvent : IDomainEvent
 {
     public DateTime OccurredOn { get; }
-    public Guid EventId { get; }
+    public Guid Id { get; }
     
     protected DomainEvent()
     {
-        EventId = Guid.NewGuid();
+        Id = Guid.NewGuid();
         OccurredOn = DateTime.UtcNow;
     }
 }

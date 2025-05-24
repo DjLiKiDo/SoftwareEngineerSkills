@@ -22,7 +22,7 @@ public class IReadRepositoryTests
         var type = typeof(IReadRepository<>);
         
         // Act & Assert
-        type.Should().BeGenericType();
+        type.IsGenericType.Should().BeTrue();
         type.IsInterface.Should().BeTrue();
         type.GetGenericArguments().Should().HaveCount(1);
         

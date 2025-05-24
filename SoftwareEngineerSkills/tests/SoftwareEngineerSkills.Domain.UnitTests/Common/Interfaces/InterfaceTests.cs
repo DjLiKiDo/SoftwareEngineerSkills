@@ -18,7 +18,7 @@ public class IAggregateRootTests
         var type = typeof(IAggregateRoot);
         
         // Act & Assert
-        type.Should().BeInterface();
+        type.IsInterface.Should().BeTrue();
         
         // Check the DomainEvents property
         var domainEventsProperty = type.GetProperty("DomainEvents");
@@ -67,7 +67,7 @@ public class IAuditableEntityTests
         var type = typeof(IAuditableEntity);
         
         // Act & Assert
-        type.Should().BeInterface();
+        type.IsInterface.Should().BeTrue();
         
         // Check Created property
         var createdProperty = type.GetProperty("Created");
@@ -79,7 +79,7 @@ public class IAuditableEntityTests
         // Check CreatedBy property
         var createdByProperty = type.GetProperty("CreatedBy");
         createdByProperty.Should().NotBeNull();
-        createdByProperty.PropertyType.Should().Be(typeof(string).MakeNullable());
+        createdByProperty.PropertyType.Should().Be(typeof(string));
         createdByProperty.CanRead.Should().BeTrue();
         createdByProperty.CanWrite.Should().BeTrue();
         
@@ -93,7 +93,7 @@ public class IAuditableEntityTests
         // Check LastModifiedBy property
         var lastModifiedByProperty = type.GetProperty("LastModifiedBy");
         lastModifiedByProperty.Should().NotBeNull();
-        lastModifiedByProperty.PropertyType.Should().Be(typeof(string).MakeNullable());
+        lastModifiedByProperty.PropertyType.Should().Be(typeof(string));
         lastModifiedByProperty.CanRead.Should().BeTrue();
         lastModifiedByProperty.CanWrite.Should().BeTrue();
     }
@@ -135,7 +135,7 @@ public class ISoftDeleteTests
         var type = typeof(ISoftDelete);
         
         // Act & Assert
-        type.Should().BeInterface();
+        type.IsInterface.Should().BeTrue();
         
         // Check IsDeleted property
         var isDeletedProperty = type.GetProperty("IsDeleted");
@@ -158,7 +158,7 @@ public class ISoftDeleteTests
         // Check DeletedBy property
         var deletedByProperty = type.GetProperty("DeletedBy");
         deletedByProperty.Should().NotBeNull();
-        deletedByProperty.PropertyType.Should().Be(typeof(string).MakeNullable());
+        deletedByProperty.PropertyType.Should().Be(typeof(string));
         deletedByProperty.CanRead.Should().BeTrue();
         deletedByProperty.CanWrite.Should().BeTrue();
     }

@@ -13,7 +13,7 @@ public class ICurrentUserServiceTests
         var type = typeof(ICurrentUserService);
 
         // Act & Assert
-        type.Should().BeInterface();
+        type.IsInterface.Should().BeTrue();
         // Add further checks for expected methods as needed
     }
 }

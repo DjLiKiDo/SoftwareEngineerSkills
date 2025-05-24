@@ -23,8 +23,8 @@ public class RepositoryTests
         var type = typeof(IRepository<TestEntity>);
         
         // Act & Assert
-        type.Should().BeInterface();
-        
+        type.IsInterface.Should().BeTrue();
+
         // Check AddAsync method
         var addMethod = type.GetMethod("AddAsync");
         addMethod.Should().NotBeNull();
@@ -61,8 +61,8 @@ public class RepositoryTests
         var type = typeof(IReadRepository<TestEntity>);
         
         // Act & Assert
-        type.Should().BeInterface();
-        
+        type.IsInterface.Should().BeTrue();
+
         // Check GetByIdAsync method
         var getByIdMethod = type.GetMethod("GetByIdAsync");
         getByIdMethod.Should().NotBeNull();
@@ -90,8 +90,8 @@ public class RepositoryTests
         var type = typeof(ISoftDeleteRepository<TestEntity>);
         
         // Act & Assert
-        type.Should().BeInterface();
-        
+        type.IsInterface.Should().BeTrue();
+
         // Check SoftDeleteAsync method
         var softDeleteMethod = type.GetMethod("SoftDeleteAsync");
         softDeleteMethod.Should().NotBeNull();
@@ -125,8 +125,8 @@ public class RepositoryTests
         var type = typeof(ISkillRepository);
         
         // Act & Assert
-        type.Should().BeInterface();
-        
+        type.IsInterface.Should().BeTrue();
+
         // Should inherit from ISoftDeleteRepository<Skill>
         type.GetInterface(typeof(ISoftDeleteRepository<>).Name).Should().NotBeNull();
         

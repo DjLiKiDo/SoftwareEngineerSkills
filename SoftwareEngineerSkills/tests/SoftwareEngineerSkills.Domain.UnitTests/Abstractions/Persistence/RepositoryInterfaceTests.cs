@@ -27,7 +27,7 @@ public class RepositoryInterfaceTests
         var type = typeof(IReadRepository<>);
         
         // Act & Assert
-        type.Should().BeInterface();
+        type.IsInterface.Should().BeTrue();
         type.IsGenericType.Should().BeTrue();
         
         // Check methods
@@ -41,7 +41,7 @@ public class RepositoryInterfaceTests
         
         // Check GetByIdAsync specifically
         var getByIdMethod = methods.First(m => m.Name == "GetByIdAsync");
-        getByIdMethod.ReturnType.Should().Be(typeof(Task<>).MakeGenericType(typeof(object).MakeNullable())); // This is approximate as the actual entity type is generic
+        getByIdMethod.ReturnType.Should().Be(typeof(Task<>).MakeGenericType(typeof(object))); // This is approximate as the actual entity type is generic
     }
     
     [Fact]
@@ -52,7 +52,7 @@ public class RepositoryInterfaceTests
         var readRepoType = typeof(IReadRepository<>);
         
         // Act & Assert
-        repoType.Should().BeInterface();
+        repoType.IsInterface.Should().BeTrue();
         repoType.IsGenericType.Should().BeTrue();
         
         // Due to generic types, we need to check interfaces differently

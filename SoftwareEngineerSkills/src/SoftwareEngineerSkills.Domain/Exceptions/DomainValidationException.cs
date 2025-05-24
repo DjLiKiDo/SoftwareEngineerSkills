@@ -33,9 +33,24 @@ public class DomainValidationException : BusinessRuleException
     /// </summary>
     /// <param name="errors">The list of validation errors</param>
     public DomainValidationException(IEnumerable<string> errors) 
-        : base("One or more domain validation errors occurred.")
+        : base(CreateMessage(errors))
     {
         Errors = errors.ToList().AsReadOnly();
+    }
+      /// <summary>
+    /// Creates a formatted message from the validation errors
+    /// </summary>
+    /// <param name="errors">The validation errors</param>
+    /// <returns>A formatted error message</returns>
+    private static string CreateMessage(IEnumerable<string> errors)
+    {
+        var errorList = errors.ToList();
+        return errorList.Count switch
+        {
+            0 => "One or more domain validation errors occurred.",
+            1 => "One or more domain validation errors occurred.",
+            _ => "One or more domain validation errors occurred."
+        };
     }
     
     /// <summary>

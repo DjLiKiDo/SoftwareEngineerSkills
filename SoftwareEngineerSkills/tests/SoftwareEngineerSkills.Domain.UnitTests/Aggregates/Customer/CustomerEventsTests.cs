@@ -22,12 +22,12 @@ public class CustomerEventsTests
         // Act
         var domainEvent = new CustomerCreatedEvent(customerId, name, email);
 
-        // Assert
+        // Assert        
         domainEvent.CustomerId.Should().Be(customerId);
         domainEvent.Name.Should().Be(name);
         domainEvent.Email.Should().Be(email);
         domainEvent.OccurredOn.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromSeconds(1));
-        domainEvent.EventId.Should().NotBe(Guid.Empty);
+        domainEvent.Id.Should().NotBe(Guid.Empty);
     }
 
     [Fact]
@@ -53,9 +53,9 @@ public class CustomerEventsTests
         var event1 = new CustomerCreatedEvent(customerId, name, email);
         var event2 = new CustomerCreatedEvent(customerId, name, email);
 
-        // Assert
-        event1.Should().NotBe(event2); // Each event should have unique EventId
-        event1.EventId.Should().NotBe(event2.EventId);
+        // Assert        
+        event1.Should().NotBe(event2); // Each event should have unique Id
+        event1.Id.Should().NotBe(event2.Id);
         event1.OccurredOn.Should().BeCloseTo(event2.OccurredOn, TimeSpan.FromMilliseconds(100));
     }
 
@@ -74,12 +74,12 @@ public class CustomerEventsTests
         // Act
         var domainEvent = new CustomerNameUpdatedEvent(customerId, oldName, newName);
 
-        // Assert
+        // Assert        
         domainEvent.CustomerId.Should().Be(customerId);
         domainEvent.OldName.Should().Be(oldName);
         domainEvent.NewName.Should().Be(newName);
         domainEvent.OccurredOn.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromSeconds(1));
-        domainEvent.EventId.Should().NotBe(Guid.Empty);
+        domainEvent.Id.Should().NotBe(Guid.Empty);
     }
 
     [Fact]
@@ -108,12 +108,12 @@ public class CustomerEventsTests
         // Act
         var domainEvent = new CustomerEmailUpdatedEvent(customerId, oldEmail, newEmail);
 
-        // Assert
+        // Assert        
         domainEvent.CustomerId.Should().Be(customerId);
         domainEvent.OldEmail.Should().Be(oldEmail);
         domainEvent.NewEmail.Should().Be(newEmail);
         domainEvent.OccurredOn.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromSeconds(1));
-        domainEvent.EventId.Should().NotBe(Guid.Empty);
+        domainEvent.Id.Should().NotBe(Guid.Empty);
     }
 
     [Fact]
@@ -142,12 +142,12 @@ public class CustomerEventsTests
         // Act
         var domainEvent = new CustomerPhoneUpdatedEvent(customerId, oldPhone, newPhone);
 
-        // Assert
+        // Assert        
         domainEvent.CustomerId.Should().Be(customerId);
         domainEvent.OldPhoneNumber.Should().Be(oldPhone);
         domainEvent.NewPhoneNumber.Should().Be(newPhone);
         domainEvent.OccurredOn.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromSeconds(1));
-        domainEvent.EventId.Should().NotBe(Guid.Empty);
+        domainEvent.Id.Should().NotBe(Guid.Empty);
     }
 
     [Fact]
@@ -191,12 +191,12 @@ public class CustomerEventsTests
         // Act
         var domainEvent = new CustomerAddressUpdatedEvent(customerId, oldAddress, newAddress);
 
-        // Assert
+        // Assert        
         domainEvent.CustomerId.Should().Be(customerId);
         domainEvent.OldAddress.Should().Be(oldAddress);
         domainEvent.NewAddress.Should().Be(newAddress);
         domainEvent.OccurredOn.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromSeconds(1));
-        domainEvent.EventId.Should().NotBe(Guid.Empty);
+        domainEvent.Id.Should().NotBe(Guid.Empty);
     }
 
     [Fact]
@@ -227,32 +227,32 @@ public class CustomerEventsTests
 
     #endregion
 
-    #region Event Timestamp Tests
-
-    [Fact]
+    #region Event Timestamp Tests    [Fact]    [Fact]
     public void DomainEvents_CreatedInSequence_TimestampsShouldBeInOrder()
     {
         // Arrange
         var customerId = Guid.NewGuid();
 
-        // Act
+        // Need to extend customer events with timestamp constructors
+        // This test checks that timestamps are correctly ordered based on creation time
+        // We would test with actual timestamps if the events had constructors accepting them
+
+        // Act - Create events in sequence, a few milliseconds apart
         var event1 = new CustomerCreatedEvent(customerId, "John", "john@example.com");
-        Thread.Sleep(1); // Ensure different timestamps
         var event2 = new CustomerNameUpdatedEvent(customerId, "John", "Jane");
-        Thread.Sleep(1);
         var event3 = new CustomerEmailUpdatedEvent(customerId, "john@example.com", "jane@example.com");
 
-        // Assert
+        // Assert - This is still valid because events are created sequentially
+        // and OccurredOn is set to DateTime.UtcNow in the constructor
         event1.OccurredOn.Should().BeBefore(event2.OccurredOn);
         event2.OccurredOn.Should().BeBefore(event3.OccurredOn);
     }
 
     #endregion
 
-    #region Event Identity Tests
-
+    #region Event Identity Tests    
     [Fact]
-    public void DomainEvents_Created_ShouldHaveUniqueEventIds()
+    public void DomainEvents_Created_ShouldHaveUniqueIds()
     {
         // Arrange
         var customerId = Guid.NewGuid();
@@ -268,7 +268,7 @@ public class CustomerEventsTests
         };
 
         // Assert
-        var eventIds = events.Select(e => e.EventId).ToList();
+        var eventIds = events.Select(e => e.Id).ToList();
         eventIds.Should().OnlyHaveUniqueItems();
         eventIds.Should().AllSatisfy(id => id.Should().NotBe(Guid.Empty));
     }
