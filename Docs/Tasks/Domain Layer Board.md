@@ -8,11 +8,8 @@ This document serves as the comprehensive guide for developing and enhancing the
 
 Before starting work on any domain layer tasks, review these key documents:
 
-1. **[Domain-Analysis-Summary.md](../Domain/Domain-Analysis-Summary.md)**: Executive summary of domain layer analysis
-2. **[Domain-Structure-Improvements.md](../Domain/Domain-Structure-Improvements.md)**: Folder organization recommendations
-3. **[Domain-Code-Improvements.md](../Domain/Domain-Code-Improvements.md)**: Code organization and consistency guidelines
-4. **[Domain-Implementation-Recommendations.md](../Domain/Domain-Implementation-Recommendations.md)**: Specific code implementation patterns
-5. **[Domain-Prioritized-Tasks.md](../Domain/Domain-Prioritized-Tasks.md)**: Detailed task breakdown with estimates
+1. **[Repo README.md](../../README.md)**: Repository README file
+2. **[Domain README.md](../../SoftwareEngineerSkills/src/SoftwareEngineerSkills.Domain/README.md)**: Folder organization recommendations
 
 ## Priority Levels
 

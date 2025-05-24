@@ -1,4 +1,4 @@
-Let's  work on the unit tests for the active class
+Let's work on the unit tests for the active class
 
 Refer to .github/instructions/unit-test-instructions.md for the detailed instructions.
 

@@ -46,9 +46,7 @@ public static class DatabaseInitializer
         {
             logger.LogInformation("Skills table already contains data, skipping seeding");
             return;
-        }
-
-        logger.LogInformation("Seeding Skills table...");
+        }        logger.LogInformation("Seeding Skills table...");
 
         var skills = new List<Skill>
         {
@@ -61,14 +59,14 @@ public static class DatabaseInitializer
                 
             new Skill(
                 "ASP.NET Core",
-                SkillCategory.Framework, 
+                SkillCategory.Backend, 
                 "Cross-platform framework for building web applications", 
                 SkillLevel.Advanced, 
                 isInDemand: true),
                 
             new Skill(
                 "Entity Framework Core", 
-                SkillCategory.Framework, 
+                SkillCategory.Backend, 
                 "Object-relational mapper for .NET", 
                 SkillLevel.Intermediate, 
                 isInDemand: true),
@@ -95,14 +93,14 @@ public static class DatabaseInitializer
                 
             new Skill(
                 "Git", 
-                SkillCategory.Tool,
+                SkillCategory.VersionControl,
                 "Distributed version control system", 
                 SkillLevel.Beginner, 
                 isInDemand: true),
                 
             new Skill(
                 "Docker", 
-                SkillCategory.DevOps,
+                SkillCategory.Containerization,
                 "Platform for containerizing applications", 
                 SkillLevel.Intermediate, 
                 isInDemand: true),
