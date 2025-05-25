@@ -32,7 +32,10 @@ Deliverables:
 - Impact assessment for each finding
 - Refactoring recommendations with concrete examples
 - Risk analysis for suggested changes
+- Refer to [TeamOrganization.md](../../Docs/Team/TeamOrganization.md) for team structure and responsibilities.
+
+Ensure the analysis is actionable, providing clear next steps for the Domain Model Team to enhance the domain layer's quality and maintainability.
 
 Consider both immediate optimizations and long-term architectural improvements while maintaining backward compatibility.
 
-Write the analysis as markdown on the file '.DomainAnalysis.md' in the root of the repository.
+Write the analysis as markdown on the file [DomainLayerAnalysis.md](../../Docs/Tasks/DomainLayerAnalysis.md)
