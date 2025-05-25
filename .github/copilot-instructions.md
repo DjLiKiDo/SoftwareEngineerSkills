@@ -5,7 +5,7 @@ This document provides instructions for GitHub Copilot to optimize AI assistance
 ## 1. Project Definition
 
 ### Primary Domain and Tech Stack
-- **Primary Domain:** Enterprise Web API development using .NET 9
+- **Primary Domain:** Development Team Task Board - Enterprise task management system using .NET 9
 - **Tech Stack:**
   - **Backend Framework:** .NET 9 / ASP.NET Core
   - **Language:** C# 14+
@@ -115,167 +115,211 @@ This document provides instructions for GitHub Copilot to optimize AI assistance
 
 #### Domain Entities
 ```csharp
-namespace Domain.Entities;
+namespace SoftwareEngineerSkills.Domain.Aggregates.Task;
 
-public class Customer : BaseEntity, IAggregateRoot
+public class Task : AggregateRoot
 {
-    public string Name { get; private set; }
-    public Email EmailAddress { get; private set; }
-    public Address ShippingAddress { get; private set; }
+    public string Title { get; private set; }
+    public string Description { get; private set; }
+    public TaskStatus Status { get; private set; }
+    public TaskPriority Priority { get; private set; }
+    public DateTime? DueDate { get; private set; }
+    public Guid? AssignedDeveloperId { get; private set; }
+    public Guid? ParentTaskId { get; private set; }
     
-    private readonly List<Order> _orders = new();
-    public IReadOnlyCollection<Order> Orders => _orders.AsReadOnly();
+    private readonly List<TaskSkillRequirement> _skillRequirements = new();
+    public IReadOnlyCollection<TaskSkillRequirement> SkillRequirements => _skillRequirements.AsReadOnly();
     
-    private Customer() { } // For EF Core
+    private readonly List<Guid> _subtaskIds = new();
+    public IReadOnlyCollection<Guid> SubtaskIds => _subtaskIds.AsReadOnly();
     
-    public Customer(string name, Email email)
+    private Task() { } // For EF Core
+    
+    public Task(string title, string description, TaskPriority priority)
     {
-        Name = name ?? throw new ArgumentNullException(nameof(name));
-        EmailAddress = email ?? throw new ArgumentNullException(nameof(email));
+        Title = Guard.Against.NullOrWhiteSpace(title, nameof(title));
+        Description = Guard.Against.NullOrWhiteSpace(description, nameof(description));
+        Priority = priority;
+        Status = TaskStatus.Todo;
+        
+        AddDomainEvent(new TaskCreatedEvent(Id, title, priority));
+        EnforceInvariants();
     }
     
-    public void UpdateShippingAddress(Address address)
+    public void AssignToDeveloper(Guid developerId, IEnumerable<DeveloperSkill> developerSkills)
     {
-        ShippingAddress = address ?? throw new ArgumentNullException(nameof(address));
-        AddDomainEvent(new CustomerAddressUpdatedEvent(Id, address));
+        Guard.Against.Default(developerId, nameof(developerId));
+        
+        if (!CanBeAssignedTo(developerSkills))
+            throw new BusinessRuleException("Developer does not have required skills for this task");
+            
+        if (AssignedDeveloperId == developerId) return;
+            
+        var previousDeveloperId = AssignedDeveloperId;
+        AssignedDeveloperId = developerId;
+        
+        AddDomainEvent(new TaskAssignedEvent(Id, developerId, previousDeveloperId));
+        EnforceInvariants();
     }
     
-    public void AddOrder(Order order)
+    public void AddSkillRequirement(SkillCategory category, SkillLevel minimumLevel)
     {
-        _orders.Add(order);
-        AddDomainEvent(new OrderAddedEvent(Id, order.Id));
+        var requirement = new TaskSkillRequirement(category, minimumLevel, true);
+        _skillRequirements.Add(requirement);
+        
+        AddDomainEvent(new TaskSkillRequirementAddedEvent(Id, category, minimumLevel));
+        EnforceInvariants();
+    }
+    
+    public bool CanBeAssignedTo(IEnumerable<DeveloperSkill> developerSkills)
+    {
+        return _skillRequirements.All(requirement => 
+            developerSkills.Any(skill => skill.MeetsRequirement(requirement)));
     }
 }
 ```
 
 #### Value Objects
 ```csharp
-namespace Domain.ValueObjects;
+namespace SoftwareEngineerSkills.Domain.ValueObjects;
 
-public class Email : ValueObject
+public class DeveloperSkill : ValueObject
 {
-    public string Value { get; private set; }
+    public Skill Skill { get; private set; }
+    public SkillLevel Level { get; private set; }
+    public DateTime AcquiredDate { get; private set; }
+    public DateTime? LastUsedDate { get; private set; }
     
-    private Email() { } // For EF Core
+    private DeveloperSkill() { } // For EF Core
     
-    public Email(string value)
+    public DeveloperSkill(Skill skill, SkillLevel level, DateTime acquiredDate)
     {
-        if (string.IsNullOrWhiteSpace(value))
-            throw new ArgumentException("Email cannot be empty", nameof(value));
-            
-        if (!IsValidEmail(value))
-            throw new BusinessRuleException("Invalid email format");
-            
-        Value = value;
+        Skill = skill ?? throw new ArgumentNullException(nameof(skill));
+        Level = level;
+        AcquiredDate = acquiredDate;
+        
+        if (acquiredDate > DateTime.UtcNow)
+            throw new BusinessRuleException("Skill acquisition date cannot be in the future");
     }
     
-    private bool IsValidEmail(string email)
+    public bool MeetsRequirement(TaskSkillRequirement requirement)
     {
-        // Email validation logic
-        return true; // Simplified for example
+        return Skill.Category == requirement.Category && 
+               Level >= requirement.MinimumLevel;
     }
     
     protected override IEnumerable<object> GetEqualityComponents()
     {
-        yield return Value.ToLowerInvariant();
+        yield return Skill;
+        yield return Level;
+        yield return AcquiredDate.Date;
     }
     
-    public static implicit operator string(Email email) => email.Value;
-    public static explicit operator Email(string email) => new(email);
+    public static implicit operator SkillLevel(DeveloperSkill developerSkill) => developerSkill.Level;
 }
 ```
 
 #### CQRS Commands and Queries
 ```csharp
 // Command
-namespace Application.Customers.Commands;
+namespace SoftwareEngineerSkills.Application.Tasks.Commands;
 
-public record CreateCustomerCommand : IRequest<Result<CustomerDto>>
+public record CreateTaskCommand : IRequest<Result<TaskDto>>
 {
-    public string Name { get; init; }
-    public string Email { get; init; }
+    public string Title { get; init; }
+    public string Description { get; init; }
+    public TaskPriority Priority { get; init; }
+    public DateTime? DueDate { get; init; }
+    public List<TaskSkillRequirementDto> SkillRequirements { get; init; } = new();
 }
 
-public class CreateCustomerCommandHandler : IRequestHandler<CreateCustomerCommand, Result<CustomerDto>>
+public class CreateTaskCommandHandler : IRequestHandler<CreateTaskCommand, Result<TaskDto>>
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
     
-    public CreateCustomerCommandHandler(IUnitOfWork unitOfWork, IMapper mapper)
+    public CreateTaskCommandHandler(IUnitOfWork unitOfWork, IMapper mapper)
     {
         _unitOfWork = unitOfWork;
         _mapper = mapper;
     }
     
-    public async Task<Result<CustomerDto>> Handle(CreateCustomerCommand request, CancellationToken cancellationToken)
+    public async Task<Result<TaskDto>> Handle(CreateTaskCommand request, CancellationToken cancellationToken)
     {
         try
         {
-            var email = new Email(request.Email);
-            var customer = new Customer(request.Name, email);
+            var task = new Task(request.Title, request.Description, request.Priority);
             
-            await _unitOfWork.Customers.AddAsync(customer, cancellationToken);
+            if (request.DueDate.HasValue)
+                task.SetDueDate(request.DueDate.Value);
+            
+            foreach (var skillReq in request.SkillRequirements)
+            {
+                task.AddSkillRequirement(skillReq.Category, skillReq.MinimumLevel);
+            }
+            
+            await _unitOfWork.Tasks.AddAsync(task, cancellationToken);
             await _unitOfWork.SaveChangesAsync(cancellationToken);
             
-            return Result.Success(_mapper.Map<CustomerDto>(customer));
+            return Result.Success(_mapper.Map<TaskDto>(task));
         }
         catch (BusinessRuleException ex)
         {
-            return Result.Failure<CustomerDto>(ex.Message);
+            return Result.Failure<TaskDto>(ex.Message);
         }
     }
 }
 
 // Query
-namespace Application.Customers.Queries;
+namespace SoftwareEngineerSkills.Application.Tasks.Queries;
 
-public record GetCustomerByIdQuery(Guid Id) : IRequest<Result<CustomerDto>>;
+public record GetTaskByIdQuery(Guid Id) : IRequest<Result<TaskDto>>;
 
-public class GetCustomerByIdQueryHandler : IRequestHandler<GetCustomerByIdQuery, Result<CustomerDto>>
+public class GetTaskByIdQueryHandler : IRequestHandler<GetTaskByIdQuery, Result<TaskDto>>
 {
-    private readonly IReadRepository<Customer> _repository;
+    private readonly IReadRepository<Task> _repository;
     private readonly IMapper _mapper;
     
-    public GetCustomerByIdQueryHandler(IReadRepository<Customer> repository, IMapper mapper)
+    public GetTaskByIdQueryHandler(IReadRepository<Task> repository, IMapper mapper)
     {
         _repository = repository;
         _mapper = mapper;
     }
     
-    public async Task<Result<CustomerDto>> Handle(GetCustomerByIdQuery request, CancellationToken cancellationToken)
+    public async Task<Result<TaskDto>> Handle(GetTaskByIdQuery request, CancellationToken cancellationToken)
     {
-        var customer = await _repository.GetByIdAsync(request.Id, cancellationToken);
+        var task = await _repository.GetByIdAsync(request.Id, cancellationToken);
         
-        if (customer == null)
-            return Result.Failure<CustomerDto>($"Customer with ID {request.Id} not found.");
+        if (task == null)
+            return Result.Failure<TaskDto>($"Task with ID {request.Id} not found.");
             
-        return Result.Success(_mapper.Map<CustomerDto>(customer));
+        return Result.Success(_mapper.Map<TaskDto>(task));
     }
 }
 ```
 
 #### API Controllers
 ```csharp
-namespace WebApi.Controllers.V1;
+namespace SoftwareEngineerSkills.API.Controllers.V1;
 
 [ApiController]
 [Route("api/v{version:apiVersion}/[controller]")]
 [ApiVersion("1.0")]
-public class CustomersController : ControllerBase
+public class TasksController : ControllerBase
 {
     private readonly IMediator _mediator;
     
-    public CustomersController(IMediator mediator)
+    public TasksController(IMediator mediator)
     {
         _mediator = mediator;
     }
     
     [HttpGet("{id}")]
-    [ProducesResponseType(typeof(CustomerDto), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(TaskDto), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> GetCustomerById(Guid id)
+    public async Task<IActionResult> GetTaskById(Guid id)
     {
-        var result = await _mediator.Send(new GetCustomerByIdQuery(id));
+        var result = await _mediator.Send(new GetTaskByIdQuery(id));
         
         return result.IsSuccess
             ? Ok(result.Value)
@@ -283,15 +327,33 @@ public class CustomersController : ControllerBase
     }
     
     [HttpPost]
-    [ProducesResponseType(typeof(CustomerDto), StatusCodes.Status201Created)]
+    [ProducesResponseType(typeof(TaskDto), StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> CreateCustomer(CreateCustomerCommand command)
+    public async Task<IActionResult> CreateTask(CreateTaskCommand command)
     {
         var result = await _mediator.Send(command);
         
         return result.IsSuccess
-            ? CreatedAtAction(nameof(GetCustomerById), new { id = result.Value.Id }, result.Value)
+            ? CreatedAtAction(nameof(GetTaskById), new { id = result.Value.Id }, result.Value)
             : BadRequest(result.Error);
+    }
+    
+    [HttpPut("{id}/assign")]
+    [ProducesResponseType(typeof(TaskDto), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> AssignTask(Guid id, AssignTaskCommand command)
+    {
+        if (id != command.TaskId)
+            return BadRequest("Task ID mismatch");
+            
+        var result = await _mediator.Send(command);
+        
+        return result.IsSuccess
+            ? Ok(result.Value)
+            : result.Error.Contains("not found") 
+                ? NotFound(result.Error)
+                : BadRequest(result.Error);
     }
 }
 ```
@@ -366,55 +428,99 @@ public class ErrorHandlingMiddleware
 
 ```csharp
 // Unit Test Example
-public class CreateCustomerCommandHandlerTests
+public class CreateTaskCommandHandlerTests
 {
     private readonly Mock<IUnitOfWork> _unitOfWorkMock;
-    private readonly Mock<ICustomerRepository> _customerRepositoryMock;
+    private readonly Mock<ITaskRepository> _taskRepositoryMock;
     private readonly Mock<IMapper> _mapperMock;
-    private readonly CreateCustomerCommandHandler _handler;
+    private readonly CreateTaskCommandHandler _handler;
     
-    public CreateCustomerCommandHandlerTests()
+    public CreateTaskCommandHandlerTests()
     {
         _unitOfWorkMock = new Mock<IUnitOfWork>();
-        _customerRepositoryMock = new Mock<ICustomerRepository>();
+        _taskRepositoryMock = new Mock<ITaskRepository>();
         _mapperMock = new Mock<IMapper>();
         
-        _unitOfWorkMock.Setup(uow => uow.Customers).Returns(_customerRepositoryMock.Object);
+        _unitOfWorkMock.Setup(uow => uow.Tasks).Returns(_taskRepositoryMock.Object);
         
-        _handler = new CreateCustomerCommandHandler(
+        _handler = new CreateTaskCommandHandler(
             _unitOfWorkMock.Object,
             _mapperMock.Object);
     }
     
     [Fact]
-    public async Task Handle_ValidCommand_ShouldCreateCustomer()
+    public async Task Handle_ValidCommand_ShouldCreateTask()
     {
         // Arrange
-        var command = new CreateCustomerCommand
+        var command = new CreateTaskCommand
         {
-            Name = "Test Customer",
-            Email = "test@example.com"
+            Title = "Implement user authentication",
+            Description = "Add JWT authentication to the API",
+            Priority = TaskPriority.High,
+            SkillRequirements = new List<TaskSkillRequirementDto>
+            {
+                new() { Category = SkillCategory.Backend, MinimumLevel = SkillLevel.Intermediate }
+            }
         };
         
-        var customerDto = new CustomerDto { Id = Guid.NewGuid(), Name = command.Name, Email = command.Email };
+        var taskDto = new TaskDto 
+        { 
+            Id = Guid.NewGuid(), 
+            Title = command.Title, 
+            Description = command.Description,
+            Priority = command.Priority,
+            Status = TaskStatus.Todo
+        };
         
         _mapperMock
-            .Setup(m => m.Map<CustomerDto>(It.IsAny<Customer>()))
-            .Returns(customerDto);
+            .Setup(m => m.Map<TaskDto>(It.IsAny<Task>()))
+            .Returns(taskDto);
             
         // Act
         var result = await _handler.Handle(command, CancellationToken.None);
         
         // Assert
         result.IsSuccess.Should().BeTrue();
-        result.Value.Should().BeEquivalentTo(customerDto);
+        result.Value.Should().BeEquivalentTo(taskDto);
         
-        _customerRepositoryMock.Verify(
-            r => r.AddAsync(It.IsAny<Customer>(), It.IsAny<CancellationToken>()),
+        _taskRepositoryMock.Verify(
+            r => r.AddAsync(It.IsAny<Task>(), It.IsAny<CancellationToken>()),
             Times.Once);
             
         _unitOfWorkMock.Verify(
             uow => uow.SaveChangesAsync(It.IsAny<CancellationToken>()),
+            Times.Once);
+    }
+    
+    [Fact]
+    public async Task Handle_TaskWithSkillRequirements_ShouldAddSkillRequirements()
+    {
+        // Arrange
+        var command = new CreateTaskCommand
+        {
+            Title = "Frontend React Component",
+            Description = "Create reusable React component",
+            Priority = TaskPriority.Medium,
+            SkillRequirements = new List<TaskSkillRequirementDto>
+            {
+                new() { Category = SkillCategory.Frontend, MinimumLevel = SkillLevel.Advanced },
+                new() { Category = SkillCategory.JavaScript, MinimumLevel = SkillLevel.Intermediate }
+            }
+        };
+        
+        var taskDto = new TaskDto { Id = Guid.NewGuid() };
+        _mapperMock.Setup(m => m.Map<TaskDto>(It.IsAny<Task>())).Returns(taskDto);
+        
+        // Act
+        var result = await _handler.Handle(command, CancellationToken.None);
+        
+        // Assert
+        result.IsSuccess.Should().BeTrue();
+        
+        _taskRepositoryMock.Verify(
+            r => r.AddAsync(
+                It.Is<Task>(t => t.SkillRequirements.Count == 2), 
+                It.IsAny<CancellationToken>()),
             Times.Once);
     }
 }
