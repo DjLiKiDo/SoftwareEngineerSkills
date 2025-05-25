@@ -22,36 +22,12 @@ You are working on a **Development Team Task Board** system built with:
 - [Complete Code Generation Standards](../instructions/code-generation.instructions.md)
 - [Project Instructions](../copilot-instructions.md)
 
-### Domain Model Overview
-The system models:
-- **Tasks** that require specific technical skills and follow workflows
-- **Developers** with skills and varying proficiency levels  
-- **Projects** that organize tasks into business initiatives
-- **Smart assignment** matching tasks to developers based on capabilities
-
-### Core Entities
-```csharp
-// Example: Task Aggregate Root
-public class Task : AggregateRoot
-{
-    public string Title { get; private set; }
-    public TaskStatus Status { get; private set; }
-    public Guid? AssignedDeveloperId { get; private set; }
-    
-    private readonly List<TaskSkillRequirement> _skillRequirements = new();
-    public IReadOnlyCollection<TaskSkillRequirement> SkillRequirements => _skillRequirements.AsReadOnly();
-    
-    public void AssignToDeveloper(Guid developerId, IEnumerable<DeveloperSkill> developerSkills)
-    {
-        if (!CanBeAssignedTo(developerSkills))
-            throw new BusinessRuleException("Developer lacks required skills");
-            
-        AssignedDeveloperId = developerId;
-        AddDomainEvent(new TaskAssignedEvent(Id, developerId));
-        EnforceInvariants();
-    }
-}
-```
+### References
+- [README](../../README.md)
+- [Domain](../../SoftwareEngineerSkills/src/SoftwareEngineerSkills.Domain/README.md)
+- [Application](../../SoftwareEngineerSkills/src/SoftwareEngineerSkills.Application/README.md)
+- [Infrastructure](../../SoftwareEngineerSkills/src/SoftwareEngineerSkills.Infrastructure/README.md)
+- [API](../../SoftwareEngineerSkills/src/SoftwareEngineerSkills.API/README.md)
 
 ## Development Assistance
 
