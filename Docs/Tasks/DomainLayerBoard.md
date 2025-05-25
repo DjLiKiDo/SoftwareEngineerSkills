@@ -404,6 +404,4 @@ public class Address : ValueObject
 
 ## Reference Implementation
 
-Find example implementations for all patterns in the [Domain-Implementation-Recommendations.md](../Domain/Domain-Implementation-Recommendations.md) document. These examples should be used as a reference when implementing the domain layer tasks.
-
 Remember to continuously update this document as tasks progress or priorities change.
