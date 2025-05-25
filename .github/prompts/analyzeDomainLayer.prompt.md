@@ -1,3 +1,9 @@
+---
+mode: 'agent'
+tools: ['codebase', 'file', 'fetch', 'context7']
+description: 'Analyze Domain layer with full project context'
+---
+
 Conduct a comprehensive analysis of the domain layer within the codebase, focusing on:
 
 1. Domain model clarity and correctness:
