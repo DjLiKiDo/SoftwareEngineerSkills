@@ -2,219 +2,120 @@
 applyTo: '"**/*Test.cs" | "**/*Tests.cs"'
 ---
 
-# GitHub Copilot - Unit Test Generation Instructions for SoftwareEngineerSkills Project (.NET 9, xUnit, Moq, FluentAssertions)
+# GitHub Copilot - Unit Test Generation Instructions (.NET 9, xUnit, Moq, FluentAssertions)
 
-This document provides detailed instructions for GitHub Copilot to generate high-quality unit tests for the SoftwareEngineerSkills project. These tests should adhere to .NET 9 best practices, utilizing xUnit as the testing framework, Moq for mocking dependencies, and FluentAssertions for expressive assertions.
+This document provides comprehensive guidelines for generating high-quality unit tests for .NET 9 projects following enterprise standards and best practices.
 
-## 1. Core Principles for Unit Testing
+## 1. Core Testing Principles
 
-*   **Target:** Unit tests should focus on a single unit of work (e.g., a method or a small group of related methods within a class).
-*   **Isolation:** Dependencies of the unit under test (SUT) must be mocked or stubbed to ensure tests are isolated and deterministic. Use Moq for this.
-*   **Readability:** Tests should be easy to read and understand. Follow the Arrange-Act-Assert (AAA) pattern.
-*   **Naming Convention:**
-    *   Use the `MethodName_Scenario_ExpectedBehavior` pattern.
-    *   Example: `Handle_ValidCommand_ShouldCreateCustomerAndReturnSuccessResult`
-    *   Example: `Constructor_NullArgument_ShouldThrowArgumentNullException`
-*   **One Assertion (Logical):** While multiple physical assertions (e.g., checking multiple properties of a DTO) are acceptable if they verify a single logical outcome, strive to test one specific aspect or behavior per test method.
-*   **No Logic in Tests:** Avoid conditional logic (if/else, switch), loops, or complex computations within test methods. Tests should be straightforward.
-*   **Repeatability:** Tests must be repeatable and produce the same result every time they are run, regardless of the environment.
+*   **Single Responsibility:** Each test should verify one specific behavior or scenario
+*   **Isolation:** Mock all external dependencies to ensure deterministic, independent tests
+*   **Readability:** Structure tests using the Arrange-Act-Assert (AAA) pattern with clear intent
+*   **Naming Convention:** Use `MethodName_Scenario_ExpectedBehavior` pattern for descriptive test names
+*   **Logical Assertions:** Group related assertions that verify a single logical outcome
+*   **Simplicity:** Avoid complex logic, loops, or conditional statements within test methods
+*   **Determinism:** Tests must produce consistent results across all environments and executions
 
-## 2. xUnit Framework Usage
+## 2. xUnit Testing Framework Guidelines
 
-*   **Test Methods:** Mark test methods with the `[Fact]` attribute for parameterless tests.
-*   **Parameterized Tests:** Use `[Theory]` with `[InlineData]`, `[MemberData]`, or `[ClassData]` for tests that run with different inputs.
-*   **Setup and Teardown:**
-    *   Use the constructor for per-test setup.
-    *   Implement `IDisposable` for per-test cleanup if needed (xUnit automatically calls `Dispose`).
-    *   For shared setup/teardown across tests in a class, use xUnit's fixture mechanisms (`IClassFixture<T>`).
+*   **Test Attributes:** Use `[Fact]` for single-scenario tests and `[Theory]` with data attributes for parameterized tests
+*   **Test Lifecycle:** Utilize constructor for test setup and `IDisposable` for cleanup when needed
+*   **Shared Resources:** Implement `IClassFixture<T>` for expensive setup shared across test methods
+*   **Data Sources:** Leverage `[InlineData]`, `[MemberData]`, or `[ClassData]` for parameterized test scenarios
 
-## 3. Moq for Mocking
+## 3. Moq Mocking Guidelines
 
-*   **Creating Mocks:** `var mock = new Mock<IDependency>();`
-*   **Setting up Methods:**
-    *   `mock.Setup(d => d.Method(It.IsAny<string>())).Returns(expectedValue);`
-    *   `mock.Setup(d => d.MethodAsync(It.IsAny<int>())).ReturnsAsync(expectedValue);`
-    *   `mock.Setup(d => d.VoidMethod(It.IsAny<Input>()));` (for void methods)
-    *   `mock.Setup(d => d.MethodWithOutput(out outVar)).Returns(true);` (for methods with out parameters)
-*   **Setting up Properties:** `mock.SetupGet(d => d.Property).Returns(value);`
-*   **Verifying Calls:**
-    *   `mock.Verify(d => d.Method(It.Is<string>(s => s.Length > 0)), Times.Once());`
-    *   `mock.Verify(d => d.VoidMethod(input), Times.Exactly(2));`
-*   **Strict Mocks:** Consider `MockBehavior.Strict` for mocks where any unconfigured call results in an exception, ensuring all interactions are explicitly defined.
-*   **Injecting Mocks:** Pass mock objects (`mock.Object`) to the constructor of the System Under Test (SUT).
+*   **Mock Creation:** Create mock objects for all external dependencies of the system under test
+*   **Method Setup:** Configure return values and behaviors for mocked methods using appropriate matchers
+*   **Property Setup:** Mock property getters and setters when behavior depends on property values
+*   **Verification:** Verify expected interactions with dependencies occurred with correct parameters
+*   **Strict Behavior:** Consider strict mock behavior when precise interaction verification is required
+*   **Async Support:** Use async-compatible setup methods for mocking asynchronous operations
 
-## 4. FluentAssertions for Assertions
+## 4. FluentAssertions Testing Guidelines
 
-*   **Clarity:** FluentAssertions provide more readable and descriptive assertions compared to traditional `Assert` classes.
-*   **Common Assertions:**
-    *   `result.Should().Be(expected);`
-    *   `actual.Should().NotBeNull();`
-    *   `collection.Should().Contain(item);`
-    *   `collection.Should().HaveCount(expectedCount);`
-    *   `collection.Should().BeEmpty();`
-    *   `stringResult.Should().StartWith("prefix").And.EndWith("suffix");`
-    *   `objectInstance.Should().BeOfType<ExpectedType>();`
-    *   `dto.Should().BeEquivalentTo(expectedDto, options => options.Excluding(x => x.Id));` (for comparing complex objects, useful for DTOs)
-*   **Exception Testing:**
-    *   `Action act = () => sut.MethodThatThrows();`
-    *   `act.Should().Throw<SpecificExceptionType>().WithMessage("Expected message part*");` (use wildcards for message matching if needed)
-    *   `Func<Task> actAsync = async () => await sut.AsyncMethodThatThrows();`
-    *   `await actAsync.Should().ThrowAsync<SpecificExceptionType>();`
-*   **Result Pattern Testing (referencing project's Result pattern):**
-    *   `result.IsSuccess.Should().BeTrue();`
-    *   `result.IsFailure.Should().BeTrue();`
-    *   `result.Value.Should().NotBeNull();` (if success)
-    *   `result.Value.Should().BeEquivalentTo(expectedDto);` (if success and value is an object)
-    *   `result.Error.Should().NotBeNull();` (if failure)
-    *   `result.Error.Message.Should().Contain("specific error message");` (if failure)
+*   **Readable Assertions:** Use fluent syntax to create self-documenting test assertions
+*   **Object Comparison:** Compare complex objects using equivalency assertions with exclusion options
+*   **Collection Assertions:** Verify collection contents, counts, and ordering as appropriate
+*   **Exception Testing:** Assert exception types and messages for error scenarios
+*   **Result Pattern Testing:** Verify success/failure states and associated values/errors
+*   **Type Assertions:** Confirm object types and inheritance relationships
+*   **String Assertions:** Test string content with pattern matching and case sensitivity options
 
-## 5. Project Structure and Test Organization
+## 5. Test Organization Standards
 
-*   **Test Projects:** Each main project (Domain, Application, Infrastructure, API) should have a corresponding unit test project.
-    *   `SoftwareEngineerSkills.Domain.UnitTests`
-    *   `SoftwareEngineerSkills.Application.UnitTests`
-    *   `SoftwareEngineerSkills.Infrastructure.UnitTests`
-    *   `SoftwareEngineerSkills.API.UnitTests`
-*   **Namespace and Folder Structure:** Mirror the folder and namespace structure of the SUT within the test project.
-    *   Example: Tests for `SoftwareEngineerSkills.Application.Features.Customers.Commands.CreateCustomerCommandHandler` should be in `SoftwareEngineerSkills.Application.UnitTests/Features/Customers/Commands/CreateCustomerCommandHandlerTests.cs`.
+*   **Project Structure:** Maintain separate test projects for each application layer with corresponding namespaces
+*   **File Organization:** Mirror the folder structure of the system under test within test projects
+*   **Test Classes:** Create dedicated test classes for each class being tested with descriptive naming
+*   **Test Grouping:** Organize related tests using nested classes or shared test fixtures when appropriate
 
-## 6. What to Test
+## 6. Testing Coverage Guidelines
 
-*   **Public API:** Focus on testing the public contract of your classes.
-*   **Business Logic:** Core domain logic, command handlers, query handlers.
-*   **Conditional Logic:** Test all branches of conditional statements.
-*   **Loops:** Test with zero, one, and multiple iterations if behavior varies.
-*   **Edge Cases:** Null inputs, empty collections, boundary values.
-*   **Error Handling:** Verify correct exceptions are thrown or `Result` failures are returned for invalid inputs or states.
-*   **Domain Entities & Value Objects:**
-    *   Test constructors for valid and invalid states.
-    *   Test methods that change state.
-    *   Test domain event emissions.
-    *   For Value Objects, test equality components and validation logic.
-*   **Application Layer (Commands/Queries):**
-    *   Test `Handle` methods of command and query handlers.
-    *   Mock dependencies (repositories, mappers, other services).
-    *   Verify interactions with mocks.
-    *   Assert the `Result` object (success/failure, value, error).
-    *   Test validators associated with commands/queries.
-*   **Infrastructure Layer:**
-    *   Test repository implementations (can be more integration-like if hitting an in-memory DB, or mock EF Core contexts for pure unit tests).
-    *   Test service integrations (mock external clients).
-*   **API Layer (Controllers):**
-    *   Test action methods.
-    *   Mock `IMediator`.
-    *   Verify `_mediator.Send()` is called with the correct command/query.
-    *   Assert the `IActionResult` returned (e.g., `OkObjectResult`, `NotFoundResult`, `CreatedAtActionResult`).
-    *   Check status codes.
+*   **Public Contracts:** Focus testing on public methods and behaviors that define the component's interface
+*   **Business Logic:** Prioritize testing of core domain logic, command handlers, and query handlers
+*   **Decision Points:** Test all conditional branches and edge cases within business logic
+*   **Error Scenarios:** Verify proper handling of invalid inputs and exceptional conditions
+*   **State Changes:** Test methods that modify object state and verify resulting domain events
+*   **Layer-Specific Testing:**
+    *   **Domain Layer:** Entity construction, business rules, value object equality, domain events
+    *   **Application Layer:** Command/query handlers, validation logic, result patterns
+    *   **Infrastructure Layer:** Repository implementations, external service integrations
+    *   **API Layer:** Controller actions, HTTP status codes, request/response mapping
 
-## 7. Specific Examples (from `copilot-instructions.md`)
+## 7. Test Implementation Patterns
 
-Refer to the `CreateCustomerCommandHandlerTests` example in the main `copilot-instructions.md` for a practical illustration of testing a command handler using Moq and FluentAssertions. Adapt this pattern for other components.
+### Command Handler Testing
+*   **Setup:** Mock repository dependencies, unit of work, and mapping services
+*   **Verification:** Assert successful result creation and verify repository interactions
+*   **Failure Cases:** Test validation failures and business rule violations
 
-```csharp
-// Unit Test Example (from copilot-instructions.md - ensure this is consistent)
-public class CreateCustomerCommandHandlerTests
-{
-    private readonly Mock<IUnitOfWork> _unitOfWorkMock;
-    private readonly Mock<ICustomerRepository> _customerRepositoryMock; // Assuming ICustomerRepository is part of IUnitOfWork or directly used
-    private readonly Mock<IMapper> _mapperMock;
-    private readonly CreateCustomerCommandHandler _handler;
+### Domain Entity Testing
+*   **Construction:** Test valid object creation and validation of constructor parameters
+*   **Behavior:** Verify state changes and domain event generation
+*   **Invariants:** Test business rule enforcement and constraint validation
 
-    public CreateCustomerCommandHandlerTests()
-    {
-        _unitOfWorkMock = new Mock<IUnitOfWork>();
-        _customerRepositoryMock = new Mock<ICustomerRepository>(); // Or setup specific repo from UoW
-        _mapperMock = new Mock<IMapper>();
+### Value Object Testing
+*   **Equality:** Verify value-based equality semantics and hash code consistency
+*   **Immutability:** Ensure objects cannot be modified after creation
+*   **Validation:** Test input validation and constraint enforcement
 
-        _unitOfWorkMock.Setup(uow => uow.Customers).Returns(_customerRepositoryMock.Object);
-        // If CustomerRepository is not directly on IUnitOfWork, adjust setup.
-        // Example: _unitOfWorkMock.Setup(uow => uow.GetRepository<ICustomerRepository>()).Returns(_customerRepositoryMock.Object);
+### Controller Testing
+*   **Mediator Integration:** Mock mediator and verify correct command/query dispatch
+*   **Response Mapping:** Assert proper HTTP status codes and response object creation
+*   **Error Handling:** Test failure scenarios and error response formatting
 
-        _handler = new CreateCustomerCommandHandler(
-            _unitOfWorkMock.Object,
-            _mapperMock.Object);
-    }
+## 8. Asynchronous Testing Guidelines
 
-    [Fact]
-    public async Task Handle_ValidCommand_ShouldCreateCustomerAndReturnSuccessResult() // Adjusted name for clarity
-    {
-        // Arrange
-        var command = new CreateCustomerCommand
-        {
-            Name = "Test Customer",
-            Email = "test@example.com"
-        };
+*   **Async Methods:** Mark test methods as `async Task` when testing asynchronous operations
+*   **Await Usage:** Use `await` consistently when calling async methods under test
+*   **Exception Testing:** Use async-compatible assertion methods for exception scenarios
+*   **Cancellation:** Test cancellation token handling in long-running operations
 
-        var customerDto = new CustomerDto { Id = Guid.NewGuid(), Name = command.Name, Email = command.Email };
+## 9. Result Pattern Testing Standards
 
-        _mapperMock
-            .Setup(m => m.Map<CustomerDto>(It.IsAny<Customer>()))
-            .Returns(customerDto);
+*   **Success Scenarios:** Verify `IsSuccess` state and validate returned values
+*   **Failure Scenarios:** Assert `IsFailure` state and examine error information
+*   **Error Details:** Test error message content and error type classification
+*   **Business Rules:** Verify domain-specific error conditions and validation failures
 
-        // Act
-        var result = await _handler.Handle(command, CancellationToken.None);
+## 10. Best Practices and Standards
 
-        // Assert
-        result.IsSuccess.Should().BeTrue();
-        result.Value.Should().BeEquivalentTo(customerDto);
+*   **Architectural Alignment:** Follow Clean Architecture dependency rules and DDD principles
+*   **Naming Consistency:** Use project naming conventions and maintain consistent test organization
+*   **Documentation:** Include XML documentation for complex test scenarios
+*   **Performance:** Keep tests fast and avoid unnecessary I/O operations in unit tests
 
-        _customerRepositoryMock.Verify(
-            r => r.AddAsync(It.Is<Customer>(c => c.Name == command.Name && c.EmailAddress.Value == command.Email), It.IsAny<CancellationToken>()), // More specific It.Is<>
-            Times.Once);
+## 11. Reference Documentation
 
-        _unitOfWorkMock.Verify(
-            uow => uow.SaveChangesAsync(It.IsAny<CancellationToken>()),
-            Times.Once);
-    }
+*   **xUnit:** Official testing framework for .NET with extensive documentation
+*   **Moq:** Popular mocking framework for .NET applications
+*   **FluentAssertions:** Assertion library providing readable test assertions
+*   **.NET Testing:** Microsoft's official guidance on testing .NET applications
+*   **Context7:** Use available tools to query official documentation for specific API details or advanced scenarios
 
-    [Fact]
-    public async Task Handle_InvalidEmail_ShouldReturnFailureResult()
-    {
-        // Arrange
-        var command = new CreateCustomerCommand
-        {
-            Name = "Test Customer",
-            Email = "invalid-email" // Assuming Email value object throws BusinessRuleException
-        };
+## 12. Quality Standards
 
-        // Act
-        var result = await _handler.Handle(command, CancellationToken.None);
-
-        // Assert
-        result.IsSuccess.Should().BeFalse();
-        result.Error.Should().NotBeNull();
-        // This assumes your Email value object or Customer constructor throws a BusinessRuleException
-        // which is caught and translated to a Result.Failure in the handler.
-        // Adjust the expected message based on your actual implementation.
-        result.Error.Message.Should().Contain("Invalid email format"); 
-
-        _customerRepositoryMock.Verify(
-            r => r.AddAsync(It.IsAny<Customer>(), It.IsAny<CancellationToken>()),
-            Times.Never); // Ensure customer is not added
-
-        _unitOfWorkMock.Verify(
-            uow => uow.SaveChangesAsync(It.IsAny<CancellationToken>()),
-            Times.Never); // Ensure SaveChanges is not called
-    }
-}
-```
-
-## 8. Async Testing
-
-*   Test methods returning `Task` or `Task<T>` should be `async Task`.
-*   Use `await` when calling async methods under test.
-*   Use `await actAsync.Should().ThrowAsync<...>()` for async methods that throw exceptions.
-
-## 9. Adherence to General Project Guidelines
-
-*   Follow all coding conventions, naming standards, and architectural patterns defined in the main `copilot-instructions.md` for the SoftwareEngineerSkills project.
-*   Pay special attention to the **Result Pattern** for error handling. Tests should verify both success and failure paths of the Result pattern.
-
-## 10. Documentation and Official Resources
-
-*   **xUnit:** [https://xunit.net/](https://xunit.net/)
-*   **Moq:** [https://github.com/moq/moq](https://github.com/moq/moq)
-*   **FluentAssertions:** [https://fluentassertions.com/](https://fluentassertions.com/)
-*   **.NET Testing:** [https://docs.microsoft.com/en-us/dotnet/core/testing/](https://docs.microsoft.com/en-us/dotnet/core/testing/)
-
-Use `context7` to query official documentation for specific API details or advanced scenarios if needed.
+*   **Code Coverage:** Aim for high test coverage while prioritizing meaningful tests over metrics
+*   **Test Maintenance:** Write tests that are easy to maintain and update as requirements evolve
+*   **Documentation:** Include clear comments for complex test scenarios and business rule validations
+*   **Performance:** Ensure tests execute quickly and can be run frequently during development

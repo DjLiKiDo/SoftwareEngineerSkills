@@ -6,25 +6,19 @@ applyTo: "**/*.cs"
 
 This instruction file provides comprehensive guidelines for GitHub Copilot when generating C# code for the SoftwareEngineerSkills .NET 9 enterprise project following Clean Architecture and Domain-Driven Design principles.
 
-## Project Context and Domain
+## Project Context
 
-**Primary Domain:** Development Team Task Board - Enterprise task management system
-**Business Context:** Managing development tasks with skill requirements, developer assignments, and intelligent matching
+**Architecture Pattern:** Clean Architecture with Domain-Driven Design
+**Framework:** .NET 9 Enterprise Application
+**Domain Modeling:** Rich domain model with aggregates, entities, value objects, and domain events
 
-### Core Entities and Relationships
-- **Task**: Work items with skill requirements, status tracking, and hierarchical structure
-- **Developer**: Team members with skill portfolios and assignment tracking  
-- **Project**: Organizational unit containing related tasks
-- **Skills**: Technical capabilities with proficiency levels
-- **Assignments**: Task-to-developer mappings based on skill matching
-
-## Architectural Standards
+### Architectural Standards
 
 ### Clean Architecture Layers
-1. **Domain Layer** (`SoftwareEngineerSkills.Domain`): Core business logic, entities, value objects, domain events
-2. **Application Layer** (`SoftwareEngineerSkills.Application`): Use cases, CQRS commands/queries, application services
-3. **Infrastructure Layer** (`SoftwareEngineerSkills.Infrastructure`): Data access, external services, persistence
-4. **API Layer** (`SoftwareEngineerSkills.API`): Controllers, middleware, configuration
+1. **Domain Layer**: Core business logic, entities, value objects, domain events
+2. **Application Layer**: Use cases, CQRS commands/queries, application services
+3. **Infrastructure Layer**: Data access, external services, persistence
+4. **API Layer**: Controllers, middleware, configuration
 
 ### Dependency Flow
 - **Inward Dependencies Only**: Domain → Application → Infrastructure → API
@@ -42,90 +36,51 @@ This instruction file provides comprehensive guidelines for GitHub Copilot when 
 - **Record Types**: Use for DTOs and immutable data structures
 
 ### Naming Conventions
-- **Classes/Interfaces/Methods**: PascalCase (`TaskService`, `IRepository`)
-- **Properties/Public Fields**: PascalCase (`AssignedDeveloperId`, `CreatedDate`)
-- **Private Fields**: _camelCase with underscore prefix (`_skillRequirements`, `_unitOfWork`)
-- **Local Variables/Parameters**: camelCase (`taskId`, `developerSkills`)
-- **Constants**: PascalCase (`MaxConcurrentTasks`)
-- **Interfaces**: Prefix with 'I' (`ITaskRepository`, `IAggregateRoot`)
+- **Classes/Interfaces/Methods**: PascalCase (`EntityService`, `IRepository`)
+- **Properties/Public Fields**: PascalCase (`PropertyName`, `CreatedDate`)
+- **Private Fields**: _camelCase with underscore prefix (`_privateField`, `_unitOfWork`)
+- **Local Variables/Parameters**: camelCase (`localVariable`, `methodParameter`)
+- **Constants**: PascalCase (`MaxItemCount`)
+- **Interfaces**: Prefix with 'I' (`IEntityRepository`, `IAggregateRoot`)
 
-### Domain Layer Code Generation
+### Domain Layer Guidelines
 
-#### Entity Pattern
-```csharp
-public class Task : AggregateRoot
+#### Entity Implementation Standards
+- Extend `AggregateRoot` for main business entities requiring thread-safe event handling
+- Use private setters for properties that should only be changed through business methods
+- Implement parameterless constructor for EF Core and public constructor with validation
+- Expose collections as `IReadOnlyCollection` with private backing fields
+- Generate domain events for significant state changes
+- Implement invariant validation in `CheckInvariants()` method
+- Call `EnforceInvariants()` after state modifications
+
+#### Value Object Implementation Standards
+- Extend `ValueObject` base class for immutable concepts without identity
+- Implement `GetEqualityComponents()` for proper equality semantics
+- Validate all inputs in constructor with appropriate guard clauses
+- Use factory methods for complex creation scenarios
 {
-    public string Title { get; private set; } = null!;
-    public TaskStatus Status { get; private set; }
+    public PropertyType PropertyName { get; private set; }
+    public AnotherType AnotherProperty { get; private set; }
+    public DateTime CreatedDate { get; private set; }
     
-    // Collections with backing fields
-    private readonly List<TaskSkillRequirement> _skillRequirements = new();
-    public IReadOnlyCollection<TaskSkillRequirement> SkillRequirements => _skillRequirements.AsReadOnly();
+    private ValueObjectName() { } // EF Core
     
-    // EF Core constructor
-    private Task() { }
-    
-    // Business constructor with validation
-    public Task(string title, string description, TaskPriority priority)
+    public ValueObjectName(PropertyType propertyName, AnotherType anotherProperty, DateTime createdDate)
     {
-        Title = Guard.Against.NullOrWhiteSpace(title, nameof(title));
-        Description = Guard.Against.NullOrWhiteSpace(description, nameof(description));
-        Priority = priority;
-        Status = TaskStatus.Todo;
+        PropertyName = propertyName ?? throw new ArgumentNullException(nameof(propertyName));
+        AnotherProperty = anotherProperty;
+        CreatedDate = createdDate;
         
-        AddDomainEvent(new TaskCreatedEvent(Id, title, priority));
-        EnforceInvariants();
-    }
-    
-    // Business behavior methods
-    public void AssignToDeveloper(Guid developerId, IEnumerable<DeveloperSkill> developerSkills)
-    {
-        Guard.Against.Default(developerId, nameof(developerId));
-        
-        if (!CanBeAssignedTo(developerSkills))
-            throw new BusinessRuleException("Developer does not have required skills for this task");
-            
-        AssignedDeveloperId = developerId;
-        AddDomainEvent(new TaskAssignedEvent(Id, developerId));
-        EnforceInvariants();
-    }
-    
-    // Invariant validation
-    protected override IEnumerable<string> CheckInvariants()
-    {
-        if (string.IsNullOrWhiteSpace(Title))
-            yield return "Task title cannot be empty";
-        if (Title?.Length > 200)
-            yield return "Task title cannot exceed 200 characters";
-    }
-}
-```
-
-#### Value Object Pattern
-```csharp
-public class DeveloperSkill : ValueObject
-{
-    public Skill Skill { get; private set; }
-    public SkillLevel Level { get; private set; }
-    public DateTime AcquiredDate { get; private set; }
-    
-    private DeveloperSkill() { } // EF Core
-    
-    public DeveloperSkill(Skill skill, SkillLevel level, DateTime acquiredDate)
-    {
-        Skill = skill ?? throw new ArgumentNullException(nameof(skill));
-        Level = level;
-        AcquiredDate = acquiredDate;
-        
-        if (acquiredDate > DateTime.UtcNow)
-            throw new BusinessRuleException("Skill acquisition date cannot be in the future");
+        if (createdDate > DateTime.UtcNow)
+            throw new BusinessRuleException("Creation date cannot be in the future");
     }
     
     protected override IEnumerable<object> GetEqualityComponents()
     {
-        yield return Skill;
-        yield return Level;
-        yield return AcquiredDate.Date;
+        yield return PropertyName;
+        yield return AnotherProperty;
+        yield return CreatedDate.Date;
     }
 }
 ```
@@ -134,164 +89,49 @@ public class DeveloperSkill : ValueObject
 
 #### CQRS Command Pattern
 ```csharp
-public record CreateTaskCommand : IRequest<Result<TaskDto>>
+public record CreateEntityCommand : IRequest<Result<EntityDto>>
 {
-    public required string Title { get; init; }
+    public required string PropertyName { get; init; }
     public required string Description { get; init; }
-    public TaskPriority Priority { get; init; }
+    public EntityPriority Priority { get; init; }
     public DateTime? DueDate { get; init; }
-    public List<TaskSkillRequirementDto> SkillRequirements { get; init; } = [];
+    public List<RelatedRequirementDto> Requirements { get; init; } = [];
 }
 
-public class CreateTaskCommandHandler : IRequestHandler<CreateTaskCommand, Result<TaskDto>>
-{
-    private readonly IUnitOfWork _unitOfWork;
-    private readonly IMapper _mapper;
-    
-    public CreateTaskCommandHandler(IUnitOfWork unitOfWork, IMapper mapper)
-    {
-        _unitOfWork = unitOfWork;
-        _mapper = mapper;
-    }
-    
-    public async Task<Result<TaskDto>> Handle(CreateTaskCommand request, CancellationToken cancellationToken)
-    {
-        try
-        {
-            var task = new Task(request.Title, request.Description, request.Priority);
-            
-            if (request.DueDate.HasValue)
-                task.SetDueDate(request.DueDate.Value);
-            
-            foreach (var skillReq in request.SkillRequirements)
-            {
-                task.AddSkillRequirement(skillReq.Category, skillReq.MinimumLevel);
-            }
-            
-            await _unitOfWork.Tasks.AddAsync(task, cancellationToken);
-            await _unitOfWork.SaveChangesAsync(cancellationToken);
-            
-            return Result.Success(_mapper.Map<TaskDto>(task));
-        }
-        catch (BusinessRuleException ex)
-        {
-            return Result.Failure<TaskDto>(ex.Message);
-        }
-    }
-}
-```
+### Application Layer Guidelines
 
-#### Query Pattern
-```csharp
-public record GetTaskByIdQuery(Guid Id) : IRequest<Result<TaskDto>>;
+#### Command Handler Implementation Standards
+- Implement `IRequestHandler<TCommand, Result<TResponse>>` interface
+- Use dependency injection for repositories, mappers, and services
+- Return `Result<T>` pattern for success/failure scenarios
+- Validate inputs using FluentValidation
+- Handle domain exceptions and convert to appropriate result types
 
-public class GetTaskByIdQueryHandler : IRequestHandler<GetTaskByIdQuery, Result<TaskDto>>
-{
-    private readonly IReadRepository<Task> _repository;
-    private readonly IMapper _mapper;
-    
-    public GetTaskByIdQueryHandler(IReadRepository<Task> repository, IMapper mapper)
-    {
-        _repository = repository;
-        _mapper = mapper;
-    }
-    
-    public async Task<Result<TaskDto>> Handle(GetTaskByIdQuery request, CancellationToken cancellationToken)
-    {
-        var task = await _repository.GetByIdAsync(request.Id, cancellationToken);
-        
-        return task == null
-            ? Result.Failure<TaskDto>($"Task with ID {request.Id} not found.")
-            : Result.Success(_mapper.Map<TaskDto>(task));
-    }
-}
-```
+#### Query Handler Implementation Standards  
+- Implement `IRequestHandler<TQuery, Result<TResponse>>` interface
+- Use read-only repository interfaces for data retrieval
+- Apply projection and filtering at the database level
+- Return mapped DTOs rather than domain entities
+- Implement caching strategies for frequently accessed data
 
-### API Layer Code Generation
+### API Layer Guidelines
 
-#### Controller Pattern
-```csharp
-[ApiController]
-[Route("api/v{version:apiVersion}/[controller]")]
-[ApiVersion("1.0")]
-public class TasksController : ControllerBase
-{
-    private readonly IMediator _mediator;
-    
-    public TasksController(IMediator mediator)
-    {
-        _mediator = mediator;
-    }
-    
-    [HttpGet("{id}")]
-    [ProducesResponseType(typeof(TaskDto), StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> GetTaskById(Guid id)
-    {
-        var result = await _mediator.Send(new GetTaskByIdQuery(id));
-        
-        return result.IsSuccess
-            ? Ok(result.Value)
-            : NotFound(result.Error);
-    }
-    
-    [HttpPost]
-    [ProducesResponseType(typeof(TaskDto), StatusCodes.Status201Created)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> CreateTask(CreateTaskCommand command)
-    {
-        var result = await _mediator.Send(command);
-        
-        return result.IsSuccess
-            ? CreatedAtAction(nameof(GetTaskById), new { id = result.Value.Id }, result.Value)
-            : BadRequest(result.Error);
-    }
-}
-```
+#### Controller Implementation Standards
+- Apply `[ApiController]` attribute and proper routing conventions
+- Use `IMediator` for command and query dispatch
+- Return appropriate HTTP status codes and response types
+- Implement proper request validation and error handling
+- Document API endpoints with OpenAPI attributes
+- Apply authentication and authorization policies consistently
 
-## Error Handling Standards
+### Testing Guidelines
 
-### Result Pattern Usage
-- **Return Results**: Use `Result<T>` for operations that can fail
-- **Exception Handling**: Reserve exceptions for unexpected errors
-- **Validation**: Use FluentValidation for input validation
-- **Business Rules**: Throw `BusinessRuleException` for domain rule violations
-
-### Exception Hierarchy
-- `DomainException` (abstract base)
-- `BusinessRuleException` (business rule violations)
-- `DomainValidationException` (invariant validation failures)
-- `EntityNotFoundException` (entity not found scenarios)
-
-## Testing Standards
-
-### Unit Test Pattern
-```csharp
-[Fact]
-public async Task Handle_ValidCommand_ShouldCreateTask()
-{
-    // Arrange
-    var command = new CreateTaskCommand
-    {
-        Title = "Implement user authentication",
-        Description = "Add JWT authentication to the API",
-        Priority = TaskPriority.High
-    };
-    
-    var taskDto = new TaskDto { Id = Guid.NewGuid(), Title = command.Title };
-    _mapperMock.Setup(m => m.Map<TaskDto>(It.IsAny<Task>())).Returns(taskDto);
-    
-    // Act
-    var result = await _handler.Handle(command, CancellationToken.None);
-    
-    // Assert
-    result.IsSuccess.Should().BeTrue();
-    result.Value.Should().BeEquivalentTo(taskDto);
-    
-    _taskRepositoryMock.Verify(
-        r => r.AddAsync(It.IsAny<Task>(), It.IsAny<CancellationToken>()),
-        Times.Once);
-}
+#### Unit Test Implementation Standards
+- Follow Arrange-Act-Assert pattern for test structure
+- Use descriptive test method names following convention patterns
+- Mock all external dependencies using appropriate mocking frameworks
+- Assert both success and failure scenarios using fluent assertions
+- Verify mock interactions and state changes appropriately
 ```
 
 ## Documentation Standards
