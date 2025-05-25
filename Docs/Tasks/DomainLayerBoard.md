@@ -1,407 +1,116 @@
-# SoftwareEngineerSkills Project - Domain Layer Development Board
+# Domain Layer Task Board
 
-## Overview
+This board outlines prioritized actionable tasks based on the Domain Layer Analysis Report. Tasks are assigned to relevant teams as per the TeamOrganization.md document.
 
-This document serves as the comprehensive guide for developing and enhancing the Domain Layer of the SoftwareEngineerSkills project. It consolidates findings from our domain analysis, provides clear implementation tasks, and establishes coding standards for domain-driven development.
+## High Priority Tasks
 
-## Reference Documents
+---
 
-Before starting work on any domain layer tasks, review these key documents:
+### Task ID: DL-001
+**Task Title:** Refactor `DeveloperSkill` to Establish Clear Relationship with Canonical `Skill` Entity
+**Description:** The current `DeveloperSkill` entity uses a string `Name` for skills, potentially leading to data inconsistency and making it difficult to manage a canonical list of skills. This task involves refactoring `DeveloperSkill` to link to the `Skill` entity via `SkillId`, and updating related logic in the `Developer` aggregate.
+**Priority Level:** High
+**Assigned Team:** Domain Model Team
+**Estimated Effort:** L
+**Expected Outcome:**
+*   `DeveloperSkill` entity will reference a canonical `Skill` entity via `SkillId`.
+*   Reduced data redundancy and improved data integrity for skills.
+*   Simplified querying for developers based on canonical skills.
+*   Clear distinction between canonical skill properties and developer-specific skill attributes.
+**Acceptance Criteria:**
+1.  `DeveloperSkill.cs` is modified to include `SkillId` (Guid) property.
+2.  The `DeveloperSkill` constructor is updated to accept `SkillId` instead of `skillName` and `category`.
+3.  `Developer.AddSkill()` method signature is changed to accept a `Skill` object or `SkillId`.
+4.  Logic within `Developer.AddSkill()` is updated to create `DeveloperSkill` using `SkillId` and to check for duplicates based on `SkillId`.
+5.  Domain events like `SkillAddedToDeveloperEvent` are updated to reflect the changes (e.g., include `canonicalSkillName`, `canonicalSkillCategory` if needed).
+6.  Redundant validation for skill name/description length in `DeveloperSkill.CheckInvariants` is removed if these properties are now primarily derived from the canonical `Skill` entity.
+7.  Unit tests for `Developer` and `DeveloperSkill` are updated or created to verify the new relationship, skill addition, and duplicate checking.
+8.  Consideration for data migration of existing `DeveloperSkill` entries is documented (migration script implementation can be a separate task).
+**Specialized Prompt for Domain Model Team:**
+"Implement changes to the `DeveloperSkill` entity and `Developer` aggregate to establish a foreign key relationship from `DeveloperSkill` to the `Skill` entity using `SkillId`.
+Tasks:
+1.  Modify `DeveloperSkill.cs`: Add `public Guid SkillId { get; private set; }`. Remove `Name` and `Category` string properties if they are to be sourced from the `Skill` entity via `SkillId`. Adjust constructor to take `skillId`. Update `CheckInvariants` to remove validations for `Name`/`Category` if they are removed.
+2.  Modify `Developer.cs`: Update `AddSkill` method to accept `Skill canonicalSkill` (or `Guid skillId`), and instantiate `DeveloperSkill` using `canonicalSkill.Id`. Ensure duplicate skill check uses `SkillId`.
+3.  Update `SkillAddedToDeveloperEvent`: Ensure it carries necessary identifiers (DeveloperId, SkillId) and potentially denormalized name/category from the canonical skill for consumers who need it.
+4.  Review and update unit tests in `SoftwareEngineerSkills.Domain.UnitTests/` for `DeveloperTests` and any tests related to `DeveloperSkill`.
+5.  Document any assumptions made about how `DeveloperSkill.Description` should be used (e.g., developer's personal notes vs. canonical skill description)."
 
-1. **[Repo README.md](../../README.md)**: Repository README file
-2. **[Domain README.md](../../SoftwareEngineerSkills/src/SoftwareEngineerSkills.Domain/README.md)**: Folder organization recommendations
+---
 
-## Priority Levels
+## Medium Priority Tasks
 
-Tasks are categorized into three priority levels:
+---
 
-- **High Priority**: Foundation tasks that other work depends on - implement these first (1-2 weeks)
-- **Medium Priority**: Enhancement tasks to improve existing functionality (3-4 weeks) 
-- **Low Priority**: Refinement tasks that add polish and advanced capabilities (5-6 weeks)
+### Task ID: DL-002
+**Task Title:** Define `IDeveloperRepository` Interface and Integrate with `IUnitOfWork`
+**Description:** The `Developer` aggregate root currently lacks a repository interface for persistence operations, and it's not exposed via `IUnitOfWork`. This task involves defining `IDeveloperRepository` and adding it to the `IUnitOfWork` interface.
+**Priority Level:** Medium
+**Assigned Team:** Domain Model Team (for interface definition), Infrastructure Team (for future implementation)
+**Estimated Effort:** S
+**Expected Outcome:**
+*   An `IDeveloperRepository` interface is defined in the Domain layer, inheriting from `IRepository<Developer>`.
+*   The `IUnitOfWork` interface exposes an `IDeveloperRepository` property.
+*   The domain layer is prepared for `Developer` aggregate persistence.
+**Acceptance Criteria:**
+1.  A new file `IDeveloperRepository.cs` is created in `SoftwareEngineerSkills/src/SoftwareEngineerSkills.Domain/Abstractions/Persistence/`.
+2.  The `IDeveloperRepository` interface inherits from `IRepository<Developer>`.
+3.  The interface includes any necessary developer-specific query methods (e.g., `GetByEmailAsync` - to be decided by the team).
+4.  `IUnitOfWork.cs` is updated to include `IDeveloperRepository Developers { get; }`.
+5.  The solution compiles successfully.
+**Specialized Prompt for Domain Model Team:**
+"Define the `IDeveloperRepository` interface and integrate it into `IUnitOfWork`.
+Tasks:
+1.  Create `IDeveloperRepository.cs` in `SoftwareEngineerSkills/src/SoftwareEngineerSkills.Domain/Abstractions/Persistence/`.
+2.  Define `public interface IDeveloperRepository : IRepository<Developer>`.
+3.  Discuss and add at least one example of a developer-specific query method signature if obvious ones come to mind (e.g., `Task<Developer?> GetByEmailAsync(Email email, CancellationToken cancellationToken = default);`), otherwise leave it minimal.
+4.  Modify `IUnitOfWork.cs` to add the property: `IDeveloperRepository Developers { get; }`.
+5.  Ensure the project builds."
 
-## Key Principles
+---
 
-All domain layer development should follow these principles:
+## Low Priority Tasks
 
-1. **Rich Domain Model**: Domain entities should encapsulate both data and behavior
-2. **Encapsulation**: Use private setters and expose behavior through methods
-3. **Immutability**: Value objects should be immutable
-4. **Validation**: Domain entities should validate their invariants
-5. **Event-Driven**: Use domain events to handle side effects
+---
 
-## Task Breakdown
+### Task ID: DL-003
+**Task Title:** Remove Unused Validation Methods in `Skill` Entity
+**Description:** The `Skill` entity (`Skill.cs`) contains unused private static validation methods (`ValidateName`, `ValidateDescription`) as the logic is handled in `CheckInvariants`. These should be removed to reduce code clutter.
+**Priority Level:** Low
+**Assigned Team:** Domain Model Team
+**Estimated Effort:** S
+**Expected Outcome:**
+*   Unused methods are removed from `Skill.cs`.
+*   Improved code clarity and reduced clutter in the `Skill` entity.
+**Acceptance Criteria:**
+1.  The `private static void ValidateName(string name)` method is removed from `Skill.cs`.
+2.  The `private static void ValidateDescription(string description)` method is removed from `Skill.cs`.
+3.  The `Skill` entity and overall solution compile and all existing tests pass.
+**Specialized Prompt for Domain Model Team:**
+"Remove the dead code (unused `ValidateName` and `ValidateDescription` static methods) from `SoftwareEngineerSkills/src/SoftwareEngineerSkills.Domain/Entities/Skills/Skill.cs`. Verify that the removal does not affect any existing logic or tests."
 
-### High Priority Tasks (Foundation)
+---
 
-#### 1. Domain Layer Reorganization
-- **Description**: Restructure domain layer for better DDD alignment
-- **Subtasks**:
-  - [x] Rename "Entities" folder to "Aggregates" for better DDD alignment
-  - [x] Create new folder structure (DomainServices, Rules, Shared)
-  - [x] Move files to appropriate locations
-  - [x] Update namespaces to reflect new structure
-  - [x] Fix project references affected by moves
-- **Expected Outcome**: Clear folder structure reflecting DDD concepts
-- **Technical Details**: See [Domain-Structure-Improvements.md](../Domain/Domain-Structure-Improvements.md)
-- **ID**: DOM-001
-- **Dependencies**: None - this is a foundational task
+### Task ID: DL-004
+**Task Title:** Review and Potentially Enhance Email Validation in `Email` Value Object
+**Description:** The `Email` value object uses custom logic for email validation. This task is to review this logic, compare with standard practices (e.g., using `System.Net.Mail.MailAddress` or third-party libraries), and enhance if deemed necessary for robustness.
+**Priority Level:** Low
+**Assigned Team:** Domain Model Team
+**Estimated Effort:** M (if significant changes and new library evaluation is needed) / S (if only minor tweaks)
+**Expected Outcome:**
+*   Email validation in `Email.cs` is reviewed and confirmed to meet project requirements or is enhanced.
+*   Reduced risk of accepting invalid email formats or rejecting valid ones.
+**Acceptance Criteria:**
+1.  The `Email.IsValidEmail` method in `Email.cs` is reviewed.
+2.  A decision is made whether to keep, modify, or replace the current validation logic.
+3.  If changes are made, they are implemented and unit tested thoroughly with various valid and invalid email examples.
+4.  If a third-party library is considered, its suitability and licensing are evaluated.
+**Specialized Prompt for Domain Model Team:**
+"Review the email validation logic in `SoftwareEngineerSkills/src/SoftwareEngineerSkills.Domain/ValueObjects/Email.cs`.
+Tasks:
+1.  Analyze the current `IsValidEmail` method for correctness and edge case handling.
+2.  Compare its behavior with `System.Net.Mail.MailAddress` and/or research dedicated email validation libraries.
+3.  Decide on an approach: keep current, modify, or replace.
+4.  If modifying or replacing, implement the new logic.
+5.  Write comprehensive unit tests for the email validation, covering common formats, international characters (if applicable), and various invalid inputs."
 
-#### 2. Domain Exception Hierarchy
-- **Description**: Create comprehensive domain exception system
-- **Subtasks**:
-  - [x] Create base `DomainException` class
-  - [x] Implement specialized exceptions (`BusinessRuleException`, `DomainValidationException`, `EntityNotFoundException`)
-  - [x] Update existing code to use the new exception types
-  - [x] Add tests for exception handling
-- **Expected Outcome**: Consistent error handling across the domain
-- **Technical Details**: See [Domain-Implementation-Recommendations.md](../Domain/Domain-Implementation-Recommendations.md)
-- **ID**: DOM-002
-- **Dependencies**: None - this is a foundational task
-
-#### 3. Standardize Base Classes
-- **Description**: Enhance and standardize domain base classes
-- **Subtasks**:
-  - [x] Create `BaseEntity`, `ValueObject`, `AggregateRoot` base classes
-  - [x] Implement `IAggregateRoot` interface to clearly identify aggregate boundaries
-  - [x] Implement domain invariants with `CheckInvariants`/`EnforceInvariants` pattern
-  - [x] Add consistent XML documentation across all base classes
-  - [x] Implement `CheckInvariantsAsync` for asynchronous validations
-  - [x] Enhance thread safety for domain event handling
-- **Expected Outcome**: Solid foundation for building rich domain models ✅ **COMPLETED**
-- **Technical Details**: See [Domain-Implementation-Recommendations.md](../Domain/Domain-Implementation-Recommendations.md)
-- **ID**: DOM-003
-- **Dependencies**: None - this is a foundational task
-
-#### 4. Complete Entity Auditing System
-- **Description**: Implement auditing capabilities for entities
-- **Subtasks**:
-  - [ ] Create interfaces for separation of concerns (`ICreationAuditable`, `IModificationAuditable`)
-  - [ ] Implement `IAuditableEntity` interface combining auditing concerns
-  - [ ] Implement `ISoftDelete` interface for soft deletion functionality  
-  - [ ] Create `SoftDeleteEntity` base class implementing the interface
-  - [ ] Create `ICurrentUserService` and implementation for capturing the current user
-  - [ ] Define `IDateTimeService` interface in the Domain layer to provide consistent UTC timestamps for auditing
-- **Expected Outcome**: Complete auditing system with creation, modification, and deletion tracking
-- **Technical Details**: See sample implementations in [Domain-Implementation-Recommendations.md](../Domain/Domain-Implementation-Recommendations.md)
-- **ID**: DOM-004
-- **Dependencies**: Depends on Standardized Base Classes (DOM-003)
-
-#### 5. Repository Pattern Implementation
-- **Description**: Finalize data access abstractions
-- **Subtasks**:
-  - [ ] Complete Repository and UnitOfWork interfaces and implementations
-  - [ ] Implement specialized repositories for soft-delete entities (`ISoftDeleteRepository<T>`)
-  - [ ] Create EF Core extensions for working with soft-deleted entities
-  - [ ] Implement global query filters for soft-deleted entities
-- **Expected Outcome**: Clean data access layer with proper soft-delete support
-- **Technical Details**: See [Entity Auditing.md](../Architecture/Entity%20Auditing.md) and [UnitOfWork.md](../Architecture/UnitOfWork.md)
-- **ID**: DOM-005
-- **Dependencies**: Depends on Entity Auditing System (DOM-004)
-
-### Medium Priority Tasks (Enhancement)
-
-#### 6. Domain Event System Enhancement
-- **Description**: Standardize and improve domain event system
-- **Subtasks**:
-  - [ ] Create `PropertyChangedEvent<T>` base class for standardized change tracking
-  - [ ] Standardize event naming conventions across aggregates
-  - [ ] Implement Apply pattern consistently across all aggregates
-  - [ ] Create typed domain events using generics
-  - [ ] Add metadata to events (timestamp, correlation ID)
-  - [ ] Ensure proper event ordering and handling
-- **Expected Outcome**: Consistent and robust event-driven architecture
-- **Technical Details**: See detailed examples in [Domain-Implementation-Recommendations.md](../Domain/Domain-Implementation-Recommendations.md)
-- **ID**: DOM-006
-- **Dependencies**: Depends on Standardized Base Classes (DOM-003)
-
-#### 7. Enhance Value Objects
-- **Description**: Improve value object implementations
-- **Subtasks**:
-  - [ ] Create value objects for domain concepts currently using primitives
-  - [ ] Ensure proper immutability in all value objects
-  - [ ] Add WithX methods for property modifications
-  - [ ] Implement proper equality and comparison
-  - [ ] Add implicit/explicit operators where appropriate
-  - [ ] Create comprehensive tests for value objects
-- **Expected Outcome**: Rich domain model with proper value encapsulation
-- **Technical Details**: See value object examples in [Domain-Implementation-Recommendations.md](../Domain/Domain-Implementation-Recommendations.md)
-- **ID**: DOM-007
-- **Dependencies**: Depends on Standardized Base Classes (DOM-003)
-
-#### 8. Implement Result Pattern
-- **Description**: Create exception-free error handling system
-- **Subtasks**:
-  - [ ] Create Result classes with success/failure states
-  - [ ] Add support for generic result types (`Result<T>`)
-  - [ ] Add extension methods for Result operations
-  - [ ] Integrate with existing code patterns
-- **Expected Outcome**: Cleaner error handling throughout the application
-- **ID**: DOM-008
-- **Dependencies**: None, but should be applied after High Priority tasks
-
-#### 9. Aggregate Relationship Management
-- **Description**: Standardize relationship handling within aggregates
-- **Subtasks**:
-  - [ ] Implement consistent collection handling in aggregates (private field with public read-only access)
-  - [ ] Create methods for managing child entity relationships
-  - [ ] Standardize domain event creation for relationship changes
-  - [ ] Add validation for relationships
-- **Expected Outcome**: Consistent relationship management across aggregates
-- **Technical Details**: See [Domain-Code-Improvements.md](../Domain/Domain-Code-Improvements.md)
-- **ID**: DOM-009
-- **Dependencies**: Depends on Domain Event System Enhancement (DOM-006)
-
-### Low Priority Tasks (Refinement)
-
-#### 10. Implement Domain Specifications
-- **Description**: Extract business rules to specification classes
-- **Subtasks**:
-  - [ ] Create `ISpecification<T>` interface
-  - [ ] Implement specification classes for common validation rules
-  - [ ] Refactor existing validation logic to use specifications
-  - [ ] Create composite specifications for complex rules
-- **Expected Outcome**: Reusable business rules and improved testability
-- **Technical Details**: Implement the specification pattern for validation rules
-- **ID**: DOM-010  
-- **Dependencies**: Depends on Standardized Base Classes (DOM-003)
-
-#### 11. Domain Documentation Enhancement
-- **Description**: Improve domain documentation
-- **Subtasks**:
-  - [ ] Create comprehensive XML documentation for all public APIs
-  - [ ] Document complex domain rules and invariants
-  - [ ] Create domain model diagrams for main aggregates
-  - [ ] Add sequence diagrams for key processes
-- **Expected Outcome**: Well-documented domain model for better understanding
-- **ID**: DOM-011
-- **Dependencies**: All high and medium priority tasks
-
-#### 12. Add Policy-Based Entity Access Control
-- **Description**: Implement entity-level access control
-- **Subtasks**:
-  - [ ] Create `IEntityWithAccessControl` interface
-  - [ ] Implement access control on relevant entities
-  - [ ] Integrate with authorization system
-- **Expected Outcome**: Fine-grained access control at the entity level
-- **ID**: DOM-012
-- **Dependencies**: Depends on Standardized Base Classes (DOM-003)
-
-## Implementation Patterns
-
-### Domain Entity Implementation Pattern
-
-Follow this pattern when implementing domain entities:
-
-```csharp
-public class Customer : AggregateRoot
-{
-    // Properties with private setters
-    public string Name { get; private set; } = null!;
-    public Email Email { get; private set; } = null!;
-    
-    // Collection properties with backing fields
-    private readonly List<Order> _orders = new();
-    public IReadOnlyCollection<Order> Orders => _orders.AsReadOnly();
-    
-    // Private constructor for EF Core
-    private Customer() { }
-    
-    // Public constructor with validation
-    public Customer(string name, Email email)
-    {
-        if (string.IsNullOrWhiteSpace(name))
-            throw new ArgumentException("Name cannot be empty", nameof(name));
-            
-        Name = name;
-        Email = email ?? throw new ArgumentNullException(nameof(email));
-        
-        AddDomainEvent(new CustomerCreatedEvent(Id, name, email));
-    }
-    
-    // Public methods that encapsulate domain behavior
-    public void UpdateName(string newName)
-    {
-        if (string.IsNullOrWhiteSpace(newName))
-            throw new ArgumentException("Name cannot be empty", nameof(newName));
-            
-        if (Name == newName)
-            return;
-            
-        var oldName = Name;
-        Name = newName;
-        
-        var @event = new CustomerNameChangedEvent(Id, oldName, newName, Version);
-        AddDomainEvent(@event);
-        ApplyDomainEvent(@event);
-    }
-    
-    // Apply method pattern
-    protected override void ApplyDomainEvent(IDomainEvent @event)
-    {
-        switch (@event)
-        {
-            case CustomerNameChangedEvent e:
-                Apply(e);
-                break;
-            // Other events
-        }
-    }
-    
-    private void Apply(CustomerNameChangedEvent @event)
-    {
-        // Additional logic if needed
-        IncrementVersion();
-    }
-    
-    // Invariant validation
-    protected override IEnumerable<string> CheckInvariants()
-    {
-        foreach (var error in base.CheckInvariants())
-            yield return error;
-            
-        if (string.IsNullOrWhiteSpace(Name))
-            yield return "Customer name cannot be empty";
-            
-        if (Email == null)
-            yield return "Customer email is required";
-    }
-}
-```
-
-### Value Object Implementation Pattern
-
-Follow this pattern when implementing value objects:
-
-```csharp
-public class Address : ValueObject
-{
-    public string Street { get; private set; } = string.Empty;
-    public string City { get; private set; } = string.Empty;
-    public string State { get; private set; } = string.Empty;
-    public string PostalCode { get; private set; } = string.Empty;
-    public string Country { get; private set; } = string.Empty;
-    
-    // Required for EF Core
-    private Address() { }
-    
-    public Address(string street, string city, string state, string postalCode, string country)
-    {
-        // Validation with helpful error messages
-        if (string.IsNullOrWhiteSpace(street))
-            throw new ArgumentException("Street cannot be empty", nameof(street));
-        // ... other validations
-        
-        Street = street;
-        City = city;
-        State = state;
-        PostalCode = postalCode;
-        Country = country;
-    }
-    
-    // Immutable property modifications using WithX methods
-    public Address WithStreet(string street)
-    {
-        return new Address(street, City, State, PostalCode, Country);
-    }
-    
-    // Domain-specific behavior
-    public string GetFormattedAddress()
-    {
-        return $"{Street}, {City}, {State} {PostalCode}, {Country}";
-    }
-    
-    // Equality implementation
-    protected override IEnumerable<object> GetEqualityComponents()
-    {
-        yield return Street;
-        yield return City;
-        yield return State;
-        yield return PostalCode;
-        yield return Country;
-    }
-}
-```
-
-## Implementation Guidelines
-
-### Approach
-- Start with implementing the high-priority tasks first
-- Work on medium-priority tasks only when high-priority ones are complete
-- Consider dependencies between tasks when planning work
-- Update CHANGELOG.md with each significant change
-- Write tests for each implementation
-
-### Documentation
-- Document design decisions in architectural decision records (ADRs)
-- Update project documentation with new patterns and implementations
-- Maintain XML comments on public APIs following these guidelines:
-  - Document the "why" behind complex domain rules, not just the "what"
-  - Include examples for complex methods
-  - Add `<remarks>` sections for implementation notes and usage guidance
-
-### Testing
-- Write unit tests for all domain entities, value objects, and services
-- Test domain events and their handling
-- Test invariant validation
-- Use meaningful test names that describe the behavior being tested
-
-## Domain Modeling Workflow
-
-1. **Identify Domain Concepts**: Start by identifying key domain concepts from requirements
-2. **Define Aggregates**: Determine aggregate boundaries and identify aggregate roots
-3. **Model Value Objects**: Identify concepts that should be value objects
-4. **Define Entity Behavior**: Add methods to entities that encapsulate domain behavior
-5. **Implement Invariants**: Add validation to ensure domain rules are enforced
-6. **Create Domain Events**: Define events for important state changes
-7. **Test Domain Model**: Write tests to verify domain behavior
-
-## Team Organization Suggestions
-
-### Task Assignment Strategy
-- **Core Domain Specialists**: Focus on high-priority domain model tasks (DOM-001 to DOM-004)
-- **Infrastructure Specialists**: Focus on repository and persistence tasks (DOM-005)
-- **Domain Modeling Team**: Work on value objects and domain events (DOM-006 to DOM-007)
-- **Cross-Cutting Concerns Team**: Work on Result Pattern (DOM-008)
-- **Documentation Team**: Update documentation alongside implementation (DOM-011)
-
-### Code Review Process
-- All implementations should be reviewed by at least two team members
-- High-priority tasks should have more thorough reviews
-- Test coverage should be verified during review
-- Check for adherence to implementation patterns
-
-## Timeline and Progress Tracking
-
-### Current Status (as of May 22, 2025)
-
-| Task ID | Description | Status | Assignee | Target Date |
-|---------|------------|--------|----------|------------|
-| DOM-001 | Domain Layer Reorganization | Completed | GitHub Copilot | May 22, 2025 |
-| DOM-002 | Domain Exception Hierarchy | Completed | GitHub Copilot | May 22, 2025 |
-| DOM-003 | Standardize Base Classes | Completed | GitHub Copilot | May 23, 2025 |
-| DOM-004 | Entity Auditing System | Not Started | | Jun 12, 2025 |
-| DOM-005 | Repository Pattern | Not Started | | Jun 12, 2025 |
-| DOM-006 | Domain Event System | Not Started | | Jun 26, 2025 |
-| DOM-007 | Enhance Value Objects | Not Started | | Jun 26, 2025 |
-| DOM-008 | Implement Result Pattern | Not Started | | Jun 26, 2025 |
-| DOM-009 | Aggregate Relationships | Not Started | | Jul 3, 2025 |
-| DOM-010 | Domain Specifications | Not Started | | Jul 10, 2025 |
-| DOM-011 | Documentation Enhancement | Not Started | | Jul 17, 2025 |
-| DOM-012 | Entity Access Control | Not Started | | Jul 24, 2025 |
-
-### Timeline Overview
-- **High Priority (DOM-001 to DOM-005)**: Complete by June 12, 2025
-- **Medium Priority (DOM-006 to DOM-009)**: Complete by July 3, 2025
-- **Low Priority (DOM-010 to DOM-012)**: Complete by July 24, 2025
-
-## Next Steps
-
-1. Review this task organization document with the team
-2. Assign owners to each task based on expertise
-3. Set up tracking in project management tool
-4. Schedule weekly check-ins to monitor progress
-5. Update CHANGELOG.md as items are completed
-
-## Reference Implementation
-
-Remember to continuously update this document as tasks progress or priorities change.
+---
